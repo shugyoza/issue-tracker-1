@@ -25,12 +25,12 @@ const userSchema = new Schema({
         required: [true, 'Email is required']
     },
     created_on: {
-        type: String,
-        default: new Date()
+        type: Date,
+        default: Date.now
     },
     updated_on: {
-        type: String,
-        default: new Date()
+        type: Date,
+        default: Date.now
     }
 })
 

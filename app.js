@@ -1,7 +1,18 @@
-const express = require('express')
+const express = require('express');
+const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+
 require('dotenv').config();
+const issueRoutes = require('./routes/issue-api.js');
 // const { port } = require('./config');
+
 const app = express();
+
+app.use('/public', express.static(process.cwd() + '/public'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/issue', issueRoutes);
 
 app.set('view engine', 'pug');
 

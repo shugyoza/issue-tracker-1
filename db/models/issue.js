@@ -26,12 +26,12 @@ const issueSchema = new Schema({
         required: [true, 'Created by is required.']
     },
     created_on: {
-        type: String,
-        default: new Date() // ok for timestamps, Date.now() is better for intervals
+        type: Date,
+        default: Date.now
     },
     updated_on: {
-        type: String,
-        default: new Date()
+        type: Date,
+        default: Date.now
     },
     assigned_to: String,
     open: {
