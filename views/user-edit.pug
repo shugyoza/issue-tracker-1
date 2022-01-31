@@ -1,0 +1,14 @@
+extend user-layout.pug
+
+block content
+  if errors
+    div(class='alert alert-danger' role='alert')
+      p The following error(s) occurred:
+      ul
+        each error in errors
+          li= error
+  form(action=`/user/edit/${user._id}` method='post')
+  include user-form-fields.pug
+  div(class='py-4')
+    button(type='submit' class='btn btn-primary') Update User
+    a(href='/' class='btn btn-warning ml-2') Cancel

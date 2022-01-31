@@ -1,0 +1,10 @@
+input(type='hidden' name='_csrf' value=csrfToken)
+div(class='form-group')
+  label(for='first-name') First Name
+  input(type='text' id='firstName' name='firstName' value=user.firstName class='form-control')
+div(class='form-group')
+  label(for='last-name')
+  input(type='text' id='lastName' name='lastName' value=user.lastName class='form-control')
+div(class='form-group')
+  label(for='email')
+  input(type='text' id='email' name='email' value=user.email class='form-control')

@@ -1,0 +1,16 @@
+doctype html
+html
+  head
+    title Users List - #{ title }
+  body
+    h1 Users List
+    div
+      h2 #{ title }
+      block content
+
+tbody
+  each user in users
+    tr
+      td= user.firstName
+      td= user.lastName
+      td= user.email
