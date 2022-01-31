@@ -7,6 +7,7 @@ try {
 }
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 const { Schema } = mongoose;
+
 const userSchema = new Schema({
     first_name: {
         type: String,
@@ -23,6 +24,14 @@ const userSchema = new Schema({
         trim: true,
         required: [true, 'Email is required']
     },
-    created_on: String,
-    updated_on: String
+    created_on: {
+        type: String,
+        default: new Date()
+    },
+    updated_on: {
+        type: String,
+        default: new Date()
+    }
 })
+
+module.exports = mongoose.model('User', userSchema)

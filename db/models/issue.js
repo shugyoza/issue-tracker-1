@@ -1,14 +1,13 @@
 'use strict';
-
 let mongoose;
 try {
     mongoose = require('mongoose');
 } catch(err) {
     console.log(err)
 };
-
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 const { Schema } = mongoose;
+
 const issueSchema = new Schema({
     project: String,
     issue_title: {
@@ -26,11 +25,23 @@ const issueSchema = new Schema({
         trim: true,
         required: [true, 'Created by is required.']
     },
-    created_on: String,
-    updated_on: String,
+    created_on: {
+        type: String,
+        default: new Date() // ok for timestamps, Date.now() is better for intervals
+    },
+    updated_on: {
+        type: String,
+        default: new Date()
+    },
     assigned_to: String,
-    open: Boolean,
-    status_text: String
+    open: {
+        type: Boolean,
+        default: true
+    },
+    status_text: {
+        type: String,
+        default: 'Initiated.'
+    }
 })
 
 module.exports = mongoose.model('Issue', issueSchema)
