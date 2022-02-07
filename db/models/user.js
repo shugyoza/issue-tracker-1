@@ -31,6 +31,11 @@ const userSchema = new Schema({
     updated_on: {
         type: Date,
         default: Date.now
+    },
+    password: {
+        type: String,
+        trim: true,
+        required: [true, 'Password is required']
     }
 })
 

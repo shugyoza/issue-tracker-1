@@ -12,9 +12,9 @@ block content
     tbody
       each user in users
         tr
-          td= user.firstName
-          td= user.lastName
+          td= user.first_name
+          td= user.last_name
           td= user.email
           td
-            a(class='btn btn-primary' href=`/user/edit/${user._id}` role='button') Edit
+            a(class='btn btn-primary' href=`/user/${user._id}/edit` role='button') Edit
             a(class='btn btn-danger ml-2' href=`/user/delete/${user._id}` role='button') Delete

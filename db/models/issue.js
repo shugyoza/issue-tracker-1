@@ -10,37 +10,45 @@ const { Schema } = mongoose;
 
 const issueSchema = new Schema({
     project: String,
-    issue_title: {
+    title: {
         type: String,
         trim: true,
         required: [true, 'Issue title is required.']
     },
-    issue_text: {
+    remark: {
         type: String,
         trim: true,
-        required: [true, 'Issue text is required']
+        required: [true, 'Remark is required.']
     },
-    created_by: {
+    creator: {
         type: String,
         trim: true,
         required: [true, 'Created by is required.']
     },
-    created_on: {
+    created: {
         type: Date,
         default: Date.now
     },
-    updated_on: {
+    updated: {
         type: Date,
         default: Date.now
     },
-    assigned_to: String,
+    assignee: String,
     open: {
         type: Boolean,
         default: true
     },
-    status_text: {
+    status: {
         type: String,
-        default: 'Initiated.'
+        default: 'New Issue.'
+    },
+    log: [{
+        description: String,
+        date: Date
+    }],
+    userid: {
+        type: String,
+        trim: true
     }
 })
 

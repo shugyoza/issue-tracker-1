@@ -1,21 +1,22 @@
 doctype html
 html
   head
-    title Issue Tracker: #{ title } List
+    title= title
 
     link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'
     integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u' crossorigin='anonymous')
 
     link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css')
 
-    link(rel='stylesheet', href='/public/style.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
 
   body
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous")
+    block content
+
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'
            integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa' crossorigin='anonymous')
 
-    h1 Issue Tracker
-    div
-      h2 #{ title }
-      block content
+    <!--
+    The integrity and crossorigin attributes are used for Subresource Integrity (SRI) checking.
+    This allows browsers to ensure that resources hosted on third-party servers have not been tampered with.
+    -->

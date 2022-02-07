@@ -1,0 +1,18 @@
+extends user-layout.pug
+
+include utils.pug
+
+block content
+  +validationErrorSummary(errors)
+  div(class='py-3')
+    a(class='btn btn-success' href=`/user/${user._id}/issue/add` role='button') Add Issue
+    a(class='btn btn-primary' href=`/user/${user._id}/issue/find` role='button') Find Issue
+
+  div
+    p First Name: #{first_name}
+    p Last Name: #{last_name}
+    p Email: #{email}
+
+  div
+    a(class='btn btn-primary' href=`/user/${user._id}/edit` role='button') Edit User
+    a(class='btn btn-danger ml-2' href=`/user/${user._id}/delete` role='button') Delete User

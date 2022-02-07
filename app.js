@@ -4,20 +4,24 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 require('dotenv').config();
-const issueRoutes = require('./routes/issue-api.js');
+const ourRoutes = require('./routes/our-api.js');
 // const { port } = require('./config');
 
 const app = express();
 
+app.set('view engine', 'pug');
+
+app.use(morgan('dev'));
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use('/issue', issueRoutes);
+app.use(cookieParser());
+app.use('/user', ourRoutes);
 
-app.set('view engine', 'pug');
 
 app.get('/', (req, res) => {
-    res.render('index', { title: 'Home' })
+    res.redirect('/user/login')
+//    res.render('index', { title: 'Home' })
 })
 
 app.get('/throw-error', (req, res) => {

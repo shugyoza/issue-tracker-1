@@ -1,0 +1,26 @@
+extends issue-layout.pug
+
+block content
+  div(class='py-3')
+    a(class='btn btn-success' href=`/user/${user._id}/issue/add` role='button') Add Issue
+  table(class='table table-striped table-hover')
+    thead(class='thead-dark')
+      tr
+        th(scope='col') Title
+        th(scope='col') Remark
+        th(scope='col') Creator
+        th(scope='col') Assignee
+        th(scope='col') Status
+        th(scope='col')
+    tbody
+      each issue in issues
+        tr
+          td= issue.title
+          td= issue.remark
+          td= issue.creator
+          td= issue.assignee
+          td= issue.status
+          td= issue.log
+          td
+            a(class='btn btn-primary' href=`/user/${user._id}/issue/update` role='button') Update
+            a(class='btn btn-danger ml-2' href=`/user/${user._id}/issue/delete` role='button') Delete

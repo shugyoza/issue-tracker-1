@@ -1,0 +1,19 @@
+input(type='hidden' name='_csrf' value=csrfToken)
+div(class='form-group')
+  label(for='project') Project Name
+  input(type='text' id='project' name='project' value=issue.project placeholder='e.g. Project X' class='form-control')
+div(class='form-group')
+  label(for='title') Title
+  input(type='text' id='title' name='title' value=issue.title placeholder='e.g. Div not centered' class='form-control')
+div(class='form-group')
+  label(for='remark') Detail
+  input(type='text' id='remark' name='remark' value=issue.remark placeholder='e.g. All the details here.' class='form-control')
+div(class='form-group')
+  label(for='creator') Creator
+  input(type='text' id='creator' name='creator' value=issue.creator placeholder='e.g. Cersei Lannister' class='form-control')
+div(class='form-group')
+  label(for='assignee') Assignee
+  input(type='text' id='assignee' name='assignee' value=issue.assignee placeholder='e.g. Tyrion Lannister' class='form-control')
+div(clas='form-group')
+  label(for='status') Status
+  input(type='text' id='status' name='status' value=issue.status placeholder='e.g. On Review' class='form-control')

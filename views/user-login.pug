@@ -1,0 +1,17 @@
+extends user-layout.pug
+
+include utils.pug
+
+block content
+  +validationErrorSummary(errors)
+  form(action='/user/login' method='post')
+    input(type='hidden' name='_csrf' value=csrfToken)
+    div(class='form-group')
+      label(for='email') Email
+      input(type='text' id='email' name='email' value=user.email placeholder='e.g. johnsnow@email.com' class='form-control')
+    div(class='form-group')
+      label(for='password') Password
+      input(type='text' id='password' name='password' value=user.password placeholder='e.g. Password123' class='form-control')
+    div(class='py-4')
+      button(type='submit' class='btn btn-primary') User Login
+      a(href='/' class='btn btn-warning ml-2') Cancel
