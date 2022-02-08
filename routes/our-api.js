@@ -115,15 +115,49 @@ router.post('/add', csrfProtection, userValidators, asyncHandler(async (req, res
 }))
 
 // POST form to login existing user
-router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, res) => {
+router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, res, next) => {
     try {
     const { email, password } = req.body;
     const validatorErrors = validationResult(req);
-    const user = await User.findOne({ email: email, password: password });
     if (validatorErrors.isEmpty()) {
-        res.redirect(`./${user._id}`)
+        let user = await User.findOne({ email: email });
+        if (!user) {
+            validatorErrors.errors.push({
+                value: email,
+                msg: 'You have inputted wrong email/password.',
+                param: 'email',
+                location: 'body'
+            });
+            const errors = validatorErrors.array().map((error) => error.msg);
+            user = { email: email, password: password };
+            res.render('user-login', {
+                title: 'User Login',
+                user,
+                errors,
+                csrfToken: req.csrfToken()
+            })
+        } else if (user) {
+            if (user.password !== password) {
+                validatorErrors.errors.push({
+                    value: password,
+                    msg: 'You have inputted wrong email/password.',
+                    param: 'password',
+                    location: 'body'
+                });
+                const errors = validatorErrors.array().map((error) => error.msg);
+                user = { email: email, password: password };
+                res.render('user-login', {
+                    title: 'User Login',
+                    user,
+                    errors,
+                    csrfToken: req.csrfToken()
+                })
+            }
+            else res.redirect(`./${user._id}`);
+        }
     } else {
         const errors = validatorErrors.array().map((error) => error.msg);
+        console.log(146, validatorErrors)
         res.render('user-login', {
             title: 'User Login',
             user,
