@@ -337,13 +337,13 @@ router.post('/:userid/issue/find', csrfProtection, issueValidators, asyncHandler
         }
         const validatorErrors = validationResult(req);
         const issues = await Issue.find(req.body).exec();
-        console.log(issues, req.body)
+        const user = { _id: req.params.userid };
         if (validatorErrors.isEmpty()) {
             res.render('issue-list', { title: 'Issues', issues, user });
         } else {
             const errors = validatorErrors.array().map((error) => error.msg);
             res.render('issue-list', {
-                title: 'User Login',
+                title: 'Issues',
                 user,
                 issues,
                 errors,
@@ -355,9 +355,10 @@ router.post('/:userid/issue/find', csrfProtection, issueValidators, asyncHandler
         }
     }))
 
-// GET form to edit issue
+// GET form to update issue
 router.get('/:userid/issue/:issueId/update', csrfProtection, issueValidators, async (req, res, next) => {
     try {
+        console.log(req.params.userid)
         const issue = await Issue.findById({ _id: req.params.issueId });
         const user = { _id: req.params.userid };
         res.render('issue-update', {
@@ -371,13 +372,14 @@ router.get('/:userid/issue/:issueId/update', csrfProtection, issueValidators, as
     }
 })
 
-// POST form to edit issue.
+// POST form to update issue.
 router.post('/:userid/issue/:issueId/update', csrfProtection, issueValidators, asyncHandler(async (req, res, next) => {
     try {
         const { title, remark, creator, assignee, status } = req.body;
         const validatorErrors = validationResult(req);
         const user = { _id: req.params.userid };
-        const issue = await Issue.findById(req.params.issueId);
+        const issueId = req.params.issueId;
+        const issue = await Issue.findById(issueId);
 
         if (title) issue.title = title;
         if (remark) issue.remark = remark;
@@ -387,7 +389,13 @@ router.post('/:userid/issue/:issueId/update', csrfProtection, issueValidators, a
 
         if (validatorErrors.isEmpty()) {
             await issue.save();
-            res.redirect(`/${user._id}/issue`);
+            const issues = await Issue.find({ _id: issueId});
+            res.render('issue-list', {
+                title: 'Issues',
+                user,
+                issues,
+                csrfToken: req.csrfToken()
+            });
             } else {
             const errors = validatorErrors.array().map((error) => error.msg);
             res.render('issue-update', {
