@@ -168,7 +168,7 @@ router.get('/:userid/edit', csrfProtection, userValidators, asyncHandler(async (
 }))
 
 // PUT form to edit user. DO NOT put this AFTER '/:userid/:issue' !
-router.post('/:userid/edit', csrfProtection, userValidators, asyncHandler(async (req, res) => {
+router.post('/:userid/edit', csrfProtection, userValidators, asyncHandler(async (req, res, next) => {
     try {
         const { first_name, last_name, email, password } = req.body;
         const validatorErrors = validationResult(req);
@@ -179,8 +179,15 @@ router.post('/:userid/edit', csrfProtection, userValidators, asyncHandler(async 
         user.password = password;
         if (validatorErrors.isEmpty()) {
             await user.save();
-            res.redirect(`./${user._id}`)
-        } else {
+            res.render('user-dashboard', {
+                title: `Hello ${user.first_name}`,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                email: user.email,
+                user,
+                csrfToken: req.csrfToken()
+            });
+            } else {
             const errors = validatorErrors.array().map((error) => error.msg);
             res.render('user-login', {
                 title: 'User Login',
@@ -192,31 +199,6 @@ router.post('/:userid/edit', csrfProtection, userValidators, asyncHandler(async 
     } catch (err) {
         next(err);
     }
-
-    // for (let key in req.body) {
-    //     if (!req.body.key) delete req.body.key;
-    // }
-    // const user = User.findById(req.params.userid);
-    // if (req.body.first_name) user.first_name = req.body.first_name;
-    // if (req.body.last_name) user.last_name = req.body.last_name;
-    // if (req.body.email) user.email = req.body.email;
-    // if (req.body.password) user.password = req.body.password;
-    // console.log([user, req.body])
-    // const validatorErrors = validationResult(req);
-
-    // if (validatorErrors.isEmpty()) {
-    //     await user.save();
-    //     res.redirect(`/`);
-    // } else {
-    //     const errors = validatorErrors.array().map((error) => error.msg);
-    //     res.render('user-edit', {
-    //         title: 'User Edit',
-    //         user,
-    //         errors,
-    //         csrfToken: req.csrfToken()
-    //     });
-    // }
-
 }))
 
 // GET list of all issues made under this user
@@ -231,7 +213,7 @@ router.get('/:userid/:issue', async (req, res, next) => {
 })
 
 // GET form to add new issue from user dashboard
-router.get('/:userid/:issue/add', csrfProtection, (req, res) => {
+router.get('/:userid/issue/add', csrfProtection, (req, res, next) => {
     const issue = new Issue({});
     const user = { _id: req.params.userid };
     res.render('issue-add', {
@@ -261,7 +243,7 @@ const issueValidators = [
 ]
 
 // POST form to add issue from user dashboard
-router.post('/:userid/:issue/add', csrfProtection, issueValidators, asyncHandler(async(req, res) => {
+router.post('/:userid/issue/add', csrfProtection, issueValidators, asyncHandler(async(req, res) => {
     const {
         project,
         title,
@@ -298,6 +280,96 @@ router.post('/:userid/:issue/add', csrfProtection, issueValidators, asyncHandler
             csrfToken: req.csrfToken()
         });
     }
+}))
+
+// GET form to find issue(s) with a set of criteria
+router.get('/:userid/issue/find', csrfProtection, (req, res) => {
+    const user = { _id: req.params.userid };
+    const issue = { project: '' };
+    res.render('issue-find', {
+        title: 'Find Issue',
+        user,
+        issue,
+        csrfToken: req.csrfToken()
+    });
+})
+
+// POST form to find issue(s) with a set of criteria
+router.post('/:userid/issue/find', csrfProtection, issueValidators, asyncHandler(async (req, res, next) => {
+    try {
+        const { project, title, remark, creator, assignee, status } = req.body;
+        for (let key in req.body) {
+            if (req.body[key] === '') delete req.body[key];
+        }
+        const validatorErrors = validationResult(req);
+        const issues = await Issue.find(req.body).exec();
+        console.log(issues, req.body)
+        if (validatorErrors.isEmpty()) {
+            res.render('issue-list', { title: 'Issues', issues, user });
+        } else {
+            const errors = validatorErrors.array().map((error) => error.msg);
+            res.render('issue-list', {
+                title: 'User Login',
+                user,
+                issues,
+                errors,
+                csrfToken: req.csrfToken()
+            });
+        }
+        } catch (err) {
+            next(err);
+        }
+    }))
+
+// GET form to edit issue
+router.get('/:userid/issue/:issueId/update', csrfProtection, issueValidators, async (req, res, next) => {
+    try {
+        const issue = await Issue.findById({ _id: req.params.issueId });
+        const user = { _id: req.params.userid };
+        res.render('issue-update', {
+            title: 'Issue',
+            issue,
+            user,
+            csrfToken: req.csrfToken()
+        });
+    } catch (err) {
+        next(err);
+    }
+})
+
+// POST form to edit issue.
+router.post('/:userid/issue/:issueId/update', csrfProtection, issueValidators, asyncHandler(async (req, res, next) => {
+    try {
+        const { title, remark, creator, assignee, status } = req.body;
+        const validatorErrors = validationResult(req);
+        const user = { _id: req.params.userid };
+        const issue = await Issue.findById(req.params.issueId);
+
+        if (title) issue.title = title;
+        if (remark) issue.remark = remark;
+        if (creator) issue.creator = creator;
+        if (assignee) issue.assignee = assignee;
+        if (status) issue.status = status;
+
+        if (validatorErrors.isEmpty()) {
+            await issue.save();
+            res.redirect(`/${user._id}/issue`);
+            } else {
+            const errors = validatorErrors.array().map((error) => error.msg);
+            res.render('issue-update', {
+                title: 'Issue Update',
+                issue,
+                user,
+                errors,
+                csrfToken: req.csrfToken()
+            });
+        }
+    } catch (err) {
+        next(err);
+    }
+
+
+
 }))
 
 module.exports = router;

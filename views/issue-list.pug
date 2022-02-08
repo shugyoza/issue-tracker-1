@@ -6,6 +6,8 @@ block content
   table(class='table table-striped table-hover')
     thead(class='thead-dark')
       tr
+        th(scope='col') _id
+        th(scope='col') Project
         th(scope='col') Title
         th(scope='col') Remark
         th(scope='col') Creator
@@ -14,7 +16,9 @@ block content
         th(scope='col')
     tbody
       each issue in issues
-        tr
+        tr(id=issue._id)
+          td= issue._id
+          td= issue.project
           td= issue.title
           td= issue.remark
           td= issue.creator
@@ -22,5 +26,5 @@ block content
           td= issue.status
           td= issue.log
           td
-            a(class='btn btn-primary' href=`/user/${user._id}/issue/update` role='button') Update
+            a(class='btn btn-primary' href=`/user/${user._id}/issue/${issue._id}/update` role='button') Update
             a(class='btn btn-danger ml-2' href=`/user/${user._id}/issue/delete` role='button') Delete

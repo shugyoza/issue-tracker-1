@@ -4,7 +4,7 @@ include utils.pug
 
 block content
   +validationErrorSummary(errors)
-  form(action=`/user/${user._id}/issue/update` method='post')
+  form(action=`/user/${user._id}/issue/${issue._id}/update` method='post')
     include issue-form-fields.pug
     div(class='py-4')
       button(type='submit' class='btn btn-primary') Update Issue
