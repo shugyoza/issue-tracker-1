@@ -28,7 +28,7 @@ router.get('/', async (req, res, next) => {
 router.get('/add', csrfProtection, (req, res) => {
     const user = new User({});
     res.render('user-add', {
-        title: 'Create User',
+        title: '', // 'Create User',
         user,
         csrfToken: req.csrfToken()
     })
@@ -38,7 +38,7 @@ router.get('/add', csrfProtection, (req, res) => {
 router.get('/login', csrfProtection, (req, res) => {
     const user = new User({});
     res.render(`user-login`, {
-        title: 'User Login',
+        title: '', // 'User Login',
         user,
         csrfToken: req.csrfToken()
     })
@@ -48,22 +48,22 @@ router.get('/login', csrfProtection, (req, res) => {
 const userValidators = [
     check('first_name')
     .exists({ checkFalsy: true })
-    .withMessage('Please input your First Name.')
+    .withMessage('Please fill in First Name.')
     .isLength({ max: 100 })
     .withMessage('First Name must be less than 100 characters long.'),
     check('last_name')
     .exists({ checkFalsy: true })
-    .withMessage('Please input your Last Name.')
+    .withMessage('Please fill in Last Name.')
     .isLength({ max: 100 })
     .withMessage('Last Name must be less than 100 characters long.'),
     check('email')
     .exists({ checkFalsy: true })
-    .withMessage('Please input your Email')
+    .withMessage('Please fill in Email')
     .isLength({ max: 255 })
     .withMessage('Email should not be that long.'),
     check('password')
     .exists({ checkFalsy: true })
-    .withMessage('Please input your desired Password.')
+    .withMessage('Please fill in new Password.')
     .isLength({ max: 100 })
     .withMessage('Password should not be that long.')
 ];
@@ -72,14 +72,14 @@ const userValidators = [
 const loginValidators = [
     check('email')
     .exists({ checkFalsy: true })
-    .withMessage('Please input email registered in this database to login.')
+    .withMessage('Please fill in your email address.')
     .isLength({ max: 255 })
-    .withMessage('You input wrong email address.'),
+    .withMessage('Invalid email address.'),
     check('password')
     .exists({ checkFalsy: true })
-    .withMessage('Please input password to login.')
+    .withMessage('Please fill in the password to login.')
     .isLength({ max: 100 })
-    .withMessage('You input wrong password.')
+    .withMessage('Invalid password.')
 ];
 
 // POST form to register new user
@@ -101,12 +101,29 @@ router.post('/add', csrfProtection, userValidators, asyncHandler(async (req, res
     const validatorErrors = validationResult(req);
 
     if (validatorErrors.isEmpty()) {
+        let user = await User.findOne({ email: email });
+        if (user) {
+            validatorErrors.errors.push({
+                value: email,
+                msg: 'Email is already in database.',
+                param: 'email',
+                location: 'body'
+            });
+            const errors = validatorErrors.array().map((error) => error.msg);
+            res.render('user-add', {
+                title: '', // 'User Login',
+                user,
+                errors,
+                csrfToken: req.csrfToken()
+            })
+
+        }
         await user.save();
-        res.redirect('/');
+        res.redirect(`/user/${user._id}`);
     } else {
         const errors = validatorErrors.array().map((error) => error.msg);
         res.render('user-add', {
-            title: 'Add User',
+            title: '', // 'Create User',
             user,
             errors,
             csrfToken: req.csrfToken()
@@ -131,7 +148,7 @@ router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, 
             const errors = validatorErrors.array().map((error) => error.msg);
             user = { email: email, password: password };
             res.render('user-login', {
-                title: 'User Login',
+                title: '', // 'User Login',
                 user,
                 errors,
                 csrfToken: req.csrfToken()
@@ -147,7 +164,7 @@ router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, 
                 const errors = validatorErrors.array().map((error) => error.msg);
                 user = { email: email, password: password };
                 res.render('user-login', {
-                    title: 'User Login',
+                    title: '', // 'User Login',
                     user,
                     errors,
                     csrfToken: req.csrfToken()
@@ -157,9 +174,9 @@ router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, 
         }
     } else {
         const errors = validatorErrors.array().map((error) => error.msg);
-        console.log(146, validatorErrors)
+        let user = { email: email, password: password };
         res.render('user-login', {
-            title: 'User Login',
+            title: '', // 'User Login',
             user,
             errors,
             csrfToken: req.csrfToken()
@@ -224,7 +241,7 @@ router.post('/:userid/edit', csrfProtection, userValidators, asyncHandler(async 
             } else {
             const errors = validatorErrors.array().map((error) => error.msg);
             res.render('user-login', {
-                title: 'User Login',
+                title: '', // 'User Login',
                 user,
                 errors,
                 csrfToken: req.csrfToken()
@@ -251,7 +268,7 @@ router.get('/:userid/issue/add', csrfProtection, (req, res, next) => {
     const issue = new Issue({});
     const user = { _id: req.params.userid };
     res.render('issue-add', {
-        title: 'Add Issue',
+        title: '', // 'Add Issue',
         issue,
         user,
         csrfToken: req.csrfToken()
@@ -260,19 +277,19 @@ router.get('/:userid/issue/add', csrfProtection, (req, res, next) => {
 
 // validator for new issue input
 const issueValidators = [
-    check('title')
+    check('summary')
     .exists({ checkFalsy: true })
-    .withMessage('Please provide a value for Title.')
+    .withMessage('Please fill in Summary.')
     .isLength({ max: 255 })
-    .withMessage('Title must not be more than 255 characters long.'),
-    check('remark')
+    .withMessage('Summary must not be more than 255 characters long.'),
+    check('description')
     .exists({ checkFalsy: true })
-    .withMessage('Please provide a value for Remark.')
+    .withMessage('Please fill in Description.')
     .isLength({ max: 500 })
-    .withMessage('Remark must not be more than 500 characters long.'),
-    check('creator')
+    .withMessage('Description must not be more than 500 characters long.'),
+    check('reporter')
     .exists({ checkFalsy: true })
-    .withMessage('Please provide a value for Creator.')
+    .withMessage('Please fill in Reporter.')
     .isLength({ max: 255 })
 ]
 
@@ -280,18 +297,18 @@ const issueValidators = [
 router.post('/:userid/issue/add', csrfProtection, issueValidators, asyncHandler(async(req, res) => {
     const {
         project,
-        title,
-        remark,
-        creator,
+        summary,
+        description,
+        reporter,
         assignee,
         status
     } = req.body;
 
     const issue = new Issue({
         project: project,
-        title: title,
-        remark: remark,
-        creator: creator,
+        summary: summary,
+        description: description,
+        reporter: reporter,
         assignee: assignee,
         status: status,
         log: [],
@@ -307,7 +324,7 @@ router.post('/:userid/issue/add', csrfProtection, issueValidators, asyncHandler(
     } else {
         const errors = validatorErrors.array().map((error) => error.msg);
         res.render('issue-add', {
-            title: 'Add Issue',
+            title: '', // 'Add Issue',
             issue,
             user,
             errors,
@@ -321,7 +338,7 @@ router.get('/:userid/issue/find', csrfProtection, (req, res) => {
     const user = { _id: req.params.userid };
     const issue = { project: '' };
     res.render('issue-find', {
-        title: 'Find Issue',
+        title: '', // 'Find Issue',
         user,
         issue,
         csrfToken: req.csrfToken()
@@ -331,7 +348,7 @@ router.get('/:userid/issue/find', csrfProtection, (req, res) => {
 // POST form to find issue(s) with a set of criteria
 router.post('/:userid/issue/find', csrfProtection, issueValidators, asyncHandler(async (req, res, next) => {
     try {
-        const { project, title, remark, creator, assignee, status } = req.body;
+        const { project, summary, description, reporter, assignee, status } = req.body;
         for (let key in req.body) {
             if (req.body[key] === '') delete req.body[key];
         }
@@ -343,7 +360,7 @@ router.post('/:userid/issue/find', csrfProtection, issueValidators, asyncHandler
         } else {
             const errors = validatorErrors.array().map((error) => error.msg);
             res.render('issue-list', {
-                title: 'Issues',
+                title: '', // 'Issues',
                 user,
                 issues,
                 errors,
@@ -375,15 +392,15 @@ router.get('/:userid/issue/:issueId/update', csrfProtection, issueValidators, as
 // POST form to update issue.
 router.post('/:userid/issue/:issueId/update', csrfProtection, issueValidators, asyncHandler(async (req, res, next) => {
     try {
-        const { title, remark, creator, assignee, status } = req.body;
+        const { summary, description, reporter, assignee, status } = req.body;
         const validatorErrors = validationResult(req);
         const user = { _id: req.params.userid };
         const issueId = req.params.issueId;
         const issue = await Issue.findById(issueId);
 
-        if (title) issue.title = title;
-        if (remark) issue.remark = remark;
-        if (creator) issue.creator = creator;
+        if (summary) issue.summary = summary;
+        if (description) issue.description = description;
+        if (reporter) issue.reporter = reporter;
         if (assignee) issue.assignee = assignee;
         if (status) issue.status = status;
 

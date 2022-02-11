@@ -1,30 +1,32 @@
 extends issue-layout.pug
 
 block content
-  div(class='py-3')
-    a(class='btn btn-success' href=`/user/${user._id}/issue/add` role='button') Add Issue
-  table(class='table table-striped table-hover')
-    thead(class='thead-dark')
-      tr
-        th(scope='col') _id
-        th(scope='col') Project
-        th(scope='col') Title
-        th(scope='col') Remark
-        th(scope='col') Creator
-        th(scope='col') Assignee
-        th(scope='col') Status
-        th(scope='col')
-    tbody
-      each issue in issues
-        tr(id=issue._id)
-          td= issue._id
-          td= issue.project
-          td= issue.title
-          td= issue.remark
-          td= issue.creator
-          td= issue.assignee
-          td= issue.status
-          td= issue.log
-          td
-            a(class='btn btn-primary' href=`/user/${user._id}/issue/${issue._id}/update` role='button') Update
-            a(class='btn btn-danger ml-2' href=`/user/${user._id}/issue/delete` role='button') Delete
+  div(class='container')
+    div(class='py-3')
+      a(class='btn btn-success' href=`/user/${user._id}/issue/add` role='button') Add Issue
+      a(class='btn btn-primary' href=`/user/${user._id}/issue/find` role='button') Find Issue
+    table(class='table table-striped table-hover')
+      thead(class='thead-dark')
+        tr
+          th(scope='col') _id
+          th(scope='col') Project
+          th(scope='col') Summary
+          th(scope='col') Description
+          th(scope='col') Reporter
+          th(scope='col') Assignee
+          th(scope='col') Status
+          th(scope='col')
+      tbody
+        each issue in issues
+          tr(id=issue._id)
+            td= issue._id
+            td= issue.project
+            td= issue.summary
+            td= issue.description
+            td= issue.reporter
+            td= issue.assignee
+            td= issue.status
+            td= issue.log
+            td
+              a(class='btn btn-primary' href=`/user/${user._id}/issue/${issue._id}/update` role='button') Update
+              a(class='btn btn-danger ml-2' href=`/user/${user._id}/issue/delete` role='button') Delete

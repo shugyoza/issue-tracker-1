@@ -3,8 +3,9 @@ extends issue-layout.pug
 include utils.pug
 
 block content
-  form(action=`/user/${user._id}/issue/find` method='post')
-    include issue-form-fields.pug
-    div(class='py-4')
-      button(type='submit' class='btn btn-primary') Find Issue
-      a(href='/' class='btn btn-warning ml-2') Logout
+  div(class='container')
+    form(action=`/user/${user._id}/issue/find` method='post')
+      include issue-form-fields.pug
+      div(class='py-4')
+        button(type='submit' class='btn btn-primary') Find Issue
+        a(href='/' class='btn btn-warning ml-2') Logout

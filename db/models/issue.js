@@ -10,17 +10,22 @@ const { Schema } = mongoose;
 
 const issueSchema = new Schema({
     project: String,
-    title: {
+    issue_type: {
         type: String,
         trim: true,
-        required: [true, 'Issue title is required.']
+        required: [true, 'Issue Type is required.']
     },
-    remark: {
+    summary: {
         type: String,
         trim: true,
-        required: [true, 'Remark is required.']
+        required: [true, 'Issue Summary is required.']
     },
-    creator: {
+    description: {
+        type: String,
+        trim: true,
+        required: [true, 'Description is required.']
+    },
+    reporter: {
         type: String,
         trim: true,
         required: [true, 'Created by is required.']

@@ -2,5 +2,127 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center
+    align-items: center;
+    background-color: #FAF9F6;
+    font-family: sans-serif;
+    font-size: 1.45rem;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+    align-items: center;
+    width: 100%
+}
+
+a.top-nav-link {
+    color: white;
+}
+
+h1 > a {
+    font-size: 1em;
+    color: navy;
+}
+
+h2 {
+    font-size: 1em;
+    margin: 1em;
+}
+
+div.container {
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    border-bottom: none;
+    border-left: none;
+    border-radius: .4em;
+    /*background-color: #90dcff;*/
+    box-shadow: -6px 6px 8px 1px rgba(0, 0, 0, 0.2);
+    padding: .5em;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(127deg, rgba(255,150,75,.8), rgba(255,0,0,0) 70.71%),
+            linear-gradient(336deg, rgba(75,150,255,.8), rgba(0,0,255,0) 70.71%),
+            linear-gradient(217deg, rgba(150,255,75,.8), rgba(0,255,0,0) 70.71%);
+
+}
+
+div.py-4,
+div.py-3,
+div.form-group {
+    border: none;
+    margin: 1em;
+}
+
+div.py-3,
+div.py-4 {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-bottom: none;
+    border-left: none;
+    margin: .3em;
+    box-shadow: -6px 6px 8px 1px rgba(0, 0, 0, 0.2);
+    min-width: 5em;
+}
+
+.btn-primary {
+    background-color: #49297e;
+    color: white;
+}
+
+.btn-danger {
+    background-color: red;
+    color: white;
+}
+
+.btn-warning {
+    background-color: orange;
+    color: white;
+}
+
+.btn-success {
+    background-color: green;
+    color: white;
+}
+
+input {
+    width: 100%
+}
+
+.form-control {
+    border: 1px solid rgba(25, 25, 112, 0.4);
+    border-top: none;
+    border-right: none;
+}
+
+.alert {
+    box-shadow: -6px 6px 8px 1px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-bottom: none;
+    border-left: none;
+}
+
+a.signup {
+    margin-left: 1.5em;
+    color: navy;
+    font-size: 1.1em;
+}
+
+.inner {
+    background-color: #FAF9F6;
+    padding: 1em;
+    border-radius: .4em;
+    border: 1px solid rgba(25, 25, 112, 0.4);
+    border-top: none;
+    border-right: none;
+    margin: 1em;
+    overflow: auto;
+    width: fit-content;
 }

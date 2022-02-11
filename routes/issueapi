@@ -40,9 +40,9 @@ const issueValidators = [
     .withMessage('Please provide a value for Remark.')
     .isLength({ max: 500 })
     .withMessage('Remark must not be more than 500 characters long.'),
-    check('creator')
+    check('reporter')
     .exists({ checkFalsy: true })
-    .withMessage('Please provide a value for Creator.')
+    .withMessage('Please provide a value for Reporter.')
     .isLength({ max: 255 })
 ]
 
@@ -50,7 +50,7 @@ router.post('/add', csrfProtection, issueValidators, asyncHandler(async(req, res
     const {
         title,
         remark,
-        creator,
+        reporter,
         assignee,
         status
     } = req.body;
@@ -59,7 +59,7 @@ router.post('/add', csrfProtection, issueValidators, asyncHandler(async(req, res
         project: req.params.project,
         title: title,
         remark: remark,
-        creator: creator,
+        reporter: reporter,
         assignee: assignee,
         status: status,
         log: []

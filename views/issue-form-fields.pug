@@ -1,64 +1,73 @@
-input(type='hidden' name='_csrf' value=csrfToken)
-div(class='form-group')
-  label(for='project') Project Name
-  input(type='text' id='project' name='project' value=issue.project placeholder='e.g. Project X' class='form-control')
-div(class='form-group')
-  label(for='title') Title
-  input(type='text' id='title' name='title' value=issue.title placeholder='e.g. Div not centered' class='form-control')
-div(class='form-group')
-  label(for='remark') Detail
-  input(type='text' id='remark' name='remark' value=issue.remark placeholder='e.g. All the details here.' class='form-control')
-div(class='form-group')
-  label(for='creator') Creator
-  input(type='text' id='creator' name='creator' value=issue.creator placeholder='e.g. Cersei Lannister' class='form-control')
-div(class='form-group')
-  label(for='assignee') Assignee
-  input(type='text' id='assignee' name='assignee' value=issue.assignee placeholder='e.g. Tyrion Lannister' class='form-control')
-div(class='form-group')
-  label(for='status') Status
-  select(name='status' id='status' value=issue.status placeholder="e.g. On Review" class='form-control')
-    option(value='Open') Open
-    option(value='Accepted') Accepted
-    option(value='Applications') Applications
-    option(value='Approved') Approved
-    option(value='Awaiting CAB Approval') Awaiting CAB Approval
-    option(value='Awaiting Implementation') Awaiting Implementation
-    option(value='Backlog') Backlog
-    option(value='Building') Building
-    option(value='Build Broken') Build Broken
-    option(value='Canceled') Cancelled
-    option(value='Completed') Completed
-    option(value='Closed') Closed
-    option(value='Contacted') Contacted
-    option(value='Declined') Declined
-    option(value='Done') Done
-    option(value='Draft') Draft
-    option(value='Escalated') Escalated
-    option(value='Implementing') Implementing
-    option(value='In Negotiation') In Negotiation
-    option(value='In Progress') In Progress
-    option(value='In Review') In Review
-    option(value='Interviewing') Interviewing
-    option(value='Interview Debrief') Interview Debrief
-    option(value='Lost') Lost
-    option(value='Offer Discussions') Offer Discussions
-    option(value='Opportunity') Opportunity
-    option(value='Peer Review / Change Manager Approval') Peer Review / Change Manager Approval
-    option(value='Pending') Pending
-    option(value='Planning') Planning
-    option(value='Published') Published
-    option(value='Purchased') Purchased
-    option(value='Rejected') Rejected
-    option(value='Reopened') Reopened
-    option(value='Requested') Requested
-    option(value='Resolved') Resolved
-    option(value='Screening') Screening
-    option(value='Second Review') Second Review
-    option(value='To Do') To Do
-    option(value='Under Investigation') Under Investigation
-    option(value='Under Review') Under Review
-    option(value='Waiting for Approval') Waiting for Approval
-    option(value='Waiting for Customer') Waiting for Customer
-    option(value='Waiting for Support') Waiting for Support
-    option(value='Won') Won
-    option(value='Work in Progress') Work in Progress
+div
+  input(type='hidden' name='_csrf' value=csrfToken)
+  div(class='form-group')
+    label(for='project') Project
+    input(type='text' id='project' name='project' value=issue.project placeholder='e.g. Project X' class='form-control')
+  div(class='form-group')
+    label(for='issue_type') Issue Type
+    select(name='issue_type' id='issue_type' value=issue.issue_type class='form-control')
+      option(value='bug') Bug
+      option(value='improvement') Improvement
+      option(value='task') Task
+      option(value='new_feature') New Feature
+  div(class='form-group')
+    label(for='summary') Summary
+    input(type='text' id='summary' name='summary' value=issue.summary placeholder='e.g. Div not centered' class='form-control')
+  div(class='form-group')
+    label(for='descrition') Desription
+    input(type='text' id='description' name='description' value=issue.description placeholder='e.g. All the details here.' class='form-control')
+  div(class='form-group')
+    label(for='reporter') Reporter
+    input(type='text' id='reporter' name='reporter' value=issue.reporter placeholder='e.g. Cersei Lannister' class='form-control')
+  div(class='form-group')
+    label(for='assignee') Assignee
+    input(type='text' id='assignee' name='assignee' value=issue.assignee placeholder='e.g. Tyrion Lannister' class='form-control')
+  div(class='form-group')
+    label(for='status') Status
+    select(name='status' id='status' value=issue.status placeholder="e.g. On Review" class='form-control')
+      option(value='Open') Open
+      option(value='Accepted') Accepted
+      option(value='Applications') Applications
+      option(value='Approved') Approved
+      option(value='Awaiting CAB Approval') Awaiting CAB Approval
+      option(value='Awaiting Implementation') Awaiting Implementation
+      option(value='Backlog') Backlog
+      option(value='Building') Building
+      option(value='Build Broken') Build Broken
+      option(value='Canceled') Cancelled
+      option(value='Change Manager Approval') Change Manager Approval
+      option(value='Completed') Completed
+      option(value='Closed') Closed
+      option(value='Contacted') Contacted
+      option(value='Declined') Declined
+      option(value='Done') Done
+      option(value='Draft') Draft
+      option(value='Escalated') Escalated
+      option(value='Implementing') Implementing
+      option(value='In Negotiation') In Negotiation
+      option(value='In Progress') In Progress
+      option(value='In Review') In Review
+      option(value='Interviewing') Interviewing
+      option(value='Interview Debrief') Interview Debrief
+      option(value='Lost') Lost
+      option(value='Offer Discussions') Offer Discussions
+      option(value='Opportunity') Opportunity
+      option(value='Peer Review') Peer Review
+      option(value='Pending') Pending
+      option(value='Planning') Planning
+      option(value='Published') Published
+      option(value='Purchased') Purchased
+      option(value='Rejected') Rejected
+      option(value='Reopened') Reopened
+      option(value='Requested') Requested
+      option(value='Resolved') Resolved
+      option(value='Screening') Screening
+      option(value='Second Review') Second Review
+      option(value='To Do') To Do
+      option(value='Under Investigation') Under Investigation
+      option(value='Under Review') Under Review
+      option(value='Waiting for Approval') Waiting for Approval
+      option(value='Waiting for Customer') Waiting for Customer
+      option(value='Waiting for Support') Waiting for Support
+      option(value='Won') Won
+      option(value='Work in Progress') Work in Progress
