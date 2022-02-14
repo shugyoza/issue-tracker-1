@@ -1,20 +1,20 @@
-extends user-layout.pug
+extends head.pug
 
 include utils.pug
 
 block content
   +validationErrorSummary(errors)
-  div(class='container')
-    div(class='py-3')
-      a(class='btn btn-success' href=`/user/${user._id}/issue/add` role='button') Add Issue
-      a(class='btn btn-primary' href=`/user/${user._id}/issue/find` role='button') Find Issue
+  div(class='py-3')
+    a(class='btn top-bookmark btn-green' id='add-issue' href=`/user/${user._id}/issue/add` role='button') add issue
+    a(class='btn top-bookmark btn-purple' id='find-issue' href=`/user/${user._id}/issue/find` role='button') find issue
+    a(class='btn top-bookmark btn-blue' href=`/user/${user._id}/issue` role='button') issues
+    a(class='btn this-bookmark' href=`/user/${user._id}` role='button') user account
 
+  div(class='container')
     div(class='inner')
       p First Name: #{first_name}
       p Last Name: #{last_name}
       p Email: #{email}
 
     div(class='py-3')
-      a(class='btn btn-primary' href=`/user/${user._id}/edit` role='button') Edit User
-      a(class='btn btn-danger ml-2' href=`/user/${user._id}/delete` role='button') Delete User
-      a(href='/' class='btn btn-warning ml-2') Logout
+      a(class='btn btn-orange' href=`/user/${user._id}/edit` role='button') Edit User

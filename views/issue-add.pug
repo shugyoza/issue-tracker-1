@@ -1,12 +1,18 @@
-extends issue-layout.pug
+extends head.pug
 
 include utils.pug
 
 block content
-  +validationErrorSummary(errors)
+  div(class='py-3')
+    a(class='btn this-bookmark' id='add-issue' href=`/user/${user._id}/issue/add` role='button') add issue
+    a(class='btn top-bookmark btn-purple' id='find-issue' href=`/user/${user._id}/issue/find` role='button') find issue
+    a(class='btn top-bookmark btn-blue' href=`/user/${user._id}/issue` role='button') issues
+    a(class='btn top-bookmark btn-maroon' href=`/user/${user._id}` role='button') user account
+    +validationErrorSummary(errors)
   div(class='container')
     form(action=`/user/${user._id}/issue/add` method='post')
       include issue-form-fields.pug
       div(class='py-4')
-        button(type='submit' class='btn btn-primary') Add Issue
-        a(href='/' class='btn btn-warning ml-2') Logout
+        button(type='submit' class='btn btn-green') add issue
+        a(href='/' class='btn btn-orange') clear fields
+  include footer.pug

@@ -30,6 +30,10 @@ const issueSchema = new Schema({
         trim: true,
         required: [true, 'Created by is required.']
     },
+    priority: {
+        type: String,
+        trim: true,
+    },
     created: {
         type: Date,
         default: Date.now

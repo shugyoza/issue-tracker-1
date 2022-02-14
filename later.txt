@@ -1,0 +1,90 @@
+  div(class='form-group')
+    label(for='status') Status
+    select(name='status' id='status' value=issue.status placeholder="e.g. On Review" class='form-control')
+      option(value='Open') Open
+      option(value='Accepted') Accepted
+      option(value='Applications') Applications
+      option(value='Approved') Approved
+      option(value='Awaiting CAB Approval') Awaiting CAB Approval
+      option(value='Awaiting Implementation') Awaiting Implementation
+      option(value='Backlog') Backlog
+      option(value='Building') Building
+      option(value='Build Broken') Build Broken
+      option(value='Canceled') Cancelled
+      option(value='Change Manager Approval') Change Manager Approval
+      option(value='Completed') Completed
+      option(value='Closed') Closed
+      option(value='Contacted') Contacted
+      option(value='Declined') Declined
+      option(value='Done') Done
+      option(value='Draft') Draft
+      option(value='Escalated') Escalated
+      option(value='Implementing') Implementing
+      option(value='In Negotiation') In Negotiation
+      option(value='In Progress') In Progress
+      option(value='In Review') In Review
+      option(value='Interviewing') Interviewing
+      option(value='Interview Debrief') Interview Debrief
+      option(value='Lost') Lost
+      option(value='Offer Discussions') Offer Discussions
+      option(value='Opportunity') Opportunity
+      option(value='Peer Review') Peer Review
+      option(value='Pending') Pending
+      option(value='Planning') Planning
+      option(value='Published') Published
+      option(value='Purchased') Purchased
+      option(value='Rejected') Rejected
+      option(value='Reopened') Reopened
+      option(value='Requested') Requested
+      option(value='Resolved') Resolved
+      option(value='Screening') Screening
+      option(value='Second Review') Second Review
+      option(value='To Do') To Do
+      option(value='Under Investigation') Under Investigation
+      option(value='Under Review') Under Review
+      option(value='Waiting for Approval') Waiting for Approval
+      option(value='Waiting for Customer') Waiting for Customer
+      option(value='Waiting for Support') Waiting for Support
+      option(value='Won') Won
+      option(value='Work in Progress') Work in Progress
+
+
+    nav(class='top-nav')
+      a(class='top-nav-link' id='linkedin' href='https://www.linkedin.com/in/stephen-hanjaya/') Linkedin
+      a(class='top-nav-link' id='github' href='https://github.com/shugyoza') Github
+      h1
+        a(href='/') Issue Tracker
+
+
+
+
+// layout.pug
+doctype html
+html
+  head
+    title= title
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'
+    integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u' crossorigin='anonymous')
+
+    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css')
+
+    link(rel='stylesheet', href='/stylesheets/style.css')
+
+  body
+    block content
+
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'
+           integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa' crossorigin='anonymous')
+
+    <!--
+    The integrity and crossorigin attributes are used for Subresource Integrity (SRI) checking.
+    This allows browsers to ensure that resources hosted on third-party servers have not been tampered with.
+    -->
+
+
+            td
+              a(class='btn btn-blue' href=`/user/${user._id}/issue/${issue._id}/update` role='button') update
+              a(class='btn btn-red' href=`/user/${user._id}/issue/delete` role='button') delete

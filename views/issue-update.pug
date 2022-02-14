@@ -1,11 +1,17 @@
-extends issue-layout.pug
+extends head.pug
 
 include utils.pug
 
 block content
   +validationErrorSummary(errors)
-  form(action=`/user/${user._id}/issue/${issue._id}/update` method='post')
-    include issue-form-fields.pug
-    div(class='py-4')
-      button(type='submit' class='btn btn-primary') Update Issue
-      a(href='/' class='btn btn-warning ml-2') Logout
+  div(class='py-3')
+    a(class='btn top-bookmark btn-green' id='add-issue' href=`/user/${user._id}/issue/add` role='button') add issue
+    a(class='btn top-bookmark btn-purple' id='find-issue' href=`/user/${user._id}/issue/find` role='button') find issue
+    a(class='btn this-bookmark' role='button') update issue
+    a(class='btn top-bookmark btn-maroon' href=`/user/${user._id}` role='button') user account
+  div(class='container')
+    form(action=`/user/${user._id}/issue/${issue._id}/update` method='post')
+      include issue-form-fields.pug
+      div(class='py-4')
+        button(type='submit' class='btn btn-blue') update
+        a(href='/' class='btn btn-orange') clear fields

@@ -48,36 +48,36 @@ router.get('/login', csrfProtection, (req, res) => {
 const userValidators = [
     check('first_name')
     .exists({ checkFalsy: true })
-    .withMessage('Please fill in First Name.')
+    .withMessage('First Name must be filled.')
     .isLength({ max: 100 })
     .withMessage('First Name must be less than 100 characters long.'),
     check('last_name')
     .exists({ checkFalsy: true })
-    .withMessage('Please fill in Last Name.')
+    .withMessage('Last Name must be filled.')
     .isLength({ max: 100 })
     .withMessage('Last Name must be less than 100 characters long.'),
     check('email')
     .exists({ checkFalsy: true })
-    .withMessage('Please fill in Email')
+    .withMessage('Email must be filled.')
     .isLength({ max: 255 })
-    .withMessage('Email should not be that long.'),
+    .withMessage('Email cannot be that long.'),
     check('password')
     .exists({ checkFalsy: true })
     .withMessage('Please fill in new Password.')
     .isLength({ max: 100 })
-    .withMessage('Password should not be that long.')
+    .withMessage('Password cannot be that long.')
 ];
 
 // validator for login existing user
 const loginValidators = [
     check('email')
     .exists({ checkFalsy: true })
-    .withMessage('Please fill in your email address.')
+    .withMessage('Email must be filled.')
     .isLength({ max: 255 })
     .withMessage('Invalid email address.'),
     check('password')
     .exists({ checkFalsy: true })
-    .withMessage('Please fill in the password to login.')
+    .withMessage('Password to login must be filled.')
     .isLength({ max: 100 })
     .withMessage('Invalid password.')
 ];
@@ -209,7 +209,7 @@ router.get('/:userid/edit', csrfProtection, userValidators, asyncHandler(async (
     try {
         const user = await User.findById(req.params.userid);
         res.render('user-edit', {
-            title: 'User Edit',
+            title: '', /*'User Edit',*/
             user,
             csrfToken: req.csrfToken()
         });
@@ -257,7 +257,7 @@ router.get('/:userid/:issue', async (req, res, next) => {
     try {
         const issues = await Issue.find({ userid: req.params.userid });
         const user = { _id: req.params.userid };
-        res.render('issue-list', { title: 'Issues', issues, user });
+        res.render('issue-list', { title: ''/*'Issues'*/, issues, user });
     } catch (err) {
         next(err);
     }
@@ -279,17 +279,17 @@ router.get('/:userid/issue/add', csrfProtection, (req, res, next) => {
 const issueValidators = [
     check('summary')
     .exists({ checkFalsy: true })
-    .withMessage('Please fill in Summary.')
+    .withMessage('Summary must be filled.')
     .isLength({ max: 255 })
-    .withMessage('Summary must not be more than 255 characters long.'),
+    .withMessage('Summary must be less than 255 characters long.'),
     check('description')
     .exists({ checkFalsy: true })
-    .withMessage('Please fill in Description.')
+    .withMessage('Description must be filled.')
     .isLength({ max: 500 })
-    .withMessage('Description must not be more than 500 characters long.'),
+    .withMessage('Description must be less than 500 characters long.'),
     check('reporter')
     .exists({ checkFalsy: true })
-    .withMessage('Please fill in Reporter.')
+    .withMessage('Reporter name is required.')
     .isLength({ max: 255 })
 ]
 
@@ -297,6 +297,7 @@ const issueValidators = [
 router.post('/:userid/issue/add', csrfProtection, issueValidators, asyncHandler(async(req, res) => {
     const {
         project,
+        issue_type,
         summary,
         description,
         reporter,
@@ -306,6 +307,7 @@ router.post('/:userid/issue/add', csrfProtection, issueValidators, asyncHandler(
 
     const issue = new Issue({
         project: project,
+        issue_type,
         summary: summary,
         description: description,
         reporter: reporter,
@@ -356,7 +358,7 @@ router.post('/:userid/issue/find', csrfProtection, issueValidators, asyncHandler
         const issues = await Issue.find(req.body).exec();
         const user = { _id: req.params.userid };
         if (validatorErrors.isEmpty()) {
-            res.render('issue-list', { title: 'Issues', issues, user });
+            res.render('issue-list', { title: '' /*'Issues'*/, issues, user });
         } else {
             const errors = validatorErrors.array().map((error) => error.msg);
             res.render('issue-list', {
@@ -375,11 +377,10 @@ router.post('/:userid/issue/find', csrfProtection, issueValidators, asyncHandler
 // GET form to update issue
 router.get('/:userid/issue/:issueId/update', csrfProtection, issueValidators, async (req, res, next) => {
     try {
-        console.log(req.params.userid)
         const issue = await Issue.findById({ _id: req.params.issueId });
         const user = { _id: req.params.userid };
         res.render('issue-update', {
-            title: 'Issue',
+            title: '', /*'Issue',*/
             issue,
             user,
             csrfToken: req.csrfToken()
