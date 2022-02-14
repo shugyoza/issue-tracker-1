@@ -311,6 +311,7 @@ router.post('/:userid/issue/add', csrfProtection, issueValidators, asyncHandler(
         issue_type,
         summary,
         description,
+        priority,
         reporter,
         assignee,
         status
@@ -321,6 +322,7 @@ router.post('/:userid/issue/add', csrfProtection, issueValidators, asyncHandler(
         issue_type,
         summary: summary,
         description: description,
+        priority: priority,
         reporter: reporter,
         assignee: assignee,
         status: status,
@@ -333,7 +335,7 @@ router.post('/:userid/issue/add', csrfProtection, issueValidators, asyncHandler(
 
     if (validatorErrors.isEmpty()) {
         await issue.save();
-        res.redirect(`/user/${user._id}`);
+        res.redirect(`/user/${user._id}/issue`);
     } else {
         const errors = validatorErrors.array().map((error) => error.msg);
         res.render('issue-add', {
@@ -461,13 +463,10 @@ router.get('/:userid/issue/:issueId/delete', csrfProtection, issueValidators, as
 // POST form to delete issue
 router.post('/:userid/issue/:issueId/delete', csrfProtection, asyncHandler(async (req, res, next) => {
     try {
-        const issue = await Issue.findById(req.params.issueId);
+        const issue = await Issue.findByIdAndDelete(req.params.issueId);
         const user = { _id: req.params.userid };
-        res.render('issue-list', {
-            title: '',
-            issue,
-            user,
-        });
+        const issues = await Issue.find({});
+        res.redirect('/:userid/issue');
     } catch (err) {
         next(err)
     }
