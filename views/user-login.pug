@@ -3,8 +3,8 @@ extends head.pug
 include utils.pug
 
 block content
-  +validationErrorSummary(errors)
   div(class='container')
+    +validationErrorSummary(errors)
     form(action='/user/login' method='post')
       input(type='hidden' name='_csrf' value=csrfToken)
       div(class='form-group')
@@ -14,6 +14,6 @@ block content
         label(for='password') Password
         input(type='text' id='password' name='password' value=user.password placeholder='e.g. Password123' class='form-control')
       div(class='py-4')
-        button(type='submit' class='btn btn-primary') User Login
-        a(href='/' class='btn btn-warning ml-2') Cancel
-        a(href='/user/add' class='signup') Create New User
+        button(type='submit' class='btn btn-blue') User Login
+        a(href='/' class='btn btn-orange') Cancel
+        a(href='/user/add' class='btn btn-green') Create New User

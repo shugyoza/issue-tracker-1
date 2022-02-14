@@ -6,6 +6,11 @@ mixin validationErrorSummary(errors)
         each error in errors
           li= error
 
+mixin deleteIssue(issueId)
+  if issueId
+    div(class='alert alert-danger' role='alert')
+      p Are you sure you want to delete this issue _id: #{issue._id} ?
+
 mixin textField(labelText, fieldName, fieldValue, placeholder)
   div(class='form-group')
     label(for=fieldName)= labelText

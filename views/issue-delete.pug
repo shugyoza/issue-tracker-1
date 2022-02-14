@@ -8,12 +8,13 @@ block content
     a(class='btn top-bookmark btn-green' href=`/user/${user._id}/issue/add` role='button') add issue
     a(class='btn top-bookmark btn-purple' href=`/user/${user._id}/issue/find` role='button') find issue
     a(class='btn top-bookmark btn-blue' href=`/user/${user._id}/issue` role='button') issues
-    a(class='btn this-bookmark' role='button') update issue
+    a(class='btn this-bookmark' role='button') delete issue
     a(class='btn top-bookmark btn-maroon' href=`/user/${user._id}` role='button') user account
   div(class='container')
-    form(action=`/user/${user._id}/issue/${issue._id}/update` method='post')
+    div(class='alert alert-danger' role='alert')
+      p Are you sure you want to delete this issue?
+    form(action=`/user/${user._id}/issue/${issue._id}/delete` method='post')
       include issue-form-fields.pug
       div(class='py-4')
-        button(type='submit' class='btn btn-blue') update issue
-        a(href=`/user/${user._id}/issue/${issue._id}/update` class='btn btn-orange') reset fields
-        a(class='btn btn-red' href=`/user/${user._id}/issue/${issue._id}/delete` role='button') delete issue
+        button(type='submit' class='btn btn-red') yes, delete issue
+        a(href=`/user/${user._id}/issue/${issue._id}/update` class='btn btn-blue') no, just update issue

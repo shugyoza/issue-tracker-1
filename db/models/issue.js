@@ -9,7 +9,11 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 const { Schema } = mongoose;
 
 const issueSchema = new Schema({
-    project: String,
+    project: {
+        type: String,
+        trim: true,
+        required: [true, 'Project Name is required.']
+    },
     issue_type: {
         type: String,
         trim: true,
@@ -33,6 +37,7 @@ const issueSchema = new Schema({
     priority: {
         type: String,
         trim: true,
+        required: [true, 'Priority is required.']
     },
     created: {
         type: Date,
@@ -49,7 +54,8 @@ const issueSchema = new Schema({
     },
     status: {
         type: String,
-        default: 'New Issue.'
+        trim: true,
+        required: [true, 'Status is required.']
     },
     log: [{
         description: String,

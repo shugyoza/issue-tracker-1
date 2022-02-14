@@ -11,21 +11,26 @@ block content
       thead(class='thead-dark')
         tr
           th(scope='col') Project
+          th(scope='col') Issue Type
           th(scope='col') Summary
           th(scope='col') Description
           th(scope='col') Reporter
           th(scope='col') Assignee
           th(scope='col') Status
+          th(scope='col') Last Update
           th(scope='col')
       tbody
         each issue in issues
           tr
             td= issue.project
+            td= issue.issue_type
             td= issue.summary
             td= issue.description
             td= issue.reporter
             td= issue.assignee
             td= issue.status
+            td= issue.updated
             td
               a(class='btn btn-blue' href=`/user/${user._id}/issue/${issue._id}/update` role='button') update
-              a(class='btn btn-red' href=`/user/${user._id}/issue/delete` role='button') delete
+              a(class='btn btn-red' href=`/user/${user._id}/issue/${issue._id}/delete` role='button') delete
+  include footer

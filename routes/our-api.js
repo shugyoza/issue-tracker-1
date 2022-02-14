@@ -192,7 +192,7 @@ router.get('/:userid', csrfProtection, asyncHandler(async (req, res) => {
     try {
         const user = await User.findById(req.params.userid);
         res.render('user-dashboard', {
-            title: `Hello ${user.first_name}`,
+            title: '',/*`Hello ${user.first_name}`,*/
             first_name: user.first_name,
             last_name: user.last_name,
             email: user.email,
@@ -231,7 +231,7 @@ router.post('/:userid/edit', csrfProtection, userValidators, asyncHandler(async 
         if (validatorErrors.isEmpty()) {
             await user.save();
             res.render('user-dashboard', {
-                title: `Hello ${user.first_name}`,
+                title: '', /*`Hello ${user.first_name}`,*/
                 first_name: user.first_name,
                 last_name: user.last_name,
                 email: user.email,
@@ -277,20 +277,31 @@ router.get('/:userid/issue/add', csrfProtection, (req, res, next) => {
 
 // validator for new issue input
 const issueValidators = [
+    check('project')
+    .exists({ checkFalsy: true })
+    .withMessage('Project name must be filled.')
+    .isLength({ max: 100 })
+    .withMessage('Project name must be less than 100 characters.'),
+    check('issue_type')
+    .exists({ checkFalsy: true })
+    .withMessage('You must select an Issue Type.'),
     check('summary')
     .exists({ checkFalsy: true })
     .withMessage('Summary must be filled.')
     .isLength({ max: 255 })
-    .withMessage('Summary must be less than 255 characters long.'),
+    .withMessage('Summary must be less than 255 characters.'),
     check('description')
     .exists({ checkFalsy: true })
     .withMessage('Description must be filled.')
     .isLength({ max: 500 })
-    .withMessage('Description must be less than 500 characters long.'),
+    .withMessage('Description must be less than 500 characters.'),
     check('reporter')
     .exists({ checkFalsy: true })
     .withMessage('Reporter name is required.')
-    .isLength({ max: 255 })
+    .isLength({ max: 255 }),
+    check('status')
+    .exists({ checkFalsy: true })
+    .withMessage('You must select a Status.')
 ]
 
 // POST form to add issue from user dashboard
@@ -350,7 +361,7 @@ router.get('/:userid/issue/find', csrfProtection, (req, res) => {
 // POST form to find issue(s) with a set of criteria
 router.post('/:userid/issue/find', csrfProtection, issueValidators, asyncHandler(async (req, res, next) => {
     try {
-        const { project, summary, description, reporter, assignee, status } = req.body;
+        const { project, issue_type, summary, description, reporter, assignee, status } = req.body;
         for (let key in req.body) {
             if (req.body[key] === '') delete req.body[key];
         }
@@ -380,7 +391,7 @@ router.get('/:userid/issue/:issueId/update', csrfProtection, issueValidators, as
         const issue = await Issue.findById({ _id: req.params.issueId });
         const user = { _id: req.params.userid };
         res.render('issue-update', {
-            title: '', /*'Issue',*/
+            title: '',
             issue,
             user,
             csrfToken: req.csrfToken()
@@ -393,12 +404,14 @@ router.get('/:userid/issue/:issueId/update', csrfProtection, issueValidators, as
 // POST form to update issue.
 router.post('/:userid/issue/:issueId/update', csrfProtection, issueValidators, asyncHandler(async (req, res, next) => {
     try {
-        const { summary, description, reporter, assignee, status } = req.body;
+        const { project, issue_type, summary, description, reporter, assignee, status } = req.body;
         const validatorErrors = validationResult(req);
         const user = { _id: req.params.userid };
         const issueId = req.params.issueId;
         const issue = await Issue.findById(issueId);
 
+        if (project) issue.project = project;
+        if (issue_type) issue.issue_type = issue_type
         if (summary) issue.summary = summary;
         if (description) issue.description = description;
         if (reporter) issue.reporter = reporter;
@@ -427,9 +440,37 @@ router.post('/:userid/issue/:issueId/update', csrfProtection, issueValidators, a
     } catch (err) {
         next(err);
     }
+}))
 
+// GET form to delete issue
+router.get('/:userid/issue/:issueId/delete', csrfProtection, issueValidators, async (req, res, next) => {
+    try {
+        const issue = await Issue.findById(req.params.issueId);
+        const user = { _id: req.params.userid };
+        res.render('issue-delete', {
+            title: '',
+            issue,
+            user,
+            csrfToken: req.csrfToken()
+        });
+    } catch (err) {
+        next(err);
+    }
+})
 
-
+// POST form to delete issue
+router.post('/:userid/issue/:issueId/delete', csrfProtection, asyncHandler(async (req, res, next) => {
+    try {
+        const issue = await Issue.findById(req.params.issueId);
+        const user = { _id: req.params.userid };
+        res.render('issue-list', {
+            title: '',
+            issue,
+            user,
+        });
+    } catch (err) {
+        next(err)
+    }
 }))
 
 module.exports = router;

@@ -5,8 +5,8 @@ include utils.pug
 block content
   +validationErrorSummary(errors)
   div(class='py-3')
-    a(class='btn top-bookmark btn-green' id='add-issue' href=`/user/${user._id}/issue/add` role='button') add issue
-    a(class='btn top-bookmark btn-purple' id='find-issue' href=`/user/${user._id}/issue/find` role='button') find issue
+    a(class='btn top-bookmark btn-green' href=`/user/${user._id}/issue/add` role='button') add issue
+    a(class='btn top-bookmark btn-purple' href=`/user/${user._id}/issue/find` role='button') find issue
     a(class='btn top-bookmark btn-blue' href=`/user/${user._id}/issue` role='button') issues
     a(class='btn this-bookmark' href=`/user/${user._id}` role='button') user account
 

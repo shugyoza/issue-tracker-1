@@ -5,7 +5,7 @@ body {
     align-items: center;
     background-color: white;
     font-family: sans-serif;
-    font-size: min(4rem, max(.875rem, 2vw));
+    font-size: min(4rem, max(.875rem, 1.5vw));
     line-height: 200%;
     min-width: 510px
 }
@@ -23,10 +23,12 @@ div.alert {
     color: red;
     padding: .3rem;
     /*margin-bottom: .5rem;*/
-    position: absolute;
-    margin-left: 70%;
-    margin-top: 5%;
+    position: sticky;
     width: fit-content;
+    box-shadow: -6px 6px 8px 1px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-bottom: none;
+    border-left: none;
 }
 nav {
     margin: auto;
@@ -49,7 +51,7 @@ a.top-nav-link {
     margin: .3rem;
 }
 h1 > a {
-    font-size: min(4rem, max(.875rem, 2vw));
+    font-size: min(4rem, max(.875rem, 1.5vw));
     color: navy;
     /* text-shadow:.1rem .1rem .1em #EDEADE, -.1rem -.1rem .1em #EDEADE, .1rem -.1rem .1em #EDEADE, -.1rem .1rem #EDEADE; /* 2px 2px white, -2px -2px white, 2px -2px white, -2px 2px white; */
 }
@@ -58,7 +60,7 @@ h2 {
     margin: 1rem;
 }
 div.main {
-    width: 95%;
+    width: 99%;
     min-width: 510px;
     display: flex;
     flex-direction: column;
@@ -72,7 +74,7 @@ div.container {
     border-radius: .4em;
     background-color: #FAF9F6; /* #90dcff; */
     box-shadow: -6px 6px 8px 1px rgba(0, 0, 0, 0.2);
-    width: 95%;
+    width: 99%;
     min-width: 500px;
     padding: .5em;
     display: flex;
@@ -110,7 +112,7 @@ div.py-4 {
     padding: .3rem;
     box-shadow: -6px 6px 8px 1px rgba(0, 0, 0, 0.2);
     min-width: 5em;
-    font-size: min(4rem, max(.875rem, 2vw));
+    font-size: min(4rem, max(.875rem, 1.5vw));
     text-align: center;
     color: white
 }
@@ -143,7 +145,7 @@ button:hover {
 }
 a.this-bookmark,
 a.top-bookmark {
-    margin-bottom: -6%;
+    margin-bottom: -5%;
     border-top-left-radius: .5em;
     border-top-right-radius: .5em;
 }
@@ -170,22 +172,13 @@ form {
     border-radius: .3rem;
     box-shadow: 2px -2px 2px -2px rgba(0, 0, 0, 0.2);
     width: 95%;
-    font-size: min(4rem, max(.875rem, 2vw));
+    font-size: min(4rem, max(.875rem, 1.5vw));
     height: fit-content;
     padding: .4rem;
 }
-input#summary,
-input#description {
-    resize: both
-}
 textarea {
-    font-family:sans-serif
-}
-.alert {
-    box-shadow: -6px 6px 8px 1px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    border-bottom: none;
-    border-left: none;
+    font-family:sans-serif;
+    resize: vertical
 }
 
 a.signup {
