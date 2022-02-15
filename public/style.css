@@ -135,6 +135,9 @@ button:hover {
 .btn-maroon{
     background-color: maroon;
 }
+.btn-yellow {
+    background-color: #EADA52;
+}
 .btn-orange {
     background-color: orange;
 }
