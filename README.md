@@ -24,21 +24,32 @@ Ref: https://stackoverflow.com/questions/29884654/button-that-refreshes-the-page
 
 ## USER STORIES:
 ### Done:
-* As a user I want to be able create a user account with as minimum detail possible for the sake of convenience. I can add on my info later.
-* As a user I hate having to memorize username. I want to login with my email as my username.
-* As an admin I want to enforce rules on user data input. If input is not rules compliant, the app must reject the input, throw the error, and have the user fix the input before another re-insert effort into database
-* As an admin I want user to access pages using the available provided resources (a links, and button) instead of typing randomly on browser address. Invalid params should be redirected to purported page (e.g. login) or just throw 404 error.
+
+#### As a user I want:
+* to be able create a user account with as minimum detail possible for the sake of convenience. I can add on my info later.
+* to be able to login with my email as my username. I hate having memorizing username.
+
+#### As an admin I want:
+* to enforce rules on user data input. If input is not rules compliant, the app must reject the input, throw the error, and have the user fix the input before another re-insert effort into database
+* user to access pages using the available provided resources (a links, and button) instead of typing randomly on browser address. Invalid params should be redirected to purported page (e.g. login) or just throw 404 error.
 
 
 * As a user I want to be able
 
 ### To Do:
-* As a user I want to be able click on an issue in the list of issues and see more details (including comments from others, deadline, progress, history, etc.);
-* As a user I want to be able see the list of issues assigned to me;
-* As a user I want to be able see the list of issues I created;
-* As a user I want to be able to see the teams involved in this issue;
-* As an able user I want to be able resize the text size smaller for more display
 
-* As an admin, I want user to input valid email address
-* As an admin, I want user to input valid name. No numeric characters.
-* As an admin, I want user to make sure they input the correct password they wanted on account creation.
+#### As a User, I want:
+* to be able click on an issue in the list of issues and see more details (including comments from others, deadline, progress, history, etc.);
+* to be able see the list of issues assigned to me;
+* to be able see the list of issues I created;
+* to be able to see the teams involved in this issue;
+* to be able resize the text size smaller for more display
+* to be able to format my writing in the Description field;
+
+#### As an Admin, I want:
+* user to input valid email address;
+* user to input valid name. No numeric characters;
+* user to make sure they input the correct password they wanted on account creation;
+#### As a Developer, I want:
+* to be able to do unit test on my controller functions;
+* to be able to do function test on my route handlers;
