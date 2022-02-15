@@ -1,12 +1,16 @@
 'use strict'
-const express = require('express');
-const csrf = require('csurf');
-const { check, validationResult } = require('express-validator');
+const   express = require('express'),
+        csrf = require('csurf'),
+        { validationResult } = require('express-validator')
 
-const User = require('../db/models/user');
-const Issue = require('../db/models/issue');
-const IssueHandler = require('../controllers/issue-handler.js');
-const user = require('../db/models/user');
+const   User = require('../db/models/user'),
+        Issue = require('../db/models/issue'),
+        IssueHandler = require('../controllers/issue-handler.js');
+
+const {
+    loginValidators,
+    userValidators,
+    issueValidators } = require('../controllers/validator.js');
 
 const router = express.Router();
 const csrfProtection = csrf({ cookie: true });
@@ -26,7 +30,7 @@ router.get('/', async (req, res, next) => {
 
 // GET form to register a new user
 router.get('/add', csrfProtection, (req, res) => {
-    const user = new User({});
+    const user = {}; // new User({});
     res.render('user-add', {
         title: '', // 'Create User',
         user,
@@ -35,52 +39,38 @@ router.get('/add', csrfProtection, (req, res) => {
 })
 
 // GET form to login user
-router.get('/login', csrfProtection, (req, res) => {
-    const user = new User({});
-    res.render(`user-login`, {
-        title: '', // 'User Login',
-        user,
-        csrfToken: req.csrfToken()
-    })
+router.get('/login', csrfProtection, loginValidators, (req, res, next) => {
+    try {
+        const user = {},
+              validatorErrors = validationResult(req),
+              email = '';
+        if (!req.query.bool) {
+            return res.render('user-login', {
+                title: '',
+                user,
+                csrfToken: req.csrfToken()
+            })
+        }
+        // handle redirect from any attempt to access any page without login
+        if (req.query.bool === 'false') {
+            validatorErrors.errors.push({
+                value: email,
+                msg: `You must login to access that page.`,
+                param: 'user',
+                location: 'body'
+            })
+        }
+        const errors = validatorErrors.array().map((error) => error.msg);
+        res.render('user-login', {
+            title: '',
+            user,
+            errors,
+            csrfToken: req.csrfToken()
+        })
+    } catch (err) {
+        next(err);
+    }
 })
-
-// validator for registering new user
-const userValidators = [
-    check('first_name')
-    .exists({ checkFalsy: true })
-    .withMessage('First Name must be filled.')
-    .isLength({ max: 100 })
-    .withMessage('First Name must be less than 100 characters long.'),
-    check('last_name')
-    .exists({ checkFalsy: true })
-    .withMessage('Last Name must be filled.')
-    .isLength({ max: 100 })
-    .withMessage('Last Name must be less than 100 characters long.'),
-    check('email')
-    .exists({ checkFalsy: true })
-    .withMessage('Email must be filled.')
-    .isLength({ max: 255 })
-    .withMessage('Email cannot be that long.'),
-    check('password')
-    .exists({ checkFalsy: true })
-    .withMessage('Please fill in new Password.')
-    .isLength({ max: 100 })
-    .withMessage('Password cannot be that long.')
-];
-
-// validator for login existing user
-const loginValidators = [
-    check('email')
-    .exists({ checkFalsy: true })
-    .withMessage('Email must be filled.')
-    .isLength({ max: 255 })
-    .withMessage('Invalid email address.'),
-    check('password')
-    .exists({ checkFalsy: true })
-    .withMessage('Password to login must be filled.')
-    .isLength({ max: 100 })
-    .withMessage('Invalid password.')
-];
 
 // POST form to register new user
 router.post('/add', csrfProtection, userValidators, asyncHandler(async (req, res) => {
@@ -190,6 +180,9 @@ router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, 
 // GET a user dashboard
 router.get('/:userid', csrfProtection, asyncHandler(async (req, res) => {
     try {
+        if (!issueHandler.isValidMongoId(req.params.userid)) {
+            return res.redirect('/user/login?bool=false');
+        }
         const user = await User.findById(req.params.userid);
         res.render('user-dashboard', {
             title: '',/*`Hello ${user.first_name}`,*/
@@ -253,8 +246,11 @@ router.post('/:userid/edit', csrfProtection, userValidators, asyncHandler(async 
 }))
 
 // GET list of all issues made under this user
-router.get('/:userid/:issue', async (req, res, next) => {
+router.get('/:userid/issue', async (req, res, next) => {
     try {
+        if (!issueHandler.isValidMongoId(req.params.userid)) {
+            return res.redirect('/user/login?bool=false');
+        }
         const issues = await Issue.find({ userid: req.params.userid });
         const user = { _id: req.params.userid };
         res.render('issue-list', { title: ''/*'Issues'*/, issues, user });
@@ -264,45 +260,23 @@ router.get('/:userid/:issue', async (req, res, next) => {
 })
 
 // GET form to add new issue from user dashboard
-router.get('/:userid/issue/add', csrfProtection, (req, res, next) => {
-    const issue = new Issue({});
-    const user = { _id: req.params.userid };
-    res.render('issue-add', {
-        title: '', // 'Add Issue',
-        issue,
-        user,
-        csrfToken: req.csrfToken()
-    })
-})
-
-// validator for new issue input
-const issueValidators = [
-    check('project')
-    .exists({ checkFalsy: true })
-    .withMessage('Project name must be filled.')
-    .isLength({ max: 100 })
-    .withMessage('Project name must be less than 100 characters.'),
-    check('issue_type')
-    .exists({ checkFalsy: true })
-    .withMessage('You must select an Issue Type.'),
-    check('summary')
-    .exists({ checkFalsy: true })
-    .withMessage('Summary must be filled.')
-    .isLength({ max: 255 })
-    .withMessage('Summary must be less than 255 characters.'),
-    check('description')
-    .exists({ checkFalsy: true })
-    .withMessage('Description must be filled.')
-    .isLength({ max: 500 })
-    .withMessage('Description must be less than 500 characters.'),
-    check('reporter')
-    .exists({ checkFalsy: true })
-    .withMessage('Reporter name is required.')
-    .isLength({ max: 255 }),
-    check('status')
-    .exists({ checkFalsy: true })
-    .withMessage('You must select a Status.')
-]
+router.get('/:userid/issue/add', csrfProtection, userValidators, asyncHandler(async (req, res, next) => {
+    try {
+        let user;
+        if (!issueHandler.isValidMongoId(req.params.userid)) {
+            return res.redirect('/user/login?bool=false');
+        }
+        user = {};
+        res.render('issue-add', {
+            title: '',
+            issue,
+            user,
+            csrfToken: req.csrfToken()
+        })
+    } catch (err) {
+        next(err);
+    }
+}))
 
 // POST form to add issue from user dashboard
 router.post('/:userid/issue/add', csrfProtection, issueValidators, asyncHandler(async(req, res) => {
@@ -349,16 +323,38 @@ router.post('/:userid/issue/add', csrfProtection, issueValidators, asyncHandler(
 }))
 
 // GET form to find issue(s) with a set of criteria
-router.get('/:userid/issue/find', csrfProtection, (req, res) => {
-    const user = { _id: req.params.userid };
-    const issue = { project: '' };
-    res.render('issue-find', {
-        title: '', // 'Find Issue',
-        user,
-        issue,
-        csrfToken: req.csrfToken()
-    });
-})
+router.get('/:userid/issue/find', csrfProtection, async (req, res, next) => {
+    try {
+        if (req.params.userid === 'undefined') {
+            res.redirect('/user/login?bool=false')
+        }
+        const user = await User.findById(req.params.userid);
+        if (!user) {
+            res.redirect('/user/login?bool=false')
+        }
+        else {
+            const issue = { project: '' };
+            res.render('issue-find', {
+                title: '', // 'Find Issue',
+                user,
+                issue,
+                csrfToken: req.csrfToken()
+            });
+        }
+    } catch (err) {
+        next(err);
+    }
+});
+
+//     const user = { _id: req.params.userid };
+//     const issue = { project: '' };
+//     res.render('issue-find', {
+//         title: '', // 'Find Issue',
+//         user,
+//         issue,
+//         csrfToken: req.csrfToken()
+//     });
+// })
 
 // POST form to find issue(s) with a set of criteria
 router.post('/:userid/issue/find', csrfProtection, issueValidators, asyncHandler(async (req, res, next) => {

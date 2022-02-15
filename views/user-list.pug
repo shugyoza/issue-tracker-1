@@ -3,7 +3,7 @@ extends head.pug
 block content
   div(class='container')
     div(class='py-3')
-      a(class='btn btn-success' href='/user/add' role='button') Add User
+      a(class='btn btn-success' href='/user/add' role='button') add user
     table(class='table table-striped table-hover')
       thead(class='thead-dark')
         tr
@@ -17,5 +17,5 @@ block content
             td= user.last_name
             td= user.email
             td
-              a(class='btn btn-primary' href=`/user/${user._id}/edit` role='button') Edit
-              a(class='btn btn-danger ml-2' href=`/user/delete/${user._id}` role='button') Delete
+              a(class='btn btn-primary' href=`/user/${user._id}/edit` role='button') edit user
+              a(class='btn btn-danger ml-2' href=`/user/delete/${user._id}` role='button') delete user
