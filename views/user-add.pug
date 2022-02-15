@@ -17,5 +17,6 @@ block content
     form(action='/user/add' method='post')
       include user-form-fields.pug
       div(class='py-4')
+        a(href='/user/add' class='btn btn-orange') Reset Fields
         button(type='submit' class='btn btn-green') Create User
-        a(href='/' class='btn btn-orange') Cancel
+        a(href='/' class='btn btn-red') Cancel
