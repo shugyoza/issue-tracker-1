@@ -8,10 +8,10 @@ block content
     a(class='btn top-bookmark btn-black' id='h1')
       h1 Issue Tracker
     div(class='py-3')
-      a(class='btn top-bookmark btn-green' href=`/user/${user._id}/issue/add` role='button') add
-      a(class='btn top-bookmark btn-purple' href=`/user/${user._id}/issue/find` role='button') find
-      a(class='btn top-bookmark btn-blue' href=`/user/${user._id}/issue` role='button') issues
-      a(class='btn this-bookmark' href=`/user/${user._id}` role='button') user
+      a(class='btn top-bookmark btn-green' href=`/user/${user._id}/issue/add` role='button') Add
+      a(class='btn top-bookmark btn-purple' href=`/user/${user._id}/issue/find` role='button') Find
+      a(class='btn top-bookmark btn-blue' href=`/user/${user._id}/issue` role='button') Issues
+      a(class='btn this-bookmark' href=`/user/${user._id}` role='button') Account
 
   div(class='container')
     div(class='inner')
@@ -20,4 +20,4 @@ block content
       p Email: #{email}
 
     div(class='py-3')
-      a(class='btn btn-blue' href=`/user/${user._id}/edit` role='button') edit user
+      a(class='btn btn-blue' href=`/user/${user._id}/edit` role='button') Edit User

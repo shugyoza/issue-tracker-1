@@ -7,13 +7,13 @@ block content
     a(class='btn top-bookmark btn-black' id='h1')
       h1 Issue Tracker
     div(class='py-3')
-      a(class='btn top-bookmark btn-green' href=`/user/${user._id}/issue/add` role='button') add
-      a(class='btn this-bookmark btn-purple' href=`/user/${user._id}/issue/find` role='button') find
-      a(class='btn top-bookmark btn-blue' href=`/user/${user._id}/issue` role='button') issues
-      a(class='btn top-bookmark btn-maroon' href=`/user/${user._id}` role='button') account
+      a(class='btn top-bookmark btn-green' href=`/user/${user._id}/issue/add` role='button') Add
+      a(class='btn this-bookmark btn-purple' href=`/user/${user._id}/issue/find` role='button') Find
+      a(class='btn top-bookmark btn-blue' href=`/user/${user._id}/issue` role='button') Issues
+      a(class='btn top-bookmark btn-maroon' href=`/user/${user._id}` role='button') Account
   div(class='container')
     form(action=`/user/${user._id}/issue/find` method='post')
       include issue-form-fields.pug
       div(class='py-4')
-        button(type='submit' class='btn btn-purple') find issue
-        a(href=`/user/${user._id}/issue/find` class='btn btn-orange') clear fields
+        button(type='submit' class='btn btn-purple') Find Issue
+        a(href=`/user/${user._id}/issue/find` class='btn btn-orange') Clear Fields

@@ -7,10 +7,10 @@ block content
     a(class='btn top-bookmark btn-black' id='h1')
       h1 Issue Tracker
     div(class='py-3')
-      a(class='btn top-bookmark btn-green' href=`/user/${user._id}/issue/add` role='button') add
-      a(class='btn top-bookmark btn-purple' href=`/user/${user._id}/issue/find` role='button') find
-      a(class='btn top-bookmark btn-blue' href=`/user/${user._id}/issue` role='button') issues
-      a(class='btn top-bookmark btn-maroon' href=`/user/${user._id}` role='button') account
+      a(class='btn top-bookmark btn-green' href=`/user/${user._id}/issue/add` role='button') Add
+      a(class='btn top-bookmark btn-purple' href=`/user/${user._id}/issue/find` role='button') Find
+      a(class='btn top-bookmark btn-blue' href=`/user/${user._id}/issue` role='button') Issues
+      a(class='btn top-bookmark btn-maroon' href=`/user/${user._id}` role='button') Account
       a(class='btn top-bookmark btn-pink' href='/readme') read me
   div(class='container')
     +validationErrorSummary(errors)
@@ -23,6 +23,6 @@ block content
         label(for='password') Password
         input(type='text' id='password' name='password' value=user.password placeholder='e.g. Password123' class='form-control')
       div(class='py-4')
-        button(type='submit' class='btn btn-blue') login
-        a(href='/' class='btn btn-orange') cancel
-        a(href='/user/add' class='btn btn-green') create new user
+        button(type='submit' class='btn btn-blue') Login
+        a(href='/' class='btn btn-orange') Cancel
+        a(href='/user/add' class='btn btn-green') Create New User
