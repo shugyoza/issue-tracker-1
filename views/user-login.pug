@@ -7,11 +7,11 @@ block content
     a(class='btn top-bookmark btn-black' href='/' id='h1')
       h1 Issue Tracker
     div(class='py-3')
-      a(class='btn top-bookmark btn-green' href=`/user/${user._id}/issue/add` role='button') Add
-      a(class='btn top-bookmark btn-purple' href=`/user/${user._id}/issue/find` role='button') Find
-      a(class='btn top-bookmark btn-blue' href=`/user/${user._id}/issue` role='button') Issues
-      a(class='btn top-bookmark btn-maroon' href=`/user/${user._id}` role='button') Account
-      a(class='btn top-bookmark btn-pink' href='/readme') read me
+      a(class='btn top-bookmark btn-green' role='button')
+      a(class='btn top-bookmark btn-purple' role='button')
+      a(class='btn top-bookmark btn-orange' role='button')
+      a(class='btn top-bookmark btn-maroon' role='button')
+      a(class='btn top-bookmark btn-pink' href='/readme') Read Me
   div(class='container')
     +validationErrorSummary(errors)
     form(action='/user/login' method='post')
