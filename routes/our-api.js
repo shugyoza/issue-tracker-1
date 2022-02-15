@@ -266,8 +266,9 @@ router.get('/:userid/issue/add', csrfProtection, userValidators, asyncHandler(as
         if (!issueHandler.isValidMongoId(req.params.userid)) {
             return res.redirect('/user/login?bool=false');
         }
-        const issue = {}
-        user = {};
+        user = await User.findById(req.params.userid);
+        console.log(user._id)
+        const issue = {};
         res.render('issue-add', {
             title: '',
             issue,
@@ -341,16 +342,6 @@ router.get('/:userid/issue/find', csrfProtection, async (req, res, next) => {
         next(err);
     }
 });
-
-//     const user = { _id: req.params.userid };
-//     const issue = { project: '' };
-//     res.render('issue-find', {
-//         title: '', // 'Find Issue',
-//         user,
-//         issue,
-//         csrfToken: req.csrfToken()
-//     });
-// })
 
 // POST form to find issue(s) with a set of criteria
 router.post('/:userid/issue/find', csrfProtection, issueValidators, asyncHandler(async (req, res, next) => {

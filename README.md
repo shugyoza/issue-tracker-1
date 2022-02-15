@@ -5,3 +5,11 @@ Cause: omitted 'csrfToken: req.csrfToken()' within the res.render in the GET for
 
 Problem: POST on update issue does not work, instead the URL got duplicated in the browser address when update button clicked.
 Cause: Missing '/' on the form action
+
+
+20220215
+Problem: After I logged in, when I clicked Find, or Add, the `${user._id}` within
+the anchor link was evaluated as 'undefined', thus user will be kicked out into a login page again, despite we should have a valid user._id as a mongo id.
+Cause: Missing 'await' before the `User.findById(...)` in the GET route handler.
+
+The above problem led me to discover that a button to refresh page (to clear the fields) could be given an onclick='window.location.reload()' instead of providing an href link to that same url address

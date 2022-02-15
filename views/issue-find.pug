@@ -16,4 +16,4 @@ block content
       include issue-form-fields.pug
       div(class='py-4')
         button(type='submit' class='btn btn-purple') Find Issue
-        a(href=`/user/${user._id}/issue/find` class='btn btn-orange') Clear Fields
+        a(id=`${user._id}` href=`/user/${user._id}/issue/find` class='btn btn-orange') Clear Fields

@@ -18,5 +18,5 @@ block content
       include issue-form-fields.pug
       div(class='py-4')
         button(type='submit' class='btn btn-green') Add Issue
-        a(href=`/user/${user._id}/issue/add` class='btn btn-orange') Clear Fields
+        button(onclick='window.location.reload();' type='button' class='btn btn-orange') Clear Fields
   include footer.pug
