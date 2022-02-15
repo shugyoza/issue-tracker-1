@@ -4,8 +4,14 @@ include utils.pug
 
 block content
   div(class='top')
-    a(class='btn top-bookmark btn-black' id='h1')
+    a(class='btn top-bookmark btn-black' href='/' id='h1')
       h1 Issue Tracker
+    div(class='py-3')
+      a(class='btn top-bookmark btn-green' role='button')
+      a(class='btn top-bookmark btn-purple' role='button')
+      a(class='btn top-bookmark btn-orange' role='button')
+      a(class='btn top-bookmark btn-maroon' role='button')
+      a(class='btn top-bookmark btn-pink' href='/readme') Read Me
   div(class='container')
     +validationErrorSummary(errors)
     form(action='/user/add' method='post')
