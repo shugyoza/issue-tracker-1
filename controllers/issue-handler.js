@@ -1,7 +1,7 @@
 // import for check mongoId validity
 const ObjectId = require('mongodb').ObjectId;
 
-function IssueHandler() {
+function Funct() {
 
     this.functionName = function(input) {
         return true;
@@ -13,6 +13,12 @@ function IssueHandler() {
         }
         return false;
     }
+    this.isValidName = (name_string) => {
+        const regex = /^(?![\s.]+$)[a-zA-Z\s.]*$/;
+        const matched = name_string.match(regex);
+        if (!matched) return false;
+        return true;
+    }
 }
 
-module.exports = IssueHandler;
+module.exports = Funct;

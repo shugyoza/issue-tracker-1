@@ -5,7 +5,7 @@ const   express = require('express'),
 
 const   User = require('../db/models/user'),
         Issue = require('../db/models/issue'),
-        IssueHandler = require('../controllers/issue-handler.js');
+        Funct = require('../controllers/issue-handler.js');
 
 const {
     loginValidators,
@@ -14,7 +14,7 @@ const {
 
 const router = express.Router();
 const csrfProtection = csrf({ cookie: true });
-let issueHandler = new IssueHandler();
+let funct = new Funct();
 
 const asyncHandler = (handler) => (req, res, next) => handler(req, res, next).catch(next);
 
@@ -80,46 +80,58 @@ router.post('/add', csrfProtection, userValidators, asyncHandler(async (req, res
         email,
         password
     } = req.body;
-
     const user = new User({
         first_name: first_name,
         last_name: last_name,
         email: email,
         password: password
     });
-
     const validatorErrors = validationResult(req);
-
     if (validatorErrors.isEmpty()) {
-        let user = await User.findOne({ email: email });
-        if (user) {
+        if (!funct.isValidName(first_name) || !funct.isValidName(last_name)) {
             validatorErrors.errors.push({
-                value: email,
-                msg: 'Email is already in database.',
-                param: 'email',
+                value: first_name,
+                msg: 'Only arabic alphabets are allowed for Name.',
+                param: 'first_name',
                 location: 'body'
             });
             const errors = validatorErrors.array().map((error) => error.msg);
-            res.render('user-add', {
+            return res.render('user-add', {
                 title: '', // 'User Login',
                 user,
                 errors,
                 csrfToken: req.csrfToken()
             })
-
         }
-        await user.save();
-        res.redirect(`/user/${user._id}`);
-    } else {
-        const errors = validatorErrors.array().map((error) => error.msg);
-        res.render('user-add', {
-            title: '', // 'Create User',
-            user,
-            errors,
-            csrfToken: req.csrfToken()
-        });
+        else if (funct.isValidName(first_name) || funct.isValidName(last_name)) {
+            let user = await User.findOne({ email: email });
+            if (user) {
+                validatorErrors.errors.push({
+                    value: email,
+                    msg: 'Email is already in database.',
+                    param: 'email',
+                    location: 'body'
+                });
+                const errors = validatorErrors.array().map((error) => error.msg);
+                res.render('user-add', {
+                    title: '', // 'User Login',
+                    user,
+                    errors,
+                    csrfToken: req.csrfToken()
+                });
+                await user.save();
+                return res.redirect(`/user/${user._id}`);
+            }
+        }
     }
-}))
+    const errors = validatorErrors.array().map((error) => error.msg);
+    res.render('user-add', {
+        title: '', // 'Create User',
+        user,
+        errors,
+        csrfToken: req.csrfToken()
+    });
+}));
 
 // POST form to login existing user
 router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, res, next) => {
@@ -180,7 +192,7 @@ router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, 
 // GET a user dashboard
 router.get('/:userid', csrfProtection, asyncHandler(async (req, res) => {
     try {
-        if (!issueHandler.isValidMongoId(req.params.userid)) {
+        if (!funct.isValidMongoId(req.params.userid)) {
             return res.redirect('/user/login?bool=false');
         }
         const user = await User.findById(req.params.userid);
@@ -248,7 +260,7 @@ router.post('/:userid/edit', csrfProtection, userValidators, asyncHandler(async 
 // GET list of all issues made under this user
 router.get('/:userid/issue', async (req, res, next) => {
     try {
-        if (!issueHandler.isValidMongoId(req.params.userid)) {
+        if (!funct.isValidMongoId(req.params.userid)) {
             return res.redirect('/user/login?bool=false');
         }
         const issues = await Issue.find({ userid: req.params.userid });
@@ -263,7 +275,7 @@ router.get('/:userid/issue', async (req, res, next) => {
 router.get('/:userid/issue/add', csrfProtection, userValidators, asyncHandler(async (req, res, next) => {
     try {
         let user;
-        if (!issueHandler.isValidMongoId(req.params.userid)) {
+        if (!funct.isValidMongoId(req.params.userid)) {
             return res.redirect('/user/login?bool=false');
         }
         user = await User.findById(req.params.userid);
@@ -327,7 +339,7 @@ router.post('/:userid/issue/add', csrfProtection, issueValidators, asyncHandler(
 // GET form to find issue(s) with a set of criteria
 router.get('/:userid/issue/find', csrfProtection, async (req, res, next) => {
     try {
-        if (!issueHandler.isValidMongoId(req.params.userid)) {
+        if (!funct.isValidMongoId(req.params.userid)) {
             return res.redirect('/user/login?bool=false');
         }
         const user = await User.findById(req.params.userid);
