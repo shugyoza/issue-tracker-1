@@ -50,11 +50,6 @@ a.top-nav-link {
     color: midnightblue;
     margin: .3rem;
 }
-h1 > a {
-    font-size: min(4rem, max(.875rem, 1.5vw));
-    color: navy;
-    /* text-shadow:.1rem .1rem .1em #EDEADE, -.1rem -.1rem .1em #EDEADE, .1rem -.1rem .1em #EDEADE, -.1rem .1rem #EDEADE; /* 2px 2px white, -2px -2px white, 2px -2px white, -2px 2px white; */
-}
 
 h2 {
     margin: 1rem;
@@ -101,7 +96,10 @@ div.py-4 {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    margin-left: 3%
+    margin-left: 2%
+}
+div.py-3 {
+    margin-top: 4%
 }
 .btn {
     border: 1px solid rgba(255, 255, 255, 0.8);
@@ -143,6 +141,15 @@ button:hover {
 .btn-green {
     background-color: green;
 }
+.btn-black {
+    background-color: black;
+}
+div.top {
+    width: 100%;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+}
 a.this-bookmark,
 a.top-bookmark {
     margin-bottom: -5%;
@@ -158,6 +165,11 @@ a.this-bookmark {
     background-color: #FAF9F6;
     z-index: 1;
     color: midnightblue
+}
+a#h1 {
+    margin-right: 2%;
+    margin-bottom: -.5%;
+    font-size: min(4rem, max(.875rem, 1.5vw));
 }
 form {
     width: 99%
