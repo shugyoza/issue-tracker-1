@@ -13,10 +13,10 @@ block content
       a(class='btn this-bookmark' role='button') Delete
       a(class='btn top-bookmark btn-maroon' href=`/user/${user._id}` role='button') Account
   div(class='container')
-    +validationErrorSummary(errors)
+    div(class='alert alert-danger' role='alert')
+      p Are you sure you want to delete this user?
     form(action=`/user/${user._id}/edit` method='post')
       include user-form-fields.pug
       div(class='py-4')
-        button(type='submit' class='btn btn-blue') Save Edit
-        a(href=`/user/${user._id}` class='btn btn-orange') Cancel
-        a(class='btn btn-red' href=`/user/${user._id}/delete` role='button') Delete
+        button(type='submit' href=`/user/${user._id}/delete` class='btn btn-red') Delete
+        a(href=`/user/${user._id}` class='btn btn-orange') Cancel Delete

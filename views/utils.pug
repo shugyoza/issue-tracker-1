@@ -1,7 +1,7 @@
 mixin validationErrorSummary(errors)
   if errors
     div(class='alert alert-danger' role='alert')
-      p We got some errors here:
+      p We got error(s):
       ul
         each error in errors
           li= error

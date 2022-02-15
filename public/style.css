@@ -50,7 +50,9 @@ a.top-nav-link {
     color: midnightblue;
     margin: .3rem;
 }
-
+h1 {
+    font-size: min(4rem, max(.875rem, 1.5vw));
+}
 h2 {
     margin: 1rem;
 }

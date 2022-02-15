@@ -74,12 +74,7 @@ router.get('/login', csrfProtection, loginValidators, (req, res, next) => {
 
 // POST form to register new user
 router.post('/add', csrfProtection, userValidators, asyncHandler(async (req, res) => {
-    const {
-        first_name,
-        last_name,
-        email,
-        password
-    } = req.body;
+    const { first_name, last_name, email, password } = req.body;
     const user = new User({
         first_name: first_name,
         last_name: last_name,
@@ -87,50 +82,43 @@ router.post('/add', csrfProtection, userValidators, asyncHandler(async (req, res
         password: password
     });
     const validatorErrors = validationResult(req);
-    if (validatorErrors.isEmpty()) {
-        if (!funct.isValidName(first_name) || !funct.isValidName(last_name)) {
-            validatorErrors.errors.push({
-                value: first_name,
-                msg: 'Only arabic alphabets are allowed for Name.',
-                param: 'first_name',
-                location: 'body'
-            });
-            const errors = validatorErrors.array().map((error) => error.msg);
-            return res.render('user-add', {
-                title: '', // 'User Login',
-                user,
-                errors,
-                csrfToken: req.csrfToken()
-            })
-        }
-        else if (funct.isValidName(first_name) || funct.isValidName(last_name)) {
-            let user = await User.findOne({ email: email });
-            if (user) {
-                validatorErrors.errors.push({
-                    value: email,
-                    msg: 'Email is already in database.',
-                    param: 'email',
-                    location: 'body'
-                });
-                const errors = validatorErrors.array().map((error) => error.msg);
-                res.render('user-add', {
-                    title: '', // 'User Login',
-                    user,
-                    errors,
-                    csrfToken: req.csrfToken()
-                });
-                await user.save();
-                return res.redirect(`/user/${user._id}`);
-            }
-        }
+    if (!funct.isValidName(first_name)) {
+        validatorErrors.errors.push({
+            value: first_name,
+            msg: 'Only arabic alphabets are allowed for Name.',
+            param: 'first_name',
+            location: 'body'
+        });
+    }
+    if (!funct.isValidName(last_name)) {
+        validatorErrors.errors.push({
+            value: last_name,
+            msg: 'Only arabic alphabets are allowed for Name.',
+            param: 'last_name',
+            location: 'body'
+        });
+    }
+    if (User.findOne({ email: email })) {
+        validatorErrors.errors.push({
+            value: email,
+            msg: 'Email is already in database.',
+            param: 'email',
+            location: 'body'
+        });
     }
     const errors = validatorErrors.array().map((error) => error.msg);
-    res.render('user-add', {
-        title: '', // 'Create User',
-        user,
-        errors,
-        csrfToken: req.csrfToken()
-    });
+    if (!validatorErrors.isEmpty || errors.length) {
+        return res.render('user-add', {
+            title: '', // 'User Login',
+            user,
+            errors,
+            csrfToken: req.csrfToken()
+        })
+    }
+    else {
+        await user.save();
+        return res.redirect(`/user/${user._id}`);
+    }
 }));
 
 // POST form to login existing user
@@ -229,8 +217,30 @@ router.post('/:userid/edit', csrfProtection, userValidators, asyncHandler(async 
         const { first_name, last_name, email, password } = req.body;
         const validatorErrors = validationResult(req);
         const user = await User.findById(req.params.userid);
-        user.first_name = first_name;
-        user.last_name = last_name;
+        if (validatorErrors.isEmpty()) {
+            if (funct.isValidName(first_name)) user.first_name = first_name;
+            else if (!funct.isValidName(first_name)) {
+                validatorErrors.errors.push({
+                    value: first_name,
+                    msg: 'Only arabic alphabets are allowed for Name.',
+                    param: 'first_name',
+                    location: 'body'
+                });
+            }
+            if (funct.isValidName(last_name)) user.last_name = last_name;
+            else if (!funct.isValidName(last_name)) {
+                validatorErrors.push({
+                    value: last_name,
+                    msg: 'Only arabic alphabets are allowed for Name.',
+                    param: 'last_name',
+                    location: 'body'
+                });
+            }
+
+        }
+
+
+
         user.email = email;
         user.password = password;
         if (validatorErrors.isEmpty()) {
@@ -257,6 +267,57 @@ router.post('/:userid/edit', csrfProtection, userValidators, asyncHandler(async 
     }
 }))
 
+
+
+
+// const { first_name, last_name, email, password } = req.body;
+// const validatorErrors = validationResult(req);
+// const user = await User.findById(req.params.userid);
+// user.first_name = first_name;
+// user.last_name = last_name;
+// user.email = email;
+// user.password = password;
+// if (validatorErrors.isEmpty()) {
+//     await user.save();
+//     res.render('user-dashboard', {
+//         title: '', /*`Hello ${user.first_name}`,*/
+//         first_name: user.first_name,
+//         last_name: user.last_name,
+//         email: user.email,
+//         user,
+//         csrfToken: req.csrfToken()
+//     });
+//     } else {
+//     const errors = validatorErrors.array().map((error) => error.msg);
+//     res.render('user-login', {
+//         title: '', // 'User Login',
+//         user,
+//         errors,
+//         csrfToken: req.csrfToken()
+//     });
+// }
+
+
+
+
+
+
+// GET form to edit user. DO NOT put this AFTER '/:userid/:issue' !
+router.get('/:userid/delete', csrfProtection, userValidators, asyncHandler(async (req, res) => {
+    try {
+        const user = await User.findById(req.params.userid);
+        res.render('user-edit', {
+            title: '', /*'User Edit',*/
+            user,
+            csrfToken: req.csrfToken()
+        });
+    } catch (err) {
+        next(err);
+    }
+}))
+
+
+
 // GET list of all issues made under this user
 router.get('/:userid/issue', async (req, res, next) => {
     try {
@@ -279,7 +340,6 @@ router.get('/:userid/issue/add', csrfProtection, userValidators, asyncHandler(as
             return res.redirect('/user/login?bool=false');
         }
         user = await User.findById(req.params.userid);
-        console.log(user._id)
         const issue = {};
         res.render('issue-add', {
             title: '',
