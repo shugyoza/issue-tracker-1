@@ -4,9 +4,8 @@ include utils.pug
 
 block content
   +validationErrorSummary(errors)
-  div(class='top')
-    a(class='btn top-bookmark btn-black' id='h1')
-      h1 Issue Tracker
+  nav(class='top')
+    h1(class='btn top-bookmark btn-black' role='button') Issue Tracker
     div(class='py-3')
       a(class='btn top-bookmark btn-green' href=`/user/${user._id}/issue/add` role='button') Add
       a(class='btn top-bookmark btn-purple' href=`/user/${user._id}/issue/find` role='button') Find

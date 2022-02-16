@@ -18,6 +18,13 @@ div {
 p {
     margin: .3rem
 }
+nav.top {
+    width: 98%;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    height: 6rem
+}
 div.alert {
     background-color: rgba(255,180,175,.8);
     color: red;
@@ -30,28 +37,11 @@ div.alert {
     border-bottom: none;
     border-left: none;
 }
-nav {
-    margin: auto;
-    width: 100%
-}
-nav.top-nav {
-    background-color: darkgrey;
-}
-nav.top-nav,
-nav.bottom-nav {
-    display: flex;
-    justify-content: space-around;
-    gap: 1em;
-    align-items: center;
-    width: 100%;
-}
-
-a.top-nav-link {
-    color: midnightblue;
-    margin: .3rem;
-}
 h1 {
     font-size: min(4rem, max(.875rem, 1.5vw));
+    margin-top: 3%;
+    margin-right: 6%;
+    line-height: 2rem;
 }
 h2 {
     margin: 1rem;
@@ -101,7 +91,7 @@ div.py-4 {
     margin-left: 2%
 }
 div.py-3 {
-    margin-top: 4%
+    margin-bottom: 4.5%
 }
 .btn {
     border: 1px solid rgba(255, 255, 255, 0.8);
@@ -145,22 +135,16 @@ button:hover {
 }
 .btn-orange {
     background-color: orange;
+    color: black;
 }
 .btn-green {
-    background-color: green;
+    background-color: darkgreen;
 }
 .btn-black {
     background-color: black;
 }
-div.top {
-    width: 100%;
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-between;
-}
-a.this-bookmark,
-a.top-bookmark {
-    margin-bottom: -5%;
+.this-bookmark,
+.top-bookmark {
     border-top-left-radius: .5em;
     border-top-right-radius: .5em;
 }
@@ -173,11 +157,6 @@ a.this-bookmark {
     background-color: #FAF9F6;
     z-index: 1;
     color: midnightblue
-}
-a#h1 {
-    margin-right: 2%;
-    margin-bottom: -.5%;
-    font-size: min(4rem, max(.875rem, 1.5vw));
 }
 form {
     width: 99%
