@@ -12,6 +12,7 @@ block content
       a(class='button top-bookmark bg-maroon' role='button')
       a(class='button top-bookmark bg-pink' href='/readme') Read Me
   div(class='container')
+    h2 #{ title }
     +validationErrorSummary(errors)
     form(action='/user/add' method='post')
       include user-form-fields.pug

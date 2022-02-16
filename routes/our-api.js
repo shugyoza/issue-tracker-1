@@ -189,7 +189,7 @@ router.get('/:userid', csrfProtection, asyncHandler(async (req, res) => {
         }
         const user = await User.findById(req.params.userid);
         res.render('user-dashboard', {
-            title: '',/*`Hello ${user.first_name}`,*/
+            title: `${user.first_name} ${user.last_name}'s Profile`,
             first_name: user.first_name,
             last_name: user.last_name,
             email: user.email,
@@ -273,7 +273,7 @@ router.get('/:userid/delete', csrfProtection, asyncHandler(async (req, res, next
     try {
         const user = await User.findById(req.params.userid);
         return res.status(200).render('user-delete', {
-            title: '', /*'User Edit',*/
+            title: 'Delete User',
             user,
             csrfToken: req.csrfToken()
         });
@@ -327,7 +327,7 @@ router.get('/:userid/issue', async (req, res, next) => {
         }
         const issues = await Issue.find({ userid: req.params.userid });
         const user = { _id: req.params.userid };
-        res.render('issue-list', { title: ''/*'Issues'*/, issues, user });
+        res.render('issue-list', { title: 'List of Issues', issues, user });
     } catch (err) {
         next(err);
     }
@@ -406,7 +406,7 @@ router.get('/:userid/issue/find', csrfProtection, async (req, res, next) => {
         const user = await User.findById(req.params.userid);
         const issue = { project: '' };
         res.render('issue-find', {
-            title: '', // 'Find Issue',
+            title: 'Find Issue',
             user,
             issue,
             csrfToken: req.csrfToken()
@@ -431,7 +431,7 @@ router.post('/:userid/issue/find', csrfProtection, issueValidators, asyncHandler
         } else {
             const errors = validatorErrors.array().map((error) => error.msg);
             res.render('issue-list', {
-                title: '', // 'Issues',
+                title: 'Issues',
                 user,
                 issues,
                 errors,
@@ -449,7 +449,7 @@ router.get('/:userid/issue/:issueId/update', csrfProtection, issueValidators, as
         const issue = await Issue.findById({ _id: req.params.issueId });
         const user = { _id: req.params.userid };
         res.render('issue-update', {
-            title: '',
+            title: 'Update Issue',
             issue,
             user,
             csrfToken: req.csrfToken()

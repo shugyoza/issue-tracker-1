@@ -21,9 +21,11 @@ p {
 nav.top {
     width: 99%;
     display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-between;
-    height: 4rem
+    flex-direction: row;
+    height: 4rem;
+    padding-left: 2%;
+    padding-right: 2%;
+    gap: .1rem;
 }
 .nav-link {
     color: midnightblue
@@ -43,6 +45,11 @@ div.alert {
 h1,
 h2 {
     font-size: min(4rem, max(.875rem, 1.5vw));
+    margin-left: 2%;
+}
+h2 {
+    align-self: flex-end;
+    margin-right: 10%;
 }
 div.main {
     margin-top: 3rem;
@@ -62,7 +69,7 @@ div.container {
     box-shadow: -6px 6px 8px 1px rgba(0, 0, 0, 0.2);
     width: 100%;
     min-width: 500px;
-    padding: .5em;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -73,24 +80,18 @@ div.container {
             linear-gradient(217deg, rgba(150,255,75,.8), rgba(0,255,0,0) 70.71%);
 */
 }
+th {
+    background-color: lightgray;
+    border-radius: .3rem;
+}
 tbody {
     width: 95%;
 }
-div.py-4,
-div.py-3,
-div.form-group {
-    margin: 1em;
-}
-
 div.py-3,
 div.py-4 {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    margin-left: 2%
-}
-div.py-3 {
-    margin-top: 0%
 }
 .button {
     border: 1px solid rgba(255, 255, 255, 0.8);
@@ -105,9 +106,8 @@ div.py-3 {
     text-align: center;
     color: white
 }
-h2:hover,
 h1:hover,
-.top-bookmark:hover,
+.button:hover,
 button:hover {
     background: linear-gradient(127deg, rgba(255,150,75,.8), rgba(255,0,0,0) 70.71%),
     linear-gradient(336deg, rgba(75,150,255,.8), rgba(0,0,255,0) 70.71%),

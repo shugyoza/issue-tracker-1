@@ -12,11 +12,12 @@ block content
       a(class='button this-bookmark' role='button') Delete
       a(class='button top-bookmark bg-maroon' href=`/user/${user._id}` role='button') Account
   div(class='container')
+    h2 #{ title }
     +validationErrorSummary(errors)
     form(action=`/user/${user._id}/edit` method='post')
       include user-form-fields.pug
       div(class='py-4')
-        button(class='button bg-blue' type='submit') Save Edit
+        button(class='button bg-blue' type='submit') h2 #{ title }
         a(class='button bg-orange' href=`/user/${user._id}` ) Cancel
         a(class='button bg-red' href=`/user/${user._id}/delete` role='button') Delete
   include footer.pug
