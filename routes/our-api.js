@@ -46,7 +46,7 @@ router.get('/login', csrfProtection, loginValidators, (req, res, next) => {
               email = '';
         if (!req.query.bool) {
             return res.render('user-login', {
-                title: '',
+                title: 'Login',
                 user,
                 csrfToken: req.csrfToken()
             })
@@ -62,7 +62,7 @@ router.get('/login', csrfProtection, loginValidators, (req, res, next) => {
         }
         const errors = validatorErrors.array().map((error) => error.msg);
         res.render('user-login', {
-            title: '',
+            title: 'Login',
             user,
             errors,
             csrfToken: req.csrfToken()
@@ -142,7 +142,7 @@ router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, 
             const errors = validatorErrors.array().map((error) => error.msg);
             user = { email: email, password: password };
             res.render('user-login', {
-                title: '', // 'User Login',
+                title: 'Login', // 'User Login',
                 user,
                 errors,
                 csrfToken: req.csrfToken()
@@ -158,7 +158,7 @@ router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, 
                 const errors = validatorErrors.array().map((error) => error.msg);
                 user = { email: email, password: password };
                 res.render('user-login', {
-                    title: '', // 'User Login',
+                    title: 'Login', // 'User Login',
                     user,
                     errors,
                     csrfToken: req.csrfToken()
@@ -170,7 +170,7 @@ router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, 
         const errors = validatorErrors.array().map((error) => error.msg);
         let user = { email: email, password: password };
         res.render('user-login', {
-            title: '', // 'User Login',
+            title: 'Login', // 'User Login',
             user,
             errors,
             csrfToken: req.csrfToken()

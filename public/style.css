@@ -40,13 +40,12 @@ div.alert {
     border-bottom: none;
     border-left: none;
 }
-h1 {
+h1,
+h2 {
     font-size: min(4rem, max(.875rem, 1.5vw));
 }
-h2 {
-    margin: 1rem;
-}
 div.main {
+    margin-top: 3rem;
     width: 98%;
     min-width: 510px;
     display: flex;
