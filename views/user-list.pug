@@ -17,13 +17,14 @@ block content
           th(scope='col') First Name
           th(scope='col') Last Name
           th(scope='col') Email
+          th(scope='col')
       tbody
         each user in users
           tr
             td= user.first_name
             td= user.last_name
             td= user.email
-            td
+            td(class='update-delete')
               a(class='button bg-blue' href=`/user/${user._id}/edit` role='button') Edit
               a(class='button bg-red' href=`/user/delete/${user._id}` role='button') Delete
   include footer.pug
