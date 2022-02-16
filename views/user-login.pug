@@ -4,13 +4,13 @@ include utils.pug
 
 block content
   nav(class='top')
-    h1(class='btn top-bookmark btn-black' role='button') Issue Tracker
+    h1(class='button top-bookmark btn-black' role='button') Issue Tracker
     div(class='py-3')
-      a(class='btn top-bookmark btn-green' role='button')
-      a(class='btn top-bookmark btn-purple' role='button')
-      a(class='btn top-bookmark btn-orange' role='button')
-      a(class='btn top-bookmark btn-maroon' role='button')
-      a(class='btn top-bookmark btn-pink' href='/readme') Read Me
+      a(class='button top-bookmark btn-green' role='button')
+      a(class='button top-bookmark btn-purple' role='button')
+      a(class='button top-bookmark btn-orange' role='button')
+      a(class='button top-bookmark btn-maroon' role='button')
+      a(class='button top-bookmark btn-pink' href='/readme') Read Me
   div(class='container')
     +validationErrorSummary(errors)
     form(action='/user/login' method='post')
@@ -22,6 +22,6 @@ block content
         label(for='password') Password
         input(type='text' id='password' name='password' value=user.password placeholder='e.g. Password123' class='form-control')
       div(class='py-4')
-        button(type='submit' class='btn btn-blue') Login
-        a(href='/' class='btn btn-orange') Cancel
-        a(href='/user/add' class='btn btn-green') Create New User
+        button(type='submit' class='button btn-blue') Login
+        a(href='/' class='button btn-orange') Cancel
+        a(href='/user/add' class='button btn-green') Create New User

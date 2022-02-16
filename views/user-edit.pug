@@ -4,18 +4,18 @@ include utils.pug
 
 block content
   nav(class='top')
-    h1(class='btn top-bookmark btn-black' role='button') Issue Tracker
+    h1(class='button top-bookmark btn-black' role='button') Issue Tracker
     div(class='py-3')
-      a(class='btn top-bookmark btn-green' href=`/user/${user._id}/issue/add` role='button') Add
-      a(class='btn top-bookmark btn-purple' href=`/user/${user._id}/issue/find` role='button') Find
-      a(class='btn top-bookmark btn-blue' href=`/user/${user._id}/issue` role='button') Issues
-      a(class='btn this-bookmark' role='button') Edit
-      a(class='btn top-bookmark btn-maroon' href=`/user/${user._id}` role='button') Account
+      a(class='button top-bookmark btn-green' href=`/user/${user._id}/issue/add` role='button') Add
+      a(class='button top-bookmark btn-purple' href=`/user/${user._id}/issue/find` role='button') Find
+      a(class='button top-bookmark btn-blue' href=`/user/${user._id}/issue` role='button') Issues
+      a(class='button this-bookmark' role='button') Delete
+      a(class='button top-bookmark btn-maroon' href=`/user/${user._id}` role='button') Account
   div(class='container')
     +validationErrorSummary(errors)
     form(action=`/user/${user._id}/edit` method='post')
       include user-form-fields.pug
       div(class='py-4')
-        button(type='submit' class='btn btn-blue') Save Edit
-        a(href=`/user/${user._id}` class='btn btn-orange') Cancel
-        a(class='btn btn-red' href=`/user/${user._id}/delete` role='button') Delete
+        button(type='submit' class='button btn-blue') Save Edit
+        a(href=`/user/${user._id}` class='button btn-orange') Cancel
+        a(class='button btn-red' href=`/user/${user._id}/delete` role='button') Delete

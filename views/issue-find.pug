@@ -4,15 +4,15 @@ include utils.pug
 
 block content
   nav(class='top')
-    h1(class='btn top-bookmark btn-black' role='button') Issue Tracker
+    h1(class='button top-bookmark btn-black' role='button') Issue Tracker
     div(class='py-3')
-      a(class='btn top-bookmark btn-green' href=`/user/${user._id}/issue/add` role='button') Add
-      a(class='btn this-bookmark btn-purple' role='button') Find
-      a(class='btn top-bookmark btn-orange' href=`/user/${user._id}/issue` role='button') Issues
-      a(class='btn top-bookmark btn-maroon' href=`/user/${user._id}` role='button') Account
+      a(class='button top-bookmark btn-green' href=`/user/${user._id}/issue/add` role='button') Add
+      a(class='button this-bookmark btn-purple' role='button') Find
+      a(class='button top-bookmark btn-orange' href=`/user/${user._id}/issue` role='button') Issues
+      a(class='button top-bookmark btn-maroon' href=`/user/${user._id}` role='button') Account
   div(class='container')
     form(action=`/user/${user._id}/issue/find` method='post')
       include issue-form-fields.pug
       div(class='py-4')
-        button(type='submit' class='btn btn-purple') Find Issue
-        button(onclick='window.location.reload();' type='button' class='btn btn-orange') Clear Fields
+        button(type='submit' class='button btn-purple') Find Issue
+        button(onclick='window.location.reload();' type='button' class='button btn-orange') Clear Fields

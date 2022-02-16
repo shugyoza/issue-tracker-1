@@ -19,11 +19,11 @@ p {
     margin: .3rem
 }
 nav.top {
-    width: 98%;
+    width: 99%;
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-between;
-    height: 6rem
+    height: 4rem
 }
 div.alert {
     background-color: rgba(255,180,175,.8);
@@ -39,15 +39,12 @@ div.alert {
 }
 h1 {
     font-size: min(4rem, max(.875rem, 1.5vw));
-    margin-top: 3%;
-    margin-right: 6%;
-    line-height: 2rem;
 }
 h2 {
     margin: 1rem;
 }
 div.main {
-    width: 99%;
+    width: 98%;
     min-width: 510px;
     display: flex;
     flex-direction: column;
@@ -61,7 +58,7 @@ div.container {
     border-radius: .4em;
     background-color: #FAF9F6; /* #90dcff; */
     box-shadow: -6px 6px 8px 1px rgba(0, 0, 0, 0.2);
-    width: 99%;
+    width: 100%;
     min-width: 500px;
     padding: .5em;
     display: flex;
@@ -91,9 +88,9 @@ div.py-4 {
     margin-left: 2%
 }
 div.py-3 {
-    margin-bottom: 4.5%
+    margin-top: 0%
 }
-.btn {
+.button {
     border: 1px solid rgba(255, 255, 255, 0.8);
     border-bottom: none;
     border-left: none;
@@ -106,6 +103,7 @@ div.py-3 {
     text-align: center;
     color: white
 }
+h1:hover,
 a:hover,
 button:hover {
     background: linear-gradient(127deg, rgba(255,150,75,.8), rgba(255,0,0,0) 70.71%),
@@ -147,8 +145,9 @@ button:hover {
 .top-bookmark {
     border-top-left-radius: .5em;
     border-top-right-radius: .5em;
+    height: 4rem;
 }
-a.this-bookmark {
+.this-bookmark {
     border-top: 1px solid lightgrey;
     border-right: 1px solid lightgrey;
     border-left: 1px solid rgba(0, 0, 0, 0.2);
@@ -180,7 +179,7 @@ textarea {
     resize: vertical
 }
 
-a.signup {
+.signup {
     margin-left: 1.5em;
     color: navy;
     /* font-size: 1.1em; */

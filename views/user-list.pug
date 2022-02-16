@@ -2,13 +2,13 @@ extends head.pug
 
 block content
   nav(class='top')
-    h1(class='btn top-bookmark btn-black' role='button') Issue Tracker
+    h1(class='button top-bookmark btn-black' role='button') Issue Tracker
     div(class='py-3')
-      a(class='btn top-bookmark btn-purple' role='button')
-      a(class='btn top-bookmark btn-orange' role='button')
-      a(class='btn top-bookmark btn-blue' role='button')
-      a(class='btn top-bookmark btn-green' href=`/user/add` role='button') Add User
-      a(class='btn top-bookmark btn-pink' href='/readme') Read Me
+      a(class='button top-bookmark btn-purple' role='button')
+      a(class='button top-bookmark btn-orange' role='button')
+      a(class='button top-bookmark btn-blue' role='button')
+      a(class='button top-bookmark btn-green' href=`/user/add` role='button') Add User
+      a(class='button top-bookmark btn-pink' href='/readme') Read Me
   div(class='container')
     table(class='table table-striped table-hover')
       thead(class='thead-dark')
@@ -23,5 +23,5 @@ block content
             td= user.last_name
             td= user.email
             td
-              a(class='btn btn-blue' href=`/user/${user._id}/edit` role='button') Edit
-              a(class='btn btn-red' href=`/user/delete/${user._id}` role='button') Delete
+              a(class='button btn-blue' href=`/user/${user._id}/edit` role='button') Edit
+              a(class='button btn-red' href=`/user/delete/${user._id}` role='button') Delete

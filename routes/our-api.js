@@ -202,7 +202,7 @@ router.get('/:userid', csrfProtection, asyncHandler(async (req, res) => {
 }))
 
 // GET form to edit user. DO NOT put this AFTER '/:userid/:issue' !
-router.get('/:userid/edit', csrfProtection, userValidators, asyncHandler(async (req, res) => {
+router.get('/:userid/edit', csrfProtection, userValidators, asyncHandler(async (req, res, next) => {
     try {
         const user = await User.findById(req.params.userid);
         res.render('user-edit', {
@@ -218,7 +218,6 @@ router.get('/:userid/edit', csrfProtection, userValidators, asyncHandler(async (
 // PUT form to edit user. DO NOT put this AFTER '/:userid/:issue' !
 router.post('/:userid/edit', csrfProtection, userValidators, asyncHandler(async (req, res, next) => {
     try {
-        console.log(req.body)
         const { first_name, last_name, email, password } = req.body;
         const user = await User.findById(req.params.userid);
         const validatorErrors = validationResult(req);
@@ -269,49 +268,50 @@ router.post('/:userid/edit', csrfProtection, userValidators, asyncHandler(async 
 }));
 
 
-
-
-// const { first_name, last_name, email, password } = req.body;
-// const validatorErrors = validationResult(req);
-// const user = await User.findById(req.params.userid);
-// user.first_name = first_name;
-// user.last_name = last_name;
-// user.email = email;
-// user.password = password;
-// if (validatorErrors.isEmpty()) {
-//     await user.save();
-//     res.render('user-dashboard', {
-//         title: '', /*`Hello ${user.first_name}`,*/
-//         first_name: user.first_name,
-//         last_name: user.last_name,
-//         email: user.email,
-//         user,
-//         csrfToken: req.csrfToken()
-//     });
-//     } else {
-//     const errors = validatorErrors.array().map((error) => error.msg);
-//     res.render('user-login', {
-//         title: '', // 'User Login',
-//         user,
-//         errors,
-//         csrfToken: req.csrfToken()
-//     });
-// }
-
-
-
-
-
-
-// GET form to edit user. DO NOT put this AFTER '/:userid/:issue' !
-router.get('/:userid/delete', csrfProtection, userValidators, asyncHandler(async (req, res) => {
+// GET form to delete user. DO NOT put this AFTER '/:userid/:issue' !
+router.get('/:userid/delete', csrfProtection, asyncHandler(async (req, res, next) => {
     try {
         const user = await User.findById(req.params.userid);
-        res.render('user-edit', {
+        return res.status(200).render('user-delete', {
             title: '', /*'User Edit',*/
             user,
             csrfToken: req.csrfToken()
         });
+    } catch (err) {
+        next(err);
+    }
+}))
+
+// DELETE form to delete user. DO NOT put this AFTER '/:userid/:issue' !
+router.post('/:userid/delete', csrfProtection, asyncHandler(async (req, res, next) => {
+    try {
+        await User.findByIdAndDelete(req.params.userid);
+        return res.status(302).redirect('/user/login');
+    } catch (err) {
+        next(err);
+    }
+}))
+
+// GET form to delete user. DO NOT put this AFTER '/:userid/:issue' !
+router.get('/delete/:userid', csrfProtection, asyncHandler(async (req, res, next) => {
+    try {
+        const user = await User.findById(req.params.userid);
+        return res.status(200).render('user-delete', {
+            title: '', /*'User Edit',*/
+            user,
+            csrfToken: req.csrfToken()
+        });
+    } catch (err) {
+        next(err);
+    }
+}))
+
+
+// DELETE form to delete user. DO NOT put this AFTER '/:userid/:issue' !
+router.post('/delete/:userid', csrfProtection, asyncHandler(async (req, res, next) => {
+    try {
+        await User.findByIdAndDelete(req.params.userid);
+        return res.status(302).redirect('/user/login');
     } catch (err) {
         next(err);
     }
