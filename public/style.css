@@ -116,31 +116,31 @@ button:hover {
     box-shadow: none;
     z-index: 1
 }
-.btn-blue {
+.bg-blue {
     background-color: blue
 }
-.btn-purple {
+.bg-purple {
     background-color: #49297e;
 }
-.btn-pink {
+.bg-pink {
     background-color: #FF1493;
 }
-.btn-red {
+.bg-red {
     background-color: red;
 }
-.btn-maroon{
+.bg-maroon{
     background-color: maroon;
 }
-.btn-yellow {
+.bg-yellow {
     background-color: #AC7D0C;
 }
-.btn-orange {
+.bg-orange {
     background-color: #F56500;
 }
-.btn-green {
+.bg-green {
     background-color: darkgreen;
 }
-.btn-black {
+.bg-black {
     background-color: black;
 }
 .this-bookmark,

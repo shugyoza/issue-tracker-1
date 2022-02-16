@@ -5,18 +5,18 @@ include utils.pug
 block content
   +validationErrorSummary(errors)
   nav(class='top')
-    h1(class='button top-bookmark btn-black' role='button') Issue Tracker
+    h1(class='button top-bookmark bg-black' role='button') Issue Tracker
     div(class='py-3')
-      a(class='button top-bookmark btn-green' href=`/user/${user._id}/issue/add` role='button') Add
-      a(class='button top-bookmark btn-purple' href=`/user/${user._id}/issue/find` role='button') Find
+      a(class='button top-bookmark bg-green' href=`/user/${user._id}/issue/add` role='button') Add
+      a(class='button top-bookmark bg-purple' href=`/user/${user._id}/issue/find` role='button') Find
       a(class='button this-bookmark' role='button') Update
-      a(class='button top-bookmark btn-orange' href=`/user/${user._id}/issue` role='button') Issues
-      a(class='button top-bookmark btn-maroon' href=`/user/${user._id}` role='button') Account
+      a(class='button top-bookmark bg-orange' href=`/user/${user._id}/issue` role='button') Issues
+      a(class='button top-bookmark bg-maroon' href=`/user/${user._id}` role='button') Account
   div(class='container')
     form(action=`/user/${user._id}/issue/${issue._id}/update` method='post')
       include issue-form-fields.pug
       div(class='py-4')
-        button(type='submit' class='btn btn-blue') Save Update
-        button(onclick='window.location.reload();' type='button' class='button btn-orange') Reset Fields
-        a(class='button btn-red' href=`/user/${user._id}/issue/${issue._id}/delete` role='button') Delete Issue
+        button(class='button bg-blue' type='submit') Save Update
+        button(class='button bg-orange' onclick='window.location.reload();' type='button') Reset Fields
+        a(class='button bg-red' href=`/user/${user._id}/issue/${issue._id}/delete` role='button') Delete Issue
   include footer.pug
