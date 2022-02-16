@@ -9,7 +9,7 @@ block content
     div(class='py-3')
       a(class='button top-bookmark bg-green' href=`/user/${user._id}/issue/add` role='button') Add
       a(class='button top-bookmark bg-purple' href=`/user/${user._id}/issue/find` role='button') Find
-      a(class='button this-bookmark' role='button') Delete
+      a(class='button this-bookmark' role='button') #{ title }
       a(class='button top-bookmark bg-orange' href=`/user/${user._id}/issue` role='button') Issues
       a(class='button top-bookmark bg-maroon' href=`/user/${user._id}` role='button') Account
   div(class='container')
@@ -18,6 +18,6 @@ block content
     form(action=`/user/${user._id}/issue/${issue._id}/delete` method='post')
       include issue-form-fields.pug
       div(class='py-4')
-        button(class='button bg-red' type='submit' ) Delete Issue
-        a(class='button bg-orange' href=`/user/${user._id}/issue/${issue._id}/update`) Cancel Delete
+        a(class='button bg-orange' href=`/user/${user._id}/issue/${issue._id}/update`) Cancel
+        button(class='button bg-red' type='submit' ) #{ title }
   include footer.pug

@@ -105,8 +105,9 @@ div.py-3 {
     text-align: center;
     color: white
 }
+h2:hover,
 h1:hover,
-a:hover,
+.top-bookmark:hover,
 button:hover {
     background: linear-gradient(127deg, rgba(255,150,75,.8), rgba(255,0,0,0) 70.71%),
     linear-gradient(336deg, rgba(75,150,255,.8), rgba(0,0,255,0) 70.71%),
@@ -153,6 +154,7 @@ button:hover {
     border-right: 1px solid lightgrey;
     border-left: 1px solid rgba(0, 0, 0, 0.2);
     box-shadow: none;
+    justify-self: flex-start;
     margin-left: 0%;
     background-color: #FAF9F6;
     z-index: 1;

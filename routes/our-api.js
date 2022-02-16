@@ -32,7 +32,7 @@ router.get('/', async (req, res, next) => {
 router.get('/add', csrfProtection, (req, res) => {
     const user = {}; // new User({});
     res.render('user-add', {
-        title: '', // 'Create User',
+        title: 'Create User', // 'Create User',
         user,
         csrfToken: req.csrfToken()
     })
@@ -110,7 +110,7 @@ router.post('/add', csrfProtection, userValidators, asyncHandler(async (req, res
         const errors = validatorErrors.array().map((error) => error.msg);
         if (!validatorErrors.isEmpty || errors.length) {
             return res.status(400).render('user-add', {
-                title: '', // 'User Login',
+                title: 'Create User',
                 user,
                 errors,
                 csrfToken: req.csrfToken()
@@ -343,7 +343,7 @@ router.get('/:userid/issue/add', csrfProtection, userValidators, asyncHandler(as
         user = await User.findById(req.params.userid);
         const issue = {};
         res.render('issue-add', {
-            title: '',
+            title: 'Add Issue',
             issue,
             user,
             csrfToken: req.csrfToken()
@@ -388,7 +388,7 @@ router.post('/:userid/issue/add', csrfProtection, issueValidators, asyncHandler(
     } else {
         const errors = validatorErrors.array().map((error) => error.msg);
         res.render('issue-add', {
-            title: '', // 'Add Issue',
+            title: 'Add Issue',
             issue,
             user,
             errors,
@@ -506,7 +506,7 @@ router.get('/:userid/issue/:issueId/delete', csrfProtection, issueValidators, as
         const issue = await Issue.findById(req.params.issueId);
         const user = { _id: req.params.userid };
         res.render('issue-delete', {
-            title: '',
+            title: 'Delete Issue',
             issue,
             user,
             csrfToken: req.csrfToken()
