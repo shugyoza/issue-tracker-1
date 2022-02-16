@@ -32,7 +32,7 @@ block content
             td= issue.assignee
             td= issue.status
             td= issue.updated
-            td
+            td(class='update-delete')
               a(class='button btn-blue' href=`/user/${user._id}/issue/${issue._id}/update` role='button') Update
               a(class='button btn-red' href=`/user/${user._id}/issue/${issue._id}/delete` role='button') Delete
   include footer

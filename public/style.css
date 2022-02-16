@@ -25,6 +25,9 @@ nav.top {
     justify-content: space-between;
     height: 4rem
 }
+.nav-link {
+    color: midnightblue
+}
 div.alert {
     background-color: rgba(255,180,175,.8);
     color: red;
@@ -132,8 +135,7 @@ button:hover {
     background-color: #AC7D0C;
 }
 .btn-orange {
-    background-color: orange;
-    color: black;
+    background-color: #F56500;
 }
 .btn-green {
     background-color: darkgreen;
@@ -178,13 +180,15 @@ textarea {
     font-family:sans-serif;
     resize: vertical
 }
-
+.update-delete {
+    display: flex;
+    flex-direction: column;
+}
 .signup {
     margin-left: 1.5em;
     color: navy;
     /* font-size: 1.1em; */
 }
-
 .inner {
     background-color: white;
     padding: 1em;
@@ -195,4 +199,13 @@ textarea {
     margin: 1em;
     overflow: auto;
     width: fit-content;
+}
+footer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1.5rem;
+    font-size: min(4rem, max(.875rem, 1.5vw));
 }
