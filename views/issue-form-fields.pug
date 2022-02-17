@@ -2,7 +2,7 @@ div
   input(type='hidden' name='_csrf' value=csrfToken)
   div(class='form-group')
     label(for='project') Project
-    input(type='text' id='project' name='project' value=issue.project placeholder='e.g. Project X' class='form-control')
+    input(type='text' id='project' name='project' placeholder=`${issue.project ? issue.project : 'e.g. Project X'}` class='form-control')
   div(class='form-group')
     label(for='issue_type') Issue Type
     select(name='issue_type' id='issue_type' value=issue.issue_type class='form-control')
