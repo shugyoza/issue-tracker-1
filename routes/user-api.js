@@ -1,7 +1,7 @@
 'use strict'
 const   express = require('express'),
         csrf = require('csurf'),
-        { validationResult } = require('express-validator')
+        { validationResult } = require('express-validator');
 
 const   User = require('../db/models/user'),
 //        Issue = require('../db/models/issue'),
@@ -47,7 +47,7 @@ router.get('/login', csrfProtection, loginValidators, (req, res, next) => {
         const user = {},
               validatorErrors = validationResult(req),
               email = '';
-        if (!req.query.bool) {
+        if (!req.query.bool && !req.query.registered) {
             return res.status(200).render('user-login', {
                 title: 'Login',
                 user,
@@ -56,12 +56,21 @@ router.get('/login', csrfProtection, loginValidators, (req, res, next) => {
         }
         // handle redirect from any attempt to access any page without login
         if (req.query.bool === 'false') {
-            validatorErrors.errors.push({
+            validatorErrors.errors = [{
                 value: email,
                 msg: `You must login to access that page.`,
                 param: 'user',
                 location: 'body'
-            })
+            }];
+        }
+        // handle redirect from attempt to register an email already exists in database
+        if (req.query.registered === 'true') {
+            validatorErrors.errors = [{
+                value: email,
+                msg: 'Email already registered. Please login.',
+                param: 'user',
+                location: 'body'
+            }];
         }
         const errors = validatorErrors.array().map((error) => error.msg);
         return res.status(400).render('user-login', {
@@ -124,6 +133,10 @@ router.post('/add', csrfProtection, userValidators, asyncHandler(async (req, res
             return res.status(302).redirect(`/user/${user._id}`);
         }
     } catch (err) {
+        // catching errors thrown because of duplicate index (email already exist)
+        if (err.code === 11000) {
+            return res.status(302).redirect('/user/login?registered=true')
+        }
         next(err);
     }
 }));

@@ -21,7 +21,7 @@ const userSchema = new Schema({
     },
     email: { // is not cAse sEnsitive, no need 'lowercase: true'
         type: String,
-        unique: true, // index for email unique checking
+        unique: true, // index for email unique checking, have to use validator that works with it.
         trim: true,
         required: [true, 'Email is required']
     },
