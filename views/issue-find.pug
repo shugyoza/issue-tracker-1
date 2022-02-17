@@ -11,9 +11,11 @@ block content
       a(class='button top-bookmark bg-orange' href=`/user/${user._id}/issue` role='button') Issues
       a(class='button top-bookmark bg-maroon' href=`/user/${user._id}` role='button') Account
   div(class='container')
-    h2 #{ title }
+    div(class='sub-head')
+      a(class='logout txt-red' href=`/`) Logout
+      h2 #{ title }
     form(action=`/user/${user._id}/issue/find` method='post')
-      include form-add-issue.pug
+      include form-find-issue.pug
       div(class='py-4')
         button(class='button bg-purple' type='submit') #{ title }
         button(class='button bg-orange' onclick='window.location.reload();' type='button') Clear Fields

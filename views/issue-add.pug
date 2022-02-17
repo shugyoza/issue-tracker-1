@@ -12,7 +12,9 @@ block content
       a(class='button top-bookmark bg-maroon' href=`/user/${user._id}` role='button') Account
       a(class='button top-bookmark bg-pink' href='/readme') Read Me
   div(class='container')
-    h2 #{ title }
+    div(class='sub-head')
+      a(class='logout txt-red' href=`/`) Logout
+      h2 #{ title }
     +validationErrorSummary(errors)
     form(action=`/user/${user._id}/issue/add` method='post')
       include form-add-issue.pug

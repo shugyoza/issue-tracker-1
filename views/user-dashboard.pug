@@ -13,7 +13,9 @@ block content
       a(class='button this-bookmark' role='button') Account
 
   div(class='container')
-    h2 #{ title }
+    div(class='sub-head')
+      a(class='logout txt-red' href=`/`) Logout
+      h2 #{ title }
     div(class='inner')
       p First Name: #{first_name}
       p Last Name: #{last_name}

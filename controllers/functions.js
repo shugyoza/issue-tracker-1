@@ -6,6 +6,7 @@ function Funct() {
     this.functionName = function(input) {
         return true;
     }
+    // function to check if a string is a valid mongo ID
     this.isValidId = (id_string) => {
         if(ObjectId.isValid(id_string)) {
             if ((String)(new ObjectId(id_string)) === id_string) return true;
@@ -13,6 +14,7 @@ function Funct() {
         }
         return false;
     }
+    // function to check if a string of name can be considered valid
     this.isValidName = (name_string) => {
         const regex = /^(?![\s.]+$)[a-zA-Z\s.]*$/;
         const matched = name_string.match(regex);
@@ -25,6 +27,32 @@ function Funct() {
             if (!reqBody[key].length) delete reqBody[key];
         }
         return reqBody;
-    }}
+    }
+    // function to convert an object into a string or req.query
+    this.stringify_obj_into_url_query_str = (obj) => {
+        let result = '';
+        for (let key in obj) {
+            if (key === '_csrf') continue;
+            else result += `${key}:${obj[key]}%20`;
+        }
+        result = result.slice(0, result.length - 3)
+        return result;
+    }
+    // function to convert a string of req.query into an object
+    this.objectify_url_query_str = (str) => {
+        const   arr_of_keyVal = str.split('%20'),
+                resObj = {};
+        for (let i = 0; i < arr_of_keyVal.length; i++) {
+            let strEl = arr_of_keyVal[i],
+                idx = strEl.indexOf(':'),
+                keyStr = strEl.slice(0, idx),
+                valStr = strEl.slice(idx + 1);
+            resObj[keyStr] = valStr;
+        }
+        return resObj;
+    }
+
+
+}
 
 module.exports = Funct;

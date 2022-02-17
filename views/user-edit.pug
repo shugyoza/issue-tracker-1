@@ -9,10 +9,12 @@ block content
       a(class='button top-bookmark bg-green' href=`/user/${user._id}/issue/add` role='button') Add
       a(class='button top-bookmark bg-purple' href=`/user/${user._id}/issue/find` role='button') Find
       a(class='button top-bookmark bg-blue' href=`/user/${user._id}/issue` role='button') Issues
-      a(class='button this-bookmark' role='button') Delete
+      a(class='button this-bookmark' role='button') Edit
       a(class='button top-bookmark bg-maroon' href=`/user/${user._id}` role='button') Account
   div(class='container')
-    h2 #{ title }
+    div(class='sub-head')
+      a(class='logout txt-red' href=`/`) Logout
+      h2 #{ title }
     +validationErrorSummary(errors)
     form(action=`/user/${user._id}/edit` method='post')
       include user-form-fields.pug

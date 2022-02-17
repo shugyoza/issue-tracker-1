@@ -45,10 +45,10 @@ div.alert {
 h1 {
     margin: 1rem;
 }
-h2 {
+h2,
+.logout {
     font-size: min(4rem, max(.875rem, 1.5vw));
-    align-self: flex-end;
-    margin-right: 8rem;
+    align-self: center;
 }
 div.main {
     margin-top: 3rem;
@@ -75,6 +75,14 @@ div.container {
     justify-content: center;
     align-items: center;
     overflow: both;
+}
+.sub-head {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    margin-bottom: 3rem;
 }
 th {
     background-color: lightgray;
@@ -139,6 +147,9 @@ button:hover {
 .bg-black {
     background-color: black;
 }
+.txt-red {
+    color: red;
+}
 .this-bookmark,
 .top-bookmark {
     border-top-left-radius: .5em;
@@ -160,7 +171,8 @@ form {
 }
 .form-group {
     margin-left: 2rem;
-    margin-right: 2rem
+    margin-right: 2rem;
+    margin-bottom: 3rem;
 }
 .form-control {
     border: 1px solid rgba(25, 25, 112, 0.4);
@@ -170,6 +182,7 @@ form {
     box-shadow: 2px -2px 2px -2px rgba(0, 0, 0, 0.2);
     font-size: min(4rem, max(.875rem, 1.5vw));
     padding: .4rem;
+    height: fit-content
 }
 textarea {
     font-family:sans-serif;

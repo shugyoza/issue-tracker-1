@@ -21,12 +21,17 @@ let funct = new Funct();
 const asyncHandler = (handler) => (req, res, next) => handler(req, res, next).catch(next);
 
 // GET list of all issues made under this user
-router.get('/:userid/issue', async (req, res, next) => {
+router.get('/:userid/:issue', async (req, res, next) => {
     try {
+        let q;
         if (!funct.isValidId(req.params.userid)) {
             return res.status(302).redirect('/user/login?bool=false');
         }
-        const issues = await Issue.find({ userid: req.params.userid });
+        if (req.params.issue && req.query.q) {
+            // turn the string into a valid object for querying database
+            q = funct.objectify_url_query_str(req.query.q);
+        }
+        const issues = await Issue.find(q);
         const user = { _id: req.params.userid };
         return res.status(200).render('issue-list', { title: 'List of Issues', issues, user });
     } catch (err) {
@@ -117,33 +122,20 @@ router.get('/:userid/issue/find', csrfProtection, async (req, res, next) => {
 });
 
 // POST form to find issue(s) with a set of criteria
-router.post('/:userid/issue/find', csrfProtection, findIssueValidators, asyncHandler(async (req, res, next) => {
+router.post('/:userid/:issue/find', csrfProtection, asyncHandler(async (req, res, next) => {
     try {
-        const { project, issue_type, summary, description, reporter, assignee, status } = req.body;
-        let query = funct.getInput(req.body);
-        if (!query.length) {
+        let queryObj = funct.getInput(req.body);
+        console.log(128, queryObj, !queryObj.length)
+        if (!queryObj) {
             return res.status(302).redirect(`/user/${req.params.userid}/issue`);
         }
-
-        const validatorErrors = validationResult(req);
-        const issues = await Issue.find(req.body).exec();
-        const user = { _id: req.params.userid };
-        if (validatorErrors.isEmpty()) {
-            res.status(302)._idredirect(`/user/${req.params.userid}/issue/find?${'key=value'}`)
-        } else {
-            const errors = validatorErrors.array().map((error) => error.msg);
-            return res.status(400).render('issue-list', {
-                title: 'Find Issue',
-                user,
-                issues,
-                errors,
-                csrfToken: req.csrfToken()
-            });
-        }
-        } catch (err) {
-            next(err);
-        }
-    }))
+        let queryStr = funct.stringify_obj_into_url_query_str(queryObj);
+        console.log(queryStr)
+        return res.status(302).redirect(`/user/${req.params.userid}/issue?q=${queryStr}`)
+    } catch (err) {
+        next(err);
+    }
+}))
 
 // GET form to update issue
 router.get('/:userid/issue/:issueId/update', csrfProtection, async (req, res, next) => {

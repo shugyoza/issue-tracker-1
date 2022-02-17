@@ -10,7 +10,9 @@ block content
       a(class='button top-bookmark bg-blue' role='button')
       a(class='button top-bookmark bg-pink' href='/readme') Read Me
   div(class='container')
-    h2 #{ title }
+    div(class='sub-head')
+      a(class='logout txt-red' href=`/`)
+      h2 #{ title }
     table(class='table table-striped table-hover')
       thead(class='thead-dark')
         tr
