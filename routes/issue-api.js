@@ -77,9 +77,9 @@ router.post('/:userid/issue/add', csrfProtection, createIssueValidators, asyncHa
         assignee: assignee,
         status: status,
         userid: req.params.userid
-    }); // created, updated, open, and log filled by default
+    }); // .created, .updated, .open, and .log filled by default
 
-    const user = { _id: req.params.userid };
+    const user = await User.findById(req.params.userid);;
     const validatorErrors = validationResult(req);
 
     if (validatorErrors.isEmpty()) {

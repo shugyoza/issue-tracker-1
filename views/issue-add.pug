@@ -15,7 +15,7 @@ block content
     h2 #{ title }
     +validationErrorSummary(errors)
     form(action=`/user/${user._id}/issue/add` method='post')
-      include issue-form-fields.pug
+      include form-add-issue.pug
       div(class='py-4')
         button(class='button bg-green' type='submit') #{ title }
         button(onclick='window.location.reload();' type='button' class='button bg-orange') Clear Fields

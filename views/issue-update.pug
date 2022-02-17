@@ -15,7 +15,7 @@ block content
   div(class='container')
     h2 #{ title }
     form(action=`/user/${user._id}/issue/${issue._id}/update` method='post')
-      include issue-form-fields.pug
+      include form-add-issue.pug
       div(class='py-4')
         button(class='button bg-blue' type='submit') Save Update
         button(class='button bg-orange' onclick='window.location.reload();' type='button') Reset Fields

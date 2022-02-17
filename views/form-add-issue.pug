@@ -16,7 +16,7 @@ div
     input(type='text' id='summary' name='summary' value=issue.summary placeholder=issue.summary ? issue.summary : '- required -' class='form-control' required)
   div(class='form-group')
     label(for='description') Desription
-    textarea(cols="30", rows="3" type='text' id='description' name='description' value=issue.description placeholder=issue.description ? issue.description : 'e.g. All the details here. Drag drop right-bottom corner to resize.' class='form-control' required)
+    textarea(cols="30", rows="3" type='text' id='description' name='description' value=issue.description placeholder=issue.description ? issue.description : '- required - drag right-bottom corner to resize.' class='form-control' required)
   div(class='form-group')
     label(for='priority') Priority
     select(name='priority' id='priority' value=issue.priority class='form-control' required)
