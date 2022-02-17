@@ -32,7 +32,7 @@ const issueSchema = new Schema({
     reporter: {
         type: String,
         trim: true,
-        required: [true, 'Created by is required.']
+        required: [true, 'Reporter is required.']
     },
     priority: {
         type: String,

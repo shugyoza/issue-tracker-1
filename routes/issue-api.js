@@ -42,8 +42,8 @@ router.get('/:userid/issue/add', csrfProtection, userValidators, asyncHandler(as
             return res.status(302).redirect('/user/login?bool=false');
         }
         user = await User.findById(req.params.userid);
-        const issue = {};
-        return res.status(200).res.render('issue-add', {
+        const issue = { reporter: `${user.first_name} ${user.last_name}`};
+        return res.status(200).render('issue-add', {
             title: 'Add Issue',
             issue,
             user,
@@ -76,9 +76,8 @@ router.post('/:userid/issue/add', csrfProtection, createIssueValidators, asyncHa
         reporter: reporter,
         assignee: assignee,
         status: status,
-        log: [],
         userid: req.params.userid
-    });
+    }); // created, updated, open, and log filled by default
 
     const user = { _id: req.params.userid };
     const validatorErrors = validationResult(req);
@@ -105,7 +104,7 @@ router.get('/:userid/issue/find', csrfProtection, async (req, res, next) => {
             return res.status(302).redirect('/user/login?bool=false');
         }
         const user = await User.findById(req.params.userid);
-        const issue = { project: '' };
+        const issue = { };
         return res.status(200).render('issue-find', {
             title: 'Find Issue',
             user,
