@@ -8,7 +8,6 @@ const   User = require('../db/models/user'),
         Funct = require('../controllers/functions.js');
 
 const {
-//    loginValidators,
     userValidators,
     createIssueValidators,
     findIssueValidators,
@@ -25,11 +24,11 @@ const asyncHandler = (handler) => (req, res, next) => handler(req, res, next).ca
 router.get('/:userid/issue', async (req, res, next) => {
     try {
         if (!funct.isValidId(req.params.userid)) {
-            return res.redirect('/user/login?bool=false');
+            return res.status(302).redirect('/user/login?bool=false');
         }
         const issues = await Issue.find({ userid: req.params.userid });
         const user = { _id: req.params.userid };
-        res.render('issue-list', { title: 'List of Issues', issues, user });
+        return res.status(200).render('issue-list', { title: 'List of Issues', issues, user });
     } catch (err) {
         next(err);
     }
@@ -44,7 +43,7 @@ router.get('/:userid/issue/add', csrfProtection, userValidators, asyncHandler(as
         }
         user = await User.findById(req.params.userid);
         const issue = {};
-        res.render('issue-add', {
+        return res.status(200).res.render('issue-add', {
             title: 'Add Issue',
             issue,
             user,
@@ -122,14 +121,16 @@ router.get('/:userid/issue/find', csrfProtection, async (req, res, next) => {
 router.post('/:userid/issue/find', csrfProtection, findIssueValidators, asyncHandler(async (req, res, next) => {
     try {
         const { project, issue_type, summary, description, reporter, assignee, status } = req.body;
-        for (let key in req.body) {
-            if (req.body[key] === '') delete req.body[key];
+        let query = funct.getInput(req.body);
+        if (!query.length) {
+            return res.status(302).redirect(`/user/${req.params.userid}/issue`);
         }
+
         const validatorErrors = validationResult(req);
         const issues = await Issue.find(req.body).exec();
         const user = { _id: req.params.userid };
         if (validatorErrors.isEmpty()) {
-            res.redirect(`/user/${req.params.userid}/issue/find?${}`)
+            res.redirect(`/user/${req.params.userid}/issue/find?${'key=value'}`)
         } else {
             const errors = validatorErrors.array().map((error) => error.msg);
             res.render('issue-list', {

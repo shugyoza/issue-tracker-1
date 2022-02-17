@@ -25,7 +25,7 @@ const asyncHandler = (handler) => (req, res, next) => handler(req, res, next).ca
 router.get('/', async (req, res, next) => {
     try {
         const users = await User.find({});
-        res.render('user-list', { title: 'Users', users });
+        return res.status(200).render('user-list', { title: 'Users', users });
     } catch (err) {
         next(err);
     }
@@ -34,7 +34,7 @@ router.get('/', async (req, res, next) => {
 // GET form to register a new user
 router.get('/add', csrfProtection, (req, res) => {
     const user = {}; // new User({});
-    res.render('user-add', {
+    return res.status(200).render('user-add', {
         title: 'Create User', // 'Create User',
         user,
         csrfToken: req.csrfToken()
@@ -48,7 +48,7 @@ router.get('/login', csrfProtection, loginValidators, (req, res, next) => {
               validatorErrors = validationResult(req),
               email = '';
         if (!req.query.bool) {
-            return res.render('user-login', {
+            return res.status(200).render('user-login', {
                 title: 'Login',
                 user,
                 csrfToken: req.csrfToken()
@@ -64,7 +64,7 @@ router.get('/login', csrfProtection, loginValidators, (req, res, next) => {
             })
         }
         const errors = validatorErrors.array().map((error) => error.msg);
-        res.render('user-login', {
+        return res.status(400).render('user-login', {
             title: 'Login',
             user,
             errors,
@@ -121,7 +121,7 @@ router.post('/add', csrfProtection, userValidators, asyncHandler(async (req, res
         }
         else {
             await user.save();
-            return res.redirect(`/user/${user._id}`);
+            return res.status(302).redirect(`/user/${user._id}`);
         }
     } catch (err) {
         next(err);
@@ -138,13 +138,13 @@ router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, 
         if (!user) {
             validatorErrors.errors.push({
                 value: email,
-                msg: 'This email is not in database.',
+                msg: 'Invalid email address / password.',
                 param: 'email',
                 location: 'body'
             });
             const errors = validatorErrors.array().map((error) => error.msg);
             user = { email: email, password: password };
-            res.render('user-login', {
+            return res.status(400).render('user-login', {
                 title: 'Login', // 'User Login',
                 user,
                 errors,
@@ -160,19 +160,19 @@ router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, 
                 });
                 const errors = validatorErrors.array().map((error) => error.msg);
                 user = { email: email, password: password };
-                res.render('user-login', {
+                return res.status(400).render('user-login', {
                     title: 'Login', // 'User Login',
                     user,
                     errors,
                     csrfToken: req.csrfToken()
                 })
             }
-            else res.redirect(`./${user._id}`);
+            else res.redirect(`/user/${user._id}`);
         }
     } else {
         const errors = validatorErrors.array().map((error) => error.msg);
         let user = { email: email, password: password };
-        res.render('user-login', {
+        return res.status(400).render('user-login', {
             title: 'Login', // 'User Login',
             user,
             errors,
@@ -188,10 +188,10 @@ router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, 
 router.get('/:userid', csrfProtection, asyncHandler(async (req, res) => {
     try {
         if (!funct.isValidId(req.params.userid)) {
-            return res.redirect('/user/login?bool=false');
+            return res.status(302).redirect('/user/login?bool=false');
         }
         const user = await User.findById(req.params.userid);
-        res.render('user-dashboard', {
+        res.status(200).render('user-dashboard', {
             title: `${user.first_name} ${user.last_name}'s Profile`,
             first_name: user.first_name,
             last_name: user.last_name,
@@ -208,7 +208,7 @@ router.get('/:userid', csrfProtection, asyncHandler(async (req, res) => {
 router.get('/:userid/edit', csrfProtection, userValidators, asyncHandler(async (req, res, next) => {
     try {
         const user = await User.findById(req.params.userid);
-        res.render('user-edit', {
+        return res.status(200).render('user-edit', {
             title: 'Edit User',
             user,
             csrfToken: req.csrfToken()
@@ -263,7 +263,7 @@ router.post('/:userid/edit', csrfProtection, userValidators, asyncHandler(async 
             if (email) user.email = email;
             if (password) user.password = password;
             await user.save();
-            return res.redirect(`/user/${user._id}`);
+            return res.status(302).redirect(`/user/${user._id}`);
         }
     } catch (err) {
         next(err);
