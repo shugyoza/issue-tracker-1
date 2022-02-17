@@ -4,7 +4,9 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 require('dotenv').config();
-const ourRoutes = require('./routes/our-api.js');
+const userRoutes = require('./routes/user-api.js');
+const issueRoutes = require('./routes/issue-api.js');
+
 // const { port } = require('./config');
 
 const app = express();
@@ -16,7 +18,8 @@ app.use('/public', express.static(process.cwd() + '/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use('/user', ourRoutes);
+app.use('/user', userRoutes);
+app.use('/user', issueRoutes);
 
 
 app.get('/', (req, res) => {

@@ -20,7 +20,7 @@ function Funct() {
         return true;
     }
     // function to get only fields with truthy value, and delete all other keys that has empty string '' as a value
-    this.getUpdate = (reqBody) => {
+    this.getInput = (reqBody) => {
         for (let key in reqBody) {
             if (!reqBody[key].length) delete reqBody[key];
         }
