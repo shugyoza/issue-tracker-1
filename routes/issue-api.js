@@ -39,7 +39,7 @@ router.get('/:userid/issue/add', csrfProtection, userValidators, asyncHandler(as
     try {
         let user;
         if (!funct.isValidId(req.params.userid)) {
-            return res.redirect('/user/login?bool=false');
+            return res.status(302).redirect('/user/login?bool=false');
         }
         user = await User.findById(req.params.userid);
         const issue = {};
@@ -85,10 +85,10 @@ router.post('/:userid/issue/add', csrfProtection, createIssueValidators, asyncHa
 
     if (validatorErrors.isEmpty()) {
         await issue.save();
-        res.redirect(`/user/${user._id}/issue`);
+        return res.status(302).redirect(`/user/${user._id}/issue`);
     } else {
         const errors = validatorErrors.array().map((error) => error.msg);
-        res.render('issue-add', {
+        return res.status(400).render('issue-add', {
             title: 'Add Issue',
             issue,
             user,
@@ -102,11 +102,11 @@ router.post('/:userid/issue/add', csrfProtection, createIssueValidators, asyncHa
 router.get('/:userid/issue/find', csrfProtection, async (req, res, next) => {
     try {
         if (!funct.isValidId(req.params.userid)) {
-            return res.redirect('/user/login?bool=false');
+            return res.status(302).redirect('/user/login?bool=false');
         }
         const user = await User.findById(req.params.userid);
         const issue = { project: '' };
-        res.render('issue-find', {
+        return res.status(200).render('issue-find', {
             title: 'Find Issue',
             user,
             issue,
@@ -130,10 +130,10 @@ router.post('/:userid/issue/find', csrfProtection, findIssueValidators, asyncHan
         const issues = await Issue.find(req.body).exec();
         const user = { _id: req.params.userid };
         if (validatorErrors.isEmpty()) {
-            res.redirect(`/user/${req.params.userid}/issue/find?${'key=value'}`)
+            res.status(302)._idredirect(`/user/${req.params.userid}/issue/find?${'key=value'}`)
         } else {
             const errors = validatorErrors.array().map((error) => error.msg);
-            res.render('issue-list', {
+            return res.status(400).render('issue-list', {
                 title: 'Find Issue',
                 user,
                 issues,
@@ -151,7 +151,7 @@ router.get('/:userid/issue/:issueId/update', csrfProtection, async (req, res, ne
     try {
         const issue = await Issue.findById({ _id: req.params.issueId });
         const user = { _id: req.params.userid };
-        res.render('issue-update', {
+        return res.status(200).render('issue-update', {
             title: 'Update Issue',
             issue,
             user,
@@ -270,7 +270,7 @@ router.get('/:userid/issue/:issueId/delete', csrfProtection, updateIssueValidato
     try {
         const issue = await Issue.findById(req.params.issueId);
         const user = { _id: req.params.userid };
-        res.render('issue-delete', {
+        return res.status(200).render('issue-delete', {
             title: 'Delete Issue',
             issue,
             user,
@@ -287,7 +287,7 @@ router.post('/:userid/issue/:issueId/delete', csrfProtection, asyncHandler(async
         const issue = await Issue.findByIdAndDelete(req.params.issueId);
         const user = { _id: req.params.userid };
         const issues = await Issue.find({});
-        res.redirect(`/user/${req.params.userid}/issue`);
+        return res.status(302).redirect(`/user/${req.params.userid}/issue`);
     } catch (err) {
         next(err)
     }
