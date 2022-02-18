@@ -39,7 +39,7 @@ const userValidators = [
 ];
 
 // validator for new issue input
-const createIssueValidators = [
+const issueValidators = [
     check('project')
     .exists({ checkFalsy: true })
     .withMessage('Project name must be filled.')
@@ -67,24 +67,6 @@ const createIssueValidators = [
     .withMessage('You must select a Status.')
 ];
 
-const updateIssueValidators = [
-    check('project')
-    .isLength({ max: 100 })
-    .withMessage('Project name must be less than 100 characters.'),
-    check('summary')
-    .isLength({ max: 255 })
-    .withMessage('Summary must be less than 255 characters.'),
-    check('description')
-    .isLength({ max: 500 })
-    .withMessage('Description must be less than 500 characters.'),
-    check('reporter')
-    .isLength({ max: 255 }),
-];
-
-const findIssueValidators = []
-
 exports.loginValidators = loginValidators;
 exports.userValidators = userValidators;
-exports.createIssueValidators = createIssueValidators;
-exports.findIssueValidators = findIssueValidators;
-exports.updateIssueValidators = updateIssueValidators;
+exports.issueValidators = issueValidators;

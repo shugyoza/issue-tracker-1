@@ -1,0 +1,7 @@
+mixin history(logs)
+  if logs
+    div
+      p History:
+      ul
+        each log in logs
+          li= log

@@ -6,25 +6,25 @@ div
   div(class='form-group')
     label(for='issue_type') Issue Type
     select(name='issue_type' id='issue_type' value=issue.issue_type class='form-control')
-      option(value='') - select -
-      option(value='bug') Bug
-      option(value='improvement') Improvement
-      option(value='task') Task
-      option(value='new_feature') New Feature
+      option(value=`${ issue.issue_type ? issue.issue_type : '' }`) #{ current_issue_type ? current_issue_type : '- select -' }
+      option(value='Bug') Bug
+      option(value='Improvement') Improvement
+      option(value='Task') Task
+      option(value='New Feature') New Feature
   div(class='form-group')
     label(for='summary') Summary
     input(type='text' id='summary' name='summary' value=issue.summary placeholder=issue.summary ? issue.summary : '' class='form-control')
   div(class='form-group')
     label(for='description') Desription
-    textarea(cols="30", rows="3" type='text' id='description' name='description' value=issue.description placeholder=issue.description ? issue.description : '' class='form-control')
+    textarea(cols="30", rows="3" type='text' id='description' name='description' value=issue.description placeholder=issue.description ? issue.description : '' class='form-control') #{ current_description ? current_description : ''}
   div(class='form-group')
     label(for='priority') Priority
     select(name='priority' id='priority' value=issue.priority class='form-control')
-      option(value='') - select -
-      option(value='low') Low
-      option(value='medium') Medium
-      option(value='high') High
-      option(value='urgent') Urgent
+      option(value=`${ issue.priority ? issue.priority : '' }`) #{ current_priority ? current_priority : '- select -' }
+      option(value='Low') Low
+      option(value='Medium') Medium
+      option(value='High') High
+      option(value='Urgent') Urgent
   div(class='form-group')
     label(for='reporter') Reporter
     input(type='text' id='reporter' name='reporter' value=issue.reporter placeholder=issue.reporter ? issue.reporter : `` class='form-control')
@@ -33,8 +33,8 @@ div
     input(type='text' id='assignee' name='assignee' value=issue.assignee placeholder=issue.assignmee ? issue.assignee : '' class='form-control')
   div(class='form-group')
     label(for='status') Status
-    select(name='status' id='status' value=issue.status placeholder="e.g. On Review" class='form-control')
-      option(value='') - select -
+    select(name='status' id='status' value=issue.status class='form-control')
+      option(value=`${ issue.status ? issue.status: '' }`) #{ current_status ? current_status : '- select -' }
       option(value='Open') Open
       option(value='Approved') Approved
       option(value='Closed') Closed
@@ -47,3 +47,9 @@ div
       option(value='To Do') To Do
       option(value='Waiting for Approval') Waiting for Approval
       option(value='Waiting for Support') Waiting for Support
+  div(class='form-group')
+    label(for='logs') #{log ? 'History and Updates: ' : ''}
+    p
+      ul
+        each log in issue.log
+          li= `${log.date.toLocaleString(undefined, { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'})}: ${log.description}`

@@ -11,6 +11,11 @@ const validate = (doc_to_validate = {}, validator = {}) => {
     }
 }
 
+const deleteHistory = (logs) => {
+    for (let i)
+}
+
+// 20220217
 // const getKey = (keyVal_str) => {
 //     let keyStr = '';
 //     for (let i = 0; i < keyVal_str.length; i++) {
@@ -20,9 +25,12 @@ const validate = (doc_to_validate = {}, validator = {}) => {
 //     }
 // }
 
-const getKey = (keyVal_str) => {
-    return keyVal_str.slice(0, keyVal_str.indexOf(':'))
-}
+// 20220217
+// const getKey = (keyVal_str) => {
+//     return keyVal_str.slice(0, keyVal_str.indexOf(':'))
+// }
+
+// 20220217
 // const getValue = (keyVal_str) => {
 //     let keyStr = '';
 //     for (let i = keyVal_str.length - 1; i >= 0; i--) {
@@ -32,28 +40,31 @@ const getKey = (keyVal_str) => {
 //     }
 // }
 
-const getValue = (keyVal_str) => {
-    return keyVal_str.slice(keyVal_str.indexOf(':') + 1)
-}
+// 20220217
+// const getValue = (keyVal_str) => {
+//     return keyVal_str.slice(keyVal_str.indexOf(':') + 1)
+// }
+
 // let obStr = '_id:id'
 // console.log(getKey(obStr))
 // console.log(getValue(obStr))
 
-const objectify_url_query_str = (str) => {
-    const   arr_of_keyVal = str.split('%20'),
-            resObj = {};
-    for (let i = 0; i < arr_of_keyVal.length; i++) {
-        let strEl = arr_of_keyVal[i],
-            idx = strEl.indexOf(':'),
-            keyStr = strEl.slice(0, idx),
-            valStr = strEl.slice(idx + 1);
-        resObj[keyStr] = valStr;
-    }
-    return resObj;
-}
+// 20220217
+// const objectify_url_query_str = (str) => {
+//     const   arr_of_keyVal = str.split('%20'),
+//             resObj = {};
+//     for (let i = 0; i < arr_of_keyVal.length; i++) {
+//         let strEl = arr_of_keyVal[i],
+//             idx = strEl.indexOf(':'),
+//             keyStr = strEl.slice(0, idx),
+//             valStr = strEl.slice(idx + 1);
+//         resObj[keyStr] = valStr;
+//     }
+//     return resObj;
+// }
 
-let str = '_id:id%20project:valid%20issue_type:type%20summary:summary%20description:desc%20priority:prio%20reporter:repor%20assignee:ass%20status:open'
-objectify_url_query_str(str)
+// let str = '_id:id%20project:valid%20issue_type:type%20summary:summary%20description:desc%20priority:prio%20reporter:repor%20assignee:ass%20status:open'
+// console.log(objectify_url_query_str(str))
 
 
 /* 20220217 DONE

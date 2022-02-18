@@ -21,6 +21,9 @@ Ref: https://stackoverflow.com/questions/29884654/button-that-refreshes-the-page
 * I must take No BS approach. If something is not necessary, functionally, may as well omit/delete it from existence.
 * Top bookmarks should be of a fixed amount as the margin between them and the div.container differs on different amount of bookmarks.
 
+### 20220218
+* Problem: Console prints a SyntaxError: Invalid shorthand property initializer when I added { ... successMsg = '...', ... } in res.render.
+Cause: It should have been a ':' instead of '='
 
 ## USER STORIES:
 ### Done:

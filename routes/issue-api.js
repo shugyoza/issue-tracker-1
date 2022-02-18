@@ -7,12 +7,7 @@ const   User = require('../db/models/user'),
         Issue = require('../db/models/issue'),
         Funct = require('../controllers/functions.js');
 
-const {
-    userValidators,
-    createIssueValidators,
-    findIssueValidators,
-    updateIssueValidators
-} = require('../controllers/validator.js');
+const { userValidators, issueValidators } = require('../controllers/validator.js');
 
 const router = express.Router();
 const csrfProtection = csrf({ cookie: true });
@@ -60,7 +55,7 @@ router.get('/:userid/issue/add', csrfProtection, userValidators, asyncHandler(as
 }))
 
 // POST form to add issue from user dashboard
-router.post('/:userid/issue/add', csrfProtection, createIssueValidators, asyncHandler(async(req, res) => {
+router.post('/:userid/issue/add', csrfProtection, issueValidators, asyncHandler(async(req, res) => {
     const {
         project,
         issue_type,
@@ -72,6 +67,8 @@ router.post('/:userid/issue/add', csrfProtection, createIssueValidators, asyncHa
         status
     } = req.body;
 
+    const user = await User.findById(req.params.userid);;
+
     const issue = new Issue({
         project: project,
         issue_type,
@@ -81,10 +78,9 @@ router.post('/:userid/issue/add', csrfProtection, createIssueValidators, asyncHa
         reporter: reporter,
         assignee: assignee,
         status: status,
-        userid: req.params.userid
+        inputter_id: req.params.userid
     }); // .created, .updated, .open, and .log filled by default
 
-    const user = await User.findById(req.params.userid);;
     const validatorErrors = validationResult(req);
 
     if (validatorErrors.isEmpty()) {
@@ -142,8 +138,15 @@ router.get('/:userid/issue/:issueId/update', csrfProtection, async (req, res, ne
     try {
         const issue = await Issue.findById({ _id: req.params.issueId });
         const user = { _id: req.params.userid };
+        const logs = issue.log.map((log) => log.description);
+        console.log(logs)
         return res.status(200).render('issue-update', {
             title: 'Update Issue',
+            current_issue_type: issue.issue_type,
+            current_description: issue.description,
+            current_priority: issue.priority,
+            current_status: issue.status,
+            logs,
             issue,
             user,
             csrfToken: req.csrfToken()
@@ -154,50 +157,40 @@ router.get('/:userid/issue/:issueId/update', csrfProtection, async (req, res, ne
 })
 
 // POST form to update issue.
-router.post('/:userid/issue/:issueId/update', csrfProtection, updateIssueValidators, asyncHandler(async (req, res, next) => {
-
+router.post('/:userid/issue/:issueId/update', csrfProtection, issueValidators, asyncHandler(async (req, res, next) => {
     try {
-        const user = { _id: req.params.userid },
+        const user = await User.findById(req.params.userid),
               issueId = req.params.issueId,
-              update = funct.getInput(req.body);
-
-        const validatorErrors = validationResult(req);
-
+              validatorErrors = validationResult(req);
         let issue = await Issue.findById(issueId);
-        if (project) {
-            update.project = project;
-        } else update.project = issue.project;
-        if (issue_type) {
-            update.issue_type = issue_type;
-        } else update.issue_type = issue.issue_type;
-        if (summary) {
-            update.summary = summary;
-        } else update.summary = issue.summary;
-        if (description) {
-            update.description = description;
-        } else update.description = issue.description;
-        if (priority) {
-            update.priority = priority;
-        } else update.priority = issue.priority;
-        if (reporter) {
-            update.reporter = reporter;
-        } else update.reporter = issue.reporter;
-        if (assignee) {
-            update.assignee = assignee;
-        } else update.assignee = issue.assignee;
-        if (status) {
-            update.status = status;
-        } else update.status = issue.status;
-
-        req.body = update;
-
+        // GET request prefilled form with what's in the DB
+        // If user changed the prefill with '' and it's required, validationResult should've catched it
+        // What we should do now is compare the value of each field in DB vs. req.body after req passed validation
         if (validatorErrors.isEmpty()) {
-            await issue.findOneAndUpdate({ _id: issueId}, update, { new: true });
-            const issues = await Issue.find({ _id: issueId});
-            return res.render('issue-list', {
+            let update_date = Date.now(),
+                updated_previous = {};
+            for (let key in req.body) {
+                if (key === '_csrf') continue;
+                if (!issue.hasOwnProperty(key) || (issue[key].toLowerCase() !== req.body[key].toLowerCase()) {
+                    issue[key] = req.body[key]
+                }
+            }
+            issue.log.push(history);
+            issue.updated = update_date;
+            issue.inputter = user._id;
+            await issue.save();
+            issue = await Issue.findById(issueId);
+            const logs = issue.log.map((log) => log.description)
+            console.log(logs)
+            return res.render('issue-update', {
                 title: 'Issues',
+                successMsg: 'Update success!',
+                current_issue_type: issue.issue_type,
+                current_priority: issue.priority,
+                current_status: issue.status,
+                logs,
                 user,
-                issues,
+                issue,
                 csrfToken: req.csrfToken()
             });
             } else {
@@ -257,7 +250,7 @@ router.post('/:userid/issue/:issueId/update', csrfProtection, updateIssueValidat
 // }))
 
 // GET form to delete issue
-router.get('/:userid/issue/:issueId/delete', csrfProtection, updateIssueValidators, async (req, res, next) => {
+router.get('/:userid/issue/:issueId/delete', csrfProtection, issueValidators, async (req, res, next) => {
     try {
         const issue = await Issue.findById(req.params.issueId);
         const user = { _id: req.params.userid };

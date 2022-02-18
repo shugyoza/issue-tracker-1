@@ -22,7 +22,7 @@ let funct = new Funct();
 const asyncHandler = (handler) => (req, res, next) => handler(req, res, next).catch(next);
 
 // GET list of all users
-router.get('/', async (req, res, next) => {
+router.get('/super', async (req, res, next) => {
     try {
         const users = await User.find({});
         return res.status(200).render('user-list', { title: 'Users', users });

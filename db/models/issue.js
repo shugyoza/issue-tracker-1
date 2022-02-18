@@ -29,7 +29,7 @@ const issueSchema = new Schema({
         trim: true,
         required: [true, 'Description is required.']
     },
-    reporter: {
+    reporter: { // the person on whose behalf input were submitted
         type: String,
         trim: true,
         required: [true, 'Reporter is required.']
@@ -40,28 +40,23 @@ const issueSchema = new Schema({
         required: [true, 'Priority is required.']
     },
     created: {
-        type: Date,
-        default: Date.now
+        type: Date
     },
     updated: {
-        type: Date,
-        default: Date.now
+        type: Date
     },
     assignee: String,
-    open: {
+    archived: {
         type: Boolean,
-        default: true
+        default: false
     },
     status: {
         type: String,
         trim: true,
         required: [true, 'Status is required.']
     },
-    log: [{
-        description: String,
-        date: Date
-    }],
-    userid: {
+    log: [],
+    inputter_id: {
         type: String,
         trim: true
     }
