@@ -5,7 +5,7 @@ div
     input(type='text' id='project' name='project' placeholder=issue.project ? issue.project : '' class='form-control' required)
   div(class='form-group')
     label(for='issue_type') Issue Type *
-    select(name='issue_type' id='issue_type' value=issue.issue_type class='form-control' required)
+    select(name='issue_type' id='issue_type' value=issue.issue_type class='form-control dropdown' data-display='static' data-toggle:'dropdown' required)
       option(value='') - select -
       option(value='bug') Bug
       option(value='improvement') Improvement

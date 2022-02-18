@@ -182,7 +182,7 @@ form {
     box-shadow: 2px -2px 2px -2px rgba(0, 0, 0, 0.2);
     font-size: min(4rem, max(.875rem, 1.5vw));
     padding: .4rem;
-    height: fit-content
+    height: fit-content;
 }
 textarea {
     font-family:sans-serif;

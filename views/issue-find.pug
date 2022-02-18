@@ -4,18 +4,19 @@ include utils.pug
 
 block content
   nav(class='top')
-    h1(class='button top-bookmark bg-black' role='button') Issue Tracker
+    h1(class='button top-bookmark bg-black') Issue Tracker
     div(class='py-3')
       a(class='button top-bookmark bg-green' href=`/user/${user._id}/issue/add` role='button') Add
-      a(class='button this-bookmark bg-purple' role='button') Find
+      span(class='button this-bookmark bg-purple') Find
       a(class='button top-bookmark bg-orange' href=`/user/${user._id}/issue` role='button') Issues
       a(class='button top-bookmark bg-maroon' href=`/user/${user._id}` role='button') Account
+      a(class='button top-bookmark bg-pink' href='/readme' role='button') Read Me
   div(class='container')
     div(class='sub-head')
       a(class='logout txt-red' href=`/`) Logout
       h2 #{ title }
     form(action=`/user/${user._id}/issue/find` method='post')
-      include form-find-issue.pug
+      include form-find-update-issue.pug
       div(class='py-4')
         button(class='button bg-purple' type='submit') #{ title }
         button(class='button bg-orange' onclick='window.location.reload();' type='button') Clear Fields

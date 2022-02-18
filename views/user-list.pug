@@ -2,13 +2,13 @@ extends head.pug
 
 block content
   nav(class='top')
-    h1(class='button top-bookmark bg-black' role='button') Issue Tracker
+    h1(class='button top-bookmark bg-black') Issue Tracker
     div(class='py-3')
       a(class='button top-bookmark bg-green' href=`/user/add` role='button') Add User
-      a(class='button top-bookmark bg-purple' role='button')
-      a(class='button top-bookmark bg-orange' role='button')
-      a(class='button top-bookmark bg-blue' role='button')
-      a(class='button top-bookmark bg-pink' href='/readme') Read Me
+      span(class='button top-bookmark bg-purple')
+      span(class='button top-bookmark bg-orange')
+      span(class='button top-bookmark bg-blue')
+      a(class='button top-bookmark bg-pink' href='/readme' role='button') Read Me
   div(class='container')
     div(class='sub-head')
       a(class='logout txt-red' href=`/`)
