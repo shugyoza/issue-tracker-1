@@ -23,10 +23,7 @@ block content
           th(scope='col') Reporter
           th(scope='col') Assignee
           th(scope='col') Status
-          th(scope='col') Created
           th(scope='col') Last Update
-          th(scope='col') Archived
-          th(scope='col') Log
           th(scope='col')
       tbody
         each issue in issues
@@ -38,10 +35,7 @@ block content
             td= issue.reporter
             td= issue.assignee
             td= issue.status
-            td= issue.created
             td= issue.updated
-            td= issue.archived
-            td= issue.log
             td(class='update-delete')
               a(class='button bg-blue' href=`/user/${user._id}/issue/${issue._id}/update` role='button') Update
               a(class='button bg-red' href=`/user/${user._id}/issue/${issue._id}/delete` role='button') Delete

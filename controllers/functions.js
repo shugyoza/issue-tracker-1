@@ -51,6 +51,25 @@ function Funct() {
         }
         return resObj;
     }
+    // function to extract only property(ies) that user has changed
+    this.getUpdate = (current_obj, new_obj) => {
+        let count = 0,
+            update = {},
+            archived;
+        for (let key in new_obj) {
+            if (key === '_csrf') continue;
+            if (key === 'status' && new_obj[key] === 'Archived') {
+                current_obj.archived = !current_obj.archived;
+                archived = current_obj.archived;
+            }
+            if (new_obj[key] !== '' > 0 && current_obj[key] !== new_obj[key]) {
+                update[key] = new_obj[key];
+                count++;
+                current_obj[key] = new_obj[key];
+            }
+        }
+        return [count, update, archived];
+    }
 
 
 }

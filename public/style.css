@@ -63,6 +63,7 @@ div.main {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
+    overflow: auto;
 }
 div.container {
     border: 1px solid rgba(34, 33, 33, 0.2);
@@ -211,7 +212,6 @@ textarea {
     border-right: 1px solid rgba(150, 150, 150, 0.4);
     margin: 1em;
     overflow: auto;
-    width: fit-content;
 }
 footer {
     width: 100%;

@@ -171,35 +171,21 @@ router.post('/:userid/issue/:issueId/update', csrfProtection, issueValidators, a
         let issue = await Issue.findById(req.params.issueId);
         const user = { _id: req.params.userid },
               validatorErrors = validationResult(req),
-              update = {};
-        if (validatorErrors.isEmpty()) {
-            for (let key in req.body) {
-                if (key === '_csrf') continue;
-                if (req.body[key].length && issue[key] !== req.body[key]) {
-                    update[key] = req.body[key];
-                    issue[key] = req.body[key];
-                }
-            }
-            issue.updated = update.updated = new Date();
-            issue.inputter_id = update.inputter_id = req.params.userid;
-            issue.log.push(update);
-            await issue.save();
-            let logs = issue.log.reverse();
-            return res.render('issue-update', {
-                title: 'Issues',
-                successMsg: 'Update success!',
-                current_issue_type: issue.issue_type,
-                current_description: issue.description,
-                current_priority: issue.priority,
-                current_status: issue.status,
-                logs,
-                user,
-                issue,
-                csrfToken: req.csrfToken()
+              { project, issue_type, summary, description, reporter, priority, assignee, status } = req.body;
+        let [ count, update, archived ] = funct.getUpdate(issue, req.body)
+        // if there's no update
+        if (count === 0) {
+            validatorErrors.errors.push({
+                value: description,
+                msg: 'You inputted nothing for an update.',
+                param: 'description',
+                location: 'body'
             });
-            } else {
-            const errors = validatorErrors.array().map((error) => error.msg);
-            return res.render('issue-update', {
+        }
+        console.log(count, update, archived)
+        const errors = validatorErrors.array().map((error) => error.msg);
+        if (!validatorErrors.isEmpty() || errors.length) {
+            return res.status(400).render('issue-update', {
                 title: 'Issue Update',
                 issue,
                 user,
@@ -207,6 +193,24 @@ router.post('/:userid/issue/:issueId/update', csrfProtection, issueValidators, a
                 csrfToken: req.csrfToken()
             });
         }
+        // if there's no error, and there's update, we'll insert what's being updated into the log
+        issue.updated = update.updated = new Date();
+        issue.inputter_id = update.inputter_id = req.params.userid;
+        issue.log.push(update);
+        await issue.save();
+        let logs = issue.log.reverse();
+        return res.status(200).render('issue-update', {
+            title: 'Issues',
+            successMsg: 'Update success!',
+            current_issue_type: issue.issue_type,
+            current_description: issue.description,
+            current_priority: issue.priority,
+            current_status: issue.status,
+            logs,
+            user,
+            issue,
+            csrfToken: req.csrfToken()
+        });
     } catch (err) {
         next(err);
     }
