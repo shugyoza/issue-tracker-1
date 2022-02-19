@@ -7,7 +7,7 @@ body {
     background-color: white;
     font-family: sans-serif;
     font-size: min(4rem, max(.875rem, 1.5vw));
-    min-width: 510px
+    min-width: 510px;
 }
 div {
     border: 1px solid transparent(34, 33, 33, 0.2);
@@ -63,7 +63,6 @@ div.main {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    overflow: auto;
 }
 div.container {
     border: 1px solid rgba(34, 33, 33, 0.2);
@@ -71,7 +70,7 @@ div.container {
     border-left: none;
     border-radius: .4em;
     background-color: #FAF9F6; /* #90dcff; */
-    box-shadow: -6px 6px 8px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: -3px 3px 4px 1px rgba(0, 0, 0, 0.2);
     width: 100%;
     min-width: 500px;
     padding: 2rem;

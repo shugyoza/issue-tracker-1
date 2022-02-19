@@ -69,7 +69,7 @@ router.post('/:userid/issue/add', csrfProtection, issueValidators, asyncHandler(
     const user = { _id: req.params.userid };
     const issue = new Issue({
         project: project,
-        issue_type,
+        issue_type: issue_type,
         summary: summary,
         description: description,
         priority: priority,
@@ -81,7 +81,7 @@ router.post('/:userid/issue/add', csrfProtection, issueValidators, asyncHandler(
         archived: false,        // default value
         log: [{                 // default value
                 project: project,
-                issue_type,
+                issue_type: issue_type,
                 summary: summary,
                 description: description,
                 priority: priority,
@@ -116,10 +116,18 @@ router.get('/:userid/issue/find', csrfProtection, async (req, res, next) => {
         if (!funct.isValidId(req.params.userid)) {
             return res.status(302).redirect('/user/login?bool=false');
         }
-        const user = await User.findById(req.params.userid);
-        const issue = { };
+        const user = await User.findById(req.params.userid),
+              issue = {},
+              placeholder = {
+                  project: '- exact match only -',
+                  summary: '- exact match only -',
+                  description: '- We are still working on this search by Description feature. -',
+                  reporter: '- exact match only -',
+                  assignee: '- exact match only -',
+                 };
         return res.status(200).render('issue-find', {
             title: 'Find Issue',
+            placeholder,
             user,
             issue,
             csrfToken: req.csrfToken()
@@ -146,15 +154,23 @@ router.post('/:userid/:issue/find', csrfProtection, asyncHandler(async (req, res
 // GET form to update issue
 router.get('/:userid/issue/:issueId/update', csrfProtection, async (req, res, next) => {
     try {
-        const issue = await Issue.findById({ _id: req.params.issueId });
-        const user = { _id: req.params.userid };
-        const logs = issue.log.reverse();
+        const issue = await Issue.findById({ _id: req.params.issueId }),
+              user = { _id: req.params.userid },
+              logs = issue.log.reverse(),
+              placeholder = {
+                  project: '',
+                  summary: '',
+                  description: '',
+                  reporter: '',
+                  assignee: '',
+                 };
         return res.status(200).render('issue-update', {
             title: 'Update Issue',
             current_issue_type: issue.issue_type,
             current_description: issue.description,
             current_priority: issue.priority,
             current_status: issue.status,
+            placeholder,
             logs,
             issue,
             user,
@@ -182,7 +198,6 @@ router.post('/:userid/issue/:issueId/update', csrfProtection, issueValidators, a
                 location: 'body'
             });
         }
-        console.log(count, update, archived)
         const errors = validatorErrors.array().map((error) => error.msg);
         if (!validatorErrors.isEmpty() || errors.length) {
             return res.status(400).render('issue-update', {
@@ -216,54 +231,23 @@ router.post('/:userid/issue/:issueId/update', csrfProtection, issueValidators, a
     }
 }))
 
-
-//     try {
-//         const { project, issue_type, summary, description, reporter, assignee, status } = req.body;
-//         console.log(project)
-//         const validatorErrors = validationResult(req);
-//         const user = { _id: req.params.userid };
-//         const issueId = req.params.issueId;
-//         const issue = await Issue.findById(issueId);
-
-//         if (project) issue.project = project;
-//         if (issue_type) issue.issue_type = issue_type
-//         if (summary) issue.summary = summary;
-//         if (description) issue.description = description;
-//         if (reporter) issue.reporter = reporter;
-//         if (assignee) issue.assignee = assignee;
-//         if (status) issue.status = status;
-
-//         if (validatorErrors.isEmpty()) {
-//             await issue.save();
-//             const issues = await Issue.find({ _id: issueId});
-//             res.render('issue-list', {
-//                 title: 'Issues',
-//                 user,
-//                 issues,
-//                 csrfToken: req.csrfToken()
-//             });
-//             } else {
-//             const errors = validatorErrors.array().map((error) => error.msg);
-//             res.render('issue-update', {
-//                 title: 'Issue Update',
-//                 issue,
-//                 user,
-//                 errors,
-//                 csrfToken: req.csrfToken()
-//             });
-//         }
-//     } catch (err) {
-//         next(err);
-//     }
-// }))
-
 // GET form to delete issue
 router.get('/:userid/issue/:issueId/delete', csrfProtection, issueValidators, async (req, res, next) => {
     try {
-        const issue = await Issue.findById(req.params.issueId);
-        const user = { _id: req.params.userid };
+        const issue = await Issue.findById(req.params.issueId),
+              user = { _id: req.params.userid },
+              placeholder = {
+                project: '',
+                summary: '',
+                description: '',
+                reporter: '',
+                assignee: '',
+               };
+        let logs = issue.log.reverse();
         return res.status(200).render('issue-delete', {
             title: 'Delete Issue',
+            placeholder,
+            logs,
             issue,
             user,
             csrfToken: req.csrfToken()

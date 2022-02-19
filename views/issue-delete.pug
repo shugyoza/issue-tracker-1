@@ -19,6 +19,7 @@ block content
       p Are you sure you want to delete this issue?
     form(action=`/user/${user._id}/issue/${issue._id}/delete` method='post')
       include form-find-update-issue.pug
+      +history(logs)
       div(class='py-4')
         a(class='button bg-orange' href=`/user/${user._id}/issue/${issue._id}/update`) Cancel
         button(class='button bg-red' type='submit' ) #{ title }

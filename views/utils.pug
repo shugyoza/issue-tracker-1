@@ -35,7 +35,6 @@ mixin history(logs)
             p= log.assignee ? `- Assignee: ${log.assignee}` : ''
             p= log.status ? `- Status: ${log.status}` : ''
             p= log.inputter_id ? `- Input by user ID: ${log.inputter_id}` : ''
-            p= log.archived ? '- This issue had been closed and archived.' : ''
 
 mixin textField(labelText, fieldName, fieldValue, placeholder)
   div(class='form-group')
