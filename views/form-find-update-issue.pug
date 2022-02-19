@@ -37,6 +37,7 @@ div
       option(value=`${ issue.status ? issue.status: '' }`) #{ current_status ? current_status : '- select -' }
       option(value='Open') Open
       option(value='Approved') Approved
+      option(value='Archived') Archived
       option(value='Closed') Closed
       option(value='Done') Done
       option(value='In Progress') In Progress
@@ -47,9 +48,3 @@ div
       option(value='To Do') To Do
       option(value='Waiting for Approval') Waiting for Approval
       option(value='Waiting for Support') Waiting for Support
-  div(class='form-group')
-    label(for='logs') #{log ? 'History and Updates: ' : ''}
-    p
-      ul
-        each log in issue.log
-          li= `${log.date.toLocaleString(undefined, { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'})}: ${log.description}`

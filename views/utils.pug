@@ -11,6 +11,32 @@ mixin success(successMsg)
     div(class='alert alert-success' role='alert')
       p #{ successMsg }
 
+//- mixin history(logs)
+//-   if logs
+//-     div(class='alert alert-primary' role='alert')
+//-       label History and Updates
+//-       ul
+//-         each log in logs
+//-           li= log
+
+mixin history(logs)
+  if logs
+    div(class='form-group')
+      label Updates History
+      ul(class='list-group list-group-flush')
+        each log in logs
+          div(class='inner') Update on #{ log.updated }
+            p= log.project ? `Project Name: ${log.project}` : ''
+            p= log.issue_type ? `Issue Type: ${log.issue_type}` : ''
+            p= log.summary ? `- Summary: ${log.summary}` : ''
+            p #{ log.description ? `- Description: ${log.description}` : '' }
+            p= log.reporter ? `- Reporter: ${log.reporter}` : ''
+            p= log.priority ? `- Priority: ${log.priority}` : ''
+            p= log.assignee ? `- Assignee: ${log.assignee}` : ''
+            p= log.status ? `- Status: ${log.status}` : ''
+            p= log.inputter_id ? `- Input by user ID: ${log.inputter_id}` : ''
+            p= log.archived ? '- This issue had been closed and archived.' : ''
+
 mixin textField(labelText, fieldName, fieldValue, placeholder)
   div(class='form-group')
     label(for=fieldName)= labelText

@@ -11,10 +11,6 @@ const validate = (doc_to_validate = {}, validator = {}) => {
     }
 }
 
-const deleteHistory = (logs) => {
-    for (let i)
-}
-
 // 20220217
 // const getKey = (keyVal_str) => {
 //     let keyStr = '';
