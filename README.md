@@ -25,6 +25,45 @@ Ref: https://stackoverflow.com/questions/29884654/button-that-refreshes-the-page
 * Problem: Console prints a SyntaxError: Invalid shorthand property initializer when I added { ... successMsg = '...', ... } in res.render.
 Cause: It should have been a ':' instead of '='
 
+### 20220219
+* Problem: When writing chai-http test, got this error
+```
+Warning: superagent request was sent twice, because both .end() and .then() were called. Never call .end() if you use promises
+Warning: .end() was called twice. This is not supported in superagent
+superagent: double callback bug
+```
+Probable cause: .catch((err)) => throw err as follows
+```
+    test('GET /user/login', (done) => {
+        chai
+            .request(app)
+            .get('/user/login')
+            .end((err, res) => {
+                assert.equal(res.status, 200);
+                assert.equal(res.type, 'text/html');
+                done();
+            })
+            .catch((err) => {
+                throw err;
+            })
+    })
+
+```
+If we have this instead, works fine.
+```
+    test('GET /user/login', (done) => {
+        chai
+            .request(app)
+            .get('/user/login')
+            .end((err, res) => {
+                if (err) done(err)
+                assert.equal(res.status, 200);
+                assert.equal(res.type, 'text/html');
+                done();
+            })
+    })
+```
+
 ## USER STORIES:
 ### Done:
 

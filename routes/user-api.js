@@ -10,9 +10,6 @@ const   User = require('../db/models/user'),
 const {
     loginValidators,
     userValidators,
-//    createIssueValidators,
-//    findIssueValidators,
-//    updateIssueValidators
 } = require('../controllers/validator.js');
 
 const router = express.Router();

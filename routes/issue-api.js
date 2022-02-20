@@ -1,6 +1,7 @@
 'use strict'
 const   express = require('express'),
-        csrf = require('csurf'),
+        // csrf = require('csurf'), // moved to utils.js
+        { csrfProtection, asyncHandler } = require('./utils'),
         { validationResult } = require('express-validator')
 
 const   User = require('../db/models/user'),
@@ -10,10 +11,12 @@ const   User = require('../db/models/user'),
 const { userValidators, issueValidators } = require('../controllers/validator.js');
 
 const router = express.Router();
-const csrfProtection = csrf({ cookie: true });
 let funct = new Funct();
 
+/* // moved to utils.js
+const csrfProtection = csrf({ cookie: true });
 const asyncHandler = (handler) => (req, res, next) => handler(req, res, next).catch(next);
+*/
 
 // GET list of all issues made under this user
 router.get('/:userid/:issue', async (req, res, next) => {

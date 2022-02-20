@@ -1,18 +1,19 @@
-const express = require('express');
-const morgan = require('morgan');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
+const   express = require('express'),
+        morgan = require('morgan'),
+        cookieParser = require('cookie-parser'),
+        bodyParser = require('body-parser'),
+        cors = require('cors');
 
 require('dotenv').config();
-const userRoutes = require('./routes/user-api.js');
-const issueRoutes = require('./routes/issue-api.js');
+const   userRoutes = require('./routes/user-api.js'),
+        issueRoutes = require('./routes/issue-api.js');
 
 // const { port } = require('./config');
 
 const app = express();
 
 app.set('view engine', 'pug');
-
+app.use(cors({ origin: '* '}));
 app.use(morgan('dev'));
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use(bodyParser.json());
@@ -71,14 +72,7 @@ app.use((err, req, res, next) => {
     });
 });
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8000;
 app.listen(port, () => console.log(`Listening on port ${port}...`))
-
-// 1 // app.get('/', (req, res) => res.send('Hello from Express!'));
-/* 2  app.all('*', (req, res) => {
-    console.log(`Request method: ${req.method}`);
-    console.log(`Request path: ${req.path}`);
-    res.render('layout', { title: 'Welcome', heading: 'Home' })
-}) */
 
 module.exports = app // needed to be used in the functional test
