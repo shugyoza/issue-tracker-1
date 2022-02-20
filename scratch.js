@@ -110,3 +110,23 @@ let obj = {
 let result = getUpdatedField(obj);
 console.log(result)
 */
+
+const getInput = (reqBody) => {
+    for (let key in reqBody) {
+        if (reqBody[key] === '' || key === '_csrf') delete reqBody[key];
+    }
+    return reqBody;
+}
+    let obj = {
+        _csrf: 'string',
+        _id: 'id',
+        project: '',
+        issue_type: '',
+        summary: 'summary',
+        description: 'desc',
+        priority: 'prio',
+        reporter: 'repor',
+        assignee: 'ass',
+        status: 'open'
+    }
+    console.log(getInput(obj))

@@ -80,3 +80,5 @@ app.listen(port, () => console.log(`Listening on port ${port}...`))
     console.log(`Request path: ${req.path}`);
     res.render('layout', { title: 'Welcome', heading: 'Home' })
 }) */
+
+module.exports = app // needed to be used in the functional test

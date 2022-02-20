@@ -24,7 +24,7 @@ function Funct() {
     // function to get only fields with truthy value, and delete all other keys that has empty string '' as a value
     this.getInput = (reqBody) => {
         for (let key in reqBody) {
-            if (!reqBody[key].length) delete reqBody[key];
+            if (reqBody[key] === '' || key === '_csrf') delete reqBody[key];
         }
         return reqBody;
     }
@@ -58,10 +58,10 @@ function Funct() {
             archived;
         for (let key in new_obj) {
             if (key === '_csrf') continue;
-            if (key === 'status') {
-                if (new_obj[key] === 'Archived') {
+            if (key.toLowerCase() === 'status') {
+                if (new_obj[key].toLowerCase() === 'archived') {
                     archived = update.archived = current_obj.archived = true;
-                } else if (new_obj[key] === 'Reopened') {
+                } else if (new_obj[key].toLowerCase() === 'reopened') {
                     archived = update.archived = current_obj.archived = false;
                 }
             }
@@ -73,8 +73,6 @@ function Funct() {
         }
         return [count, update, archived];
     }
-
-
 }
 
 module.exports = Funct;
