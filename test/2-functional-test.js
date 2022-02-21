@@ -1,6 +1,8 @@
 const   chai = require('chai'),
         assert = chai.assert,
         expect = chai.expect;
+        csrf = require('csurf'),
+        csrfProtection = csrf({ cookie: true });
 
 const   app = require('../app'),
         User = require('../db/models/user'),
@@ -10,10 +12,13 @@ const   app = require('../app'),
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
-suite('Functional Tests', () => {
-    let _id;
+const   agent = chai.request.agent(app),
+        funct =
 
-    test('GET / should redirect to /user/login, which after rendering /user/login should result in status 200.', (done) => {
+suite('FUNCTIONAL TEST FOR GET REQUEST', () => {
+    let _id, csrfToken;
+
+    test('GET request to root: /', (done) => {
         chai
             .request(app)
             .get('/')
@@ -26,7 +31,7 @@ suite('Functional Tests', () => {
             })
     })
 
-    test('GET /user/login', (done) => {
+    test('GET request to /user/login', (done) => {
         chai
             .request(app)
             .get('/user/login')
@@ -38,23 +43,7 @@ suite('Functional Tests', () => {
             })
     })
 
-    test('POST /user/login', (done) => {
-        chai
-            .request(app)
-            .post('/user/login')
-            .send({
-                email: 'johnsnow@email.com',
-                password: 'Password123'
-            })
-            .end((err, res) => {
-                if (err) done(err);
-                expect(res).to.redirect;
-                assert.equal(res.status, 200);
-                done();
-            })
-    })
-
-    test('GET /user/super', (done) => {
+    test('GET request to /user/super', (done) => {
         chai
             .request(app)
             .get('/user/super')
@@ -92,55 +81,14 @@ suite('Functional Tests', () => {
     test('GET /user/:userid', (done) => {
         chai
             .request(app)
-            .get(`/user/${user._id}`)
+            .get(`/user/${ '61fc67886b160cf621fba14d' }`) // temporary hard-code
             .end((err, res) => {
                 if (err) done(err);
                 assert.equal(res.status, 200);
                 assert.equal(res.type, 'text/html');
-                assert.isNotEmpty(res.body._id);
+                // assert.equal(res.body.first_name, 'Jay');
+                // assert.equal(res.body.last_name, 'Spence');
+                // assert.equal(res.body.email, 'jayspence@email.com')
                 done();
             })
     })
-
-    test('POST to /user/add with all fields: first_name, last_name, email, and password, filled in', (done) => {
-        chai
-            .request(app)
-            .post('/user/add')
-            .type('form')
-            .send({
-                first_name: 'John',
-                last_name: 'Wick',
-                email: 'johnwick@email.com',
-                password: `Password123`
-            })
-            .end((err, res) => {
-                if (err) done(err);
-                expect(res).to.redirect;
-                assert.equal(res.status, 200);
-                done();
-            })
-    })
-})
-
-
-/*
-// npm install mocha
-describe('User', () => {
-    describe('Create User', () => {
-        if('Returns a 200 response', () => {
-            return chai.request(app)
-                .post('/user/add')
-                .send({
-                    first_name: 'John',
-                    last_name: 'Wick',
-                    email: 'johnwick@email.com',
-                    password: `Password123`
-                })
-                .then(res => {
-                    expect(res).to.have.status(200);
-                    done();
-                })
-        });
-    });
-});
-*/

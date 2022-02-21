@@ -1,6 +1,7 @@
 'use strict'
 const   express = require('express'),
-        csrf = require('csurf'),
+        // csrf = require('csurf'), // moved to utils.js
+        { csrfProtection, asyncHandler } = require('./utils'),
         { validationResult } = require('express-validator');
 
 const   User = require('../db/models/user'),
@@ -13,15 +14,18 @@ const {
 } = require('../controllers/validator.js');
 
 const router = express.Router();
-const csrfProtection = csrf({ cookie: true });
 let funct = new Funct();
 
+/*
+const csrfProtection = csrf({ cookie: true });
 const asyncHandler = (handler) => (req, res, next) => handler(req, res, next).catch(next);
+*/
 
 // GET list of all users
 router.get('/super', async (req, res, next) => {
     try {
         const users = await User.find({});
+        console.log(res)
         return res.status(200).render('user-list', { title: 'Users', users });
     } catch (err) {
         next(err);
@@ -29,14 +33,16 @@ router.get('/super', async (req, res, next) => {
 })
 
 // GET form to register a new user
+// router.get('/add', csrfProtection, funct.add_user)
 router.get('/add', csrfProtection, (req, res) => {
     const user = {}; // new User({});
-    return res.status(200).render('user-add', {
+    res.status(200).render('user-add', {
         title: 'Create User', // 'Create User',
         user,
         csrfToken: req.csrfToken()
     })
 })
+
 
 // GET form to login user
 router.get('/login', csrfProtection, loginValidators, (req, res, next) => {
@@ -84,6 +90,7 @@ router.get('/login', csrfProtection, loginValidators, (req, res, next) => {
 // POST form to register new user
 router.post('/add', csrfProtection, userValidators, asyncHandler(async (req, res, next) => {
     try {
+        console.log(req.body)
         const { first_name, last_name, email, password } = req.body;
         const user = new User({
             first_name: first_name,

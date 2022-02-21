@@ -52,7 +52,7 @@ function Funct() {
         return resObj;
     }
     // function to extract only property(ies) that user has changed
-    this.getUpdate = (current_obj, new_obj) => {
+    this.update = (current_obj, new_obj) => {
         let count = 0,
             update = {},
             archived;
@@ -73,6 +73,21 @@ function Funct() {
         }
         return [count, update, archived];
     }
+
+
+
+    // trial
+    this.add_user = (req, res) => {
+        const user = {}; // new User({});
+        res.status = 200;
+        return res.render('user-add', {
+            title: 'Create User', // 'Create User',
+            user,
+            csrfToken: req.csrfToken()
+        })
+    }
+
+
 }
 
 module.exports = Funct;

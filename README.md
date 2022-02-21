@@ -64,6 +64,30 @@ If we have this instead, works fine.
     })
 ```
 
+### 20220220
+Problem: Having a 403 Forbidden Error on any Chai POST route test.
+Probable cause: we need to include _csrf token in the POST request that match the _csrf on GET request.
+Conclusion: YES, 403 error is related to csrf. We need to have our test wrapped with chai.request.agent.
+```
+const agent = chai.request.agent(app)
+
+agent.get('/singup').end((err, res) => {
+  // do some tests and get the token
+  // ...
+  // the agent will use the cookie from the previous request
+  // so you only need to set the CSRF-Token header
+  agent.post('/singup')
+    .set('CSRF-Token', _csrf)
+    .send({ username: 'me', password: '123' })
+    .end((err, res) => {
+       // handle the post response
+    })
+})
+
+agent.close()
+```
+Reference: https://stackoverflow.com/questions/70817611/how-to-test-http-api-that-uses-csurf-csrf-protection-with-mocha-chai
+
 ## USER STORIES:
 ### Done:
 

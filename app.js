@@ -13,7 +13,11 @@ const   userRoutes = require('./routes/user-api.js'),
 const app = express();
 
 app.set('view engine', 'pug');
+
+
 app.use(cors({ origin: '* '}));
+
+
 app.use(morgan('dev'));
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use(bodyParser.json());

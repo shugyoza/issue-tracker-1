@@ -191,7 +191,7 @@ router.post('/:userid/issue/:issueId/update', csrfProtection, issueValidators, a
         const user = { _id: req.params.userid },
               validatorErrors = validationResult(req),
               { project, issue_type, summary, description, reporter, priority, assignee, status } = req.body;
-        let [ count, update, archived ] = funct.getUpdate(issue, req.body)
+        let [ count, update, archived ] = funct.update(issue, req.body)
         // if there's no update
         if (count === 0) {
             validatorErrors.errors.push({
