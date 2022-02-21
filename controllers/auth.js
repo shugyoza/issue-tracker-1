@@ -1,3 +1,11 @@
+const ObjectId = require('mongodb').ObjectId;
+
+function Auth() {
+    this.serializ
+}
+
+module.exports = Auth;
+
 /* const User = require('../db/models/user');
 
 

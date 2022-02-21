@@ -3,41 +3,32 @@ const   express = require('express')
     ,   cookieParser = require('cookie-parser')
     ,   bodyParser = require('body-parser')
     ,   cors = require('cors')
+    ,   myDB = require('./connection')
     ,   session = require('express-session')   //
-    ,   passport = require('passport');
+    ,   passport = require('passport')
+    ,   ObjectID = require('mongodb').ObjectID;
 
 // const { port } = require('./config')
 //    , { sessionSecret } = require('./config')   //
 
 require('dotenv').config();
-const   userRoutes = require('./routes/user-api.js')
-    ,   issueRoutes = require('./routes/issue-api.js');
+const   authRoutes = require('./routes/auth-api')
+    ,   userRoutes = require('./routes/user-api')
+    ,   issueRoutes = require('./routes/issue-api');
 //    ,   Auth = require('./controllers/auth.js'); //
 
 
 const app = express();
 //    , auth = new Auth();
 
-
 app.set('view engine', 'pug');
-
-
 app.use(cors({ origin: '* '}));
-
 
 app.use(morgan('dev'));
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-
-/* app.use(session({   //
-    name: 'whatever',
-    secret: sessionSecret,
-    resave: false,
-    saveUninitialized: false
-}))
-app.use(auth.restoreUser) // */
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -48,13 +39,15 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+myDB
+
+app.use('/user', authRoutes);
 app.use('/user', userRoutes);
 app.use('/user', issueRoutes);
 
 app.get('/', (req, res) => {
-    res.redirect('/user/login')
-//    res.render('index', { title: 'Home' })
-})
+    res.redirect('/user/signin')
+});
 
 app.get('/throw-error', (req, res) => {
     throw new Error('An error occurred!');

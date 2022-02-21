@@ -1,11 +1,14 @@
 'use strict'
-const   express = require('express'),
-        // csrf = require('csurf'), // moved to utils.js
-        { csrfProtection, asyncHandler } = require('./utils'),
-        { validationResult } = require('express-validator');
+const   express = require('express')
+    ,   passport = require('passport')
+    ,   LocalStrategy = require('passport-local')
+    ,   crypto = require('crypto')
+    ,   { csrfProtection, asyncHandler } = require('./utils')
+    ,   { validationResult } = require('express-validator');
 
 const   User = require('../db/models/user'),
-        Funct = require('../controllers/functions.js');
+        Funct = require('../controllers/functions.js')
+    ,   myDB = require('../connection');
 
 const {
     loginValidators,
@@ -15,23 +18,6 @@ const {
 const router = express.Router();
 let funct = new Funct();
 
-/*
-const csrfProtection = csrf({ cookie: true });
-const asyncHandler = (handler) => (req, res, next) => handler(req, res, next).catch(next);
-*/
-
-// GET list of all users
-router.get('/super', async (req, res, next) => {
-    try {
-        const users = await User.find({});
-        console.log(res)
-        return res.status(200).render('user-list', { title: 'Users', users });
-    } catch (err) {
-        next(err);
-    }
-})
-
-/*
 
 // GET form to register a new user
 // router.get('/add', csrfProtection, funct.add_user)
@@ -43,6 +29,39 @@ router.get('/add', csrfProtection, (req, res) => {
         csrfToken: req.csrfToken()
     })
 })
+
+myDB(async (client) => {
+    const myDataBase = await client.db('database').collection('users')
+
+    router.get('/signin', csrfProtection, (req, res) => {
+        const user = {};
+        res.render('user-login', {
+            title: 'Sign-in',
+            message: 'Please sign in',
+            user,
+            csrfToken: req.csrfToken()
+        });
+    });
+    // serialization and deserialization
+    passport.serializeUser((user, done) => {
+        done(null, user._id);
+    });
+    passport.deserializeUser((id, done) => {
+        myDataBase.findOne({ _id: new ObjectID(id) }, (err, doc) => {
+            done(null, null);
+        });
+    });
+}).catch((err) => {
+    router.get('/signin', (req, res) => {
+        res.render('user-login', {
+            title: err,
+            message: 'Unable to Login',
+            user,
+            csrfToken: req.csrfToken()
+        })
+    })
+})
+
 
 
 // GET form to login user
@@ -197,143 +216,6 @@ router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, 
             csrfToken: req.csrfToken()
         });
     }
-    } catch (err) {
-        next(err);
-    }
-}))
-*/
-
-// GET a user dashboard
-router.get('/:userid', csrfProtection, asyncHandler(async (req, res) => {
-    try {
-        if (!funct.isValidId(req.params.userid)) {
-            return res.status(302).redirect('/user/login?bool=false');
-        }
-        const user = await User.findById(req.params.userid);
-        res.status(200).render('user-dashboard', {
-            title: `${user.first_name} ${user.last_name}'s Profile`,
-            first_name: user.first_name,
-            last_name: user.last_name,
-            email: user.email,
-            user,
-            csrfToken: req.csrfToken()
-        });
-    } catch (err) {
-        next(err);
-    }
-}))
-
-// GET form to edit user. DO NOT put this AFTER '/:userid/:issue' !
-router.get('/:userid/edit', csrfProtection, userValidators, asyncHandler(async (req, res, next) => {
-    try {
-        const user = await User.findById(req.params.userid);
-        return res.status(200).render('user-edit', {
-            title: 'Edit User',
-            user,
-            csrfToken: req.csrfToken()
-        });
-    } catch (err) {
-        next(err);
-    }
-}))
-
-// PUT form to edit user. DO NOT put this AFTER '/:userid/:issue' !
-router.post('/:userid/edit', csrfProtection, userValidators, asyncHandler(async (req, res, next) => {
-    try {
-        const { first_name, last_name, email, password } = req.body;
-        const user = await User.findById(req.params.userid);
-        const validatorErrors = validationResult(req);
-        if (!funct.isValidName(first_name)) {
-            validatorErrors.errors.push({
-                value: first_name,
-                msg: 'Only arabic alphabets are allowed for Name.',
-                param: 'first_name',
-                location: 'body'
-            });
-        }
-        if (!funct.isValidName(last_name)) {
-            validatorErrors.errors.push({
-                value: last_name,
-                msg: 'Only arabic alphabets are allowed for Name.',
-                param: 'last_name',
-                location: 'body'
-            });
-        }
-        if (User.findOne({ email: email })._id && User.findOne({ email: email })._id !== user._id) {
-            validatorErrors.errors.push({
-                value: email,
-                msg: 'Email is already in database.',
-                param: 'email',
-                location: 'body'
-            });
-        }
-        const errors = validatorErrors.array().map((error) => error.msg);
-        if (!validatorErrors.isEmpty || errors.length) {
-            return res.status(400).render('user-edit', {
-                title: 'Edit User',
-                user,
-                errors,
-                csrfToken: req.csrfToken()
-            })
-        }
-        else {
-            if (first_name) user.first_name = first_name;
-            if (last_name) user.last_name = last_name;
-            if (email) user.email = email;
-            if (password) user.password = password;
-            await user.save();
-            return res.status(302).redirect(`/user/${user._id}`);
-        }
-    } catch (err) {
-        next(err);
-    }
-}));
-
-
-// GET form to delete user. DO NOT put this AFTER '/:userid/:issue' !
-router.get('/:userid/delete', csrfProtection, asyncHandler(async (req, res, next) => {
-    try {
-        const user = await User.findById(req.params.userid);
-        return res.status(200).render('user-delete', {
-            title: 'Delete User',
-            user,
-            csrfToken: req.csrfToken()
-        });
-    } catch (err) {
-        next(err);
-    }
-}))
-
-// DELETE form to delete user. DO NOT put this AFTER '/:userid/:issue' !
-router.post('/:userid/delete', csrfProtection, asyncHandler(async (req, res, next) => {
-    try {
-        await User.findByIdAndDelete(req.params.userid);
-        return res.status(302).redirect('/user/login');
-    } catch (err) {
-        next(err);
-    }
-}))
-
-// GET form to delete user. DO NOT put this AFTER '/:userid/:issue' !
-router.get('/delete/:userid', csrfProtection, asyncHandler(async (req, res, next) => {
-    try {
-        const user = await User.findById(req.params.userid);
-        return res.status(200).render('user-delete', {
-            title: '', /*'User Edit',*/
-            user,
-            csrfToken: req.csrfToken()
-        });
-    } catch (err) {
-        next(err);
-    }
-}))
-
-
-// DELETE form to delete user. DO NOT put this AFTER '/:userid/:issue' !
-router.post('/delete/:userid', csrfProtection, asyncHandler(async (req, res, next) => {
-    try {
-        await User.findByIdAndDelete(req.params.userid);
-        return res.status(302).redirect('/user/login');
     } catch (err) {
         next(err);
     }
