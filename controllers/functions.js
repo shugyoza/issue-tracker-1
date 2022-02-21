@@ -76,6 +76,21 @@ function Funct() {
 
 
 
+
+
+    // function to prevent a user tweaking url to visit a page and modify document s(he)'s not authorized to
+    this.checkPermission = (instance, currentInstance) => {
+        if (instance._id != currentInstance._id) {
+            const err = new Error('Illegal operation.');
+            err.status = 403;
+            throw err;
+        }
+    }
+
+
+
+
+
     // trial
     this.add_user = (req, res) => {
         const user = {}; // new User({});

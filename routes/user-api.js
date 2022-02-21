@@ -5,7 +5,6 @@ const   express = require('express'),
         { validationResult } = require('express-validator');
 
 const   User = require('../db/models/user'),
-//        Issue = require('../db/models/issue'),
         Funct = require('../controllers/functions.js');
 
 const {

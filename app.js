@@ -1,16 +1,23 @@
-const   express = require('express'),
-        morgan = require('morgan'),
-        cookieParser = require('cookie-parser'),
-        bodyParser = require('body-parser'),
-        cors = require('cors');
+const   express = require('express')
+    ,   morgan = require('morgan')
+    ,   cookieParser = require('cookie-parser')
+    ,   bodyParser = require('body-parser')
+    ,   cors = require('cors')
+    ,   session = require('express-session')   //
+    ,   passport = require('passport');
+
+// const { port } = require('./config')
+//    , { sessionSecret } = require('./config')   //
 
 require('dotenv').config();
-const   userRoutes = require('./routes/user-api.js'),
-        issueRoutes = require('./routes/issue-api.js');
+const   userRoutes = require('./routes/user-api.js')
+    ,   issueRoutes = require('./routes/issue-api.js');
+//    ,   Auth = require('./controllers/auth.js'); //
 
-// const { port } = require('./config');
 
 const app = express();
+//    , auth = new Auth();
+
 
 app.set('view engine', 'pug');
 
@@ -23,9 +30,26 @@ app.use('/public', express.static(process.cwd() + '/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+/* app.use(session({   //
+    name: 'whatever',
+    secret: sessionSecret,
+    resave: false,
+    saveUninitialized: false
+}))
+app.use(auth.restoreUser) // */
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    cookie: { secure: false }
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/user', userRoutes);
 app.use('/user', issueRoutes);
-
 
 app.get('/', (req, res) => {
     res.redirect('/user/login')
