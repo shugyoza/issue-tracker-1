@@ -1,0 +1,13 @@
+div
+  form(action='/user/signin' method='post')
+    input(type='hidden' name='_csrf' value=csrfToken)
+    div(class='form-group')
+      label(for='email') Email
+      input(type='text' id='email' name='email' value=user.email placeholder='e.g. jk@email.com ' class='form-control')
+    div(class='form-group')
+      label(for='password') Password
+      input(type='text' id='password' name='password' value=user.password placeholder='e.g. Password123' class='form-control')
+    div(class='py-4')
+      button(class='button bg-blue' type='submit') #{ title }
+      a(class='button bg-orange' href='/') Cancel
+      a(class='button bg-green' href='/user/registration') Create User

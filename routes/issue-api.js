@@ -1,33 +1,37 @@
 'use strict'
-const   express = require('express'),
-        // csrf = require('csurf'), // moved to utils.js
-        { csrfProtection, asyncHandler } = require('./utils'),
-        { validationResult } = require('express-validator')
+const express = require('express')
+    , { validationResult } = require('express-validator');
 
-const   User = require('../db/models/user'),
-        Issue = require('../db/models/issue'),
-        Funct = require('../controllers/functions.js');
-
-const { userValidators, issueValidators } = require('../controllers/validator.js');
+const User = require('../db/models/user')
+    , Issue = require('../db/models/issue')
+    , {
+        asyncHandler,
+        csrfProtection,
+        isValidId,
+        isValidName,
+        getInput,
+        stringify_obj_into_url_query_str,
+        objectify_url_query_str,
+        update,
+        logSession,
+        ensureAuthenticated,
+        checkPermission,
+        add_user
+    } = require('../controllers/utils')
+    , { userValidators, issueValidators } = require('../controllers/validator.js');
 
 const router = express.Router();
-let funct = new Funct();
-
-/* // moved to utils.js
-const csrfProtection = csrf({ cookie: true });
-const asyncHandler = (handler) => (req, res, next) => handler(req, res, next).catch(next);
-*/
 
 // GET list of all issues made under this user
 router.get('/:userid/:issue', async (req, res, next) => {
     try {
         let q;
-        if (!funct.isValidId(req.params.userid)) {
+        if (!isValidId(req.params.userid)) {
             return res.status(302).redirect('/user/login?bool=false');
         }
         if (req.params.issue && req.query.q) {
             // turn the string into a valid object for querying database
-            q = funct.objectify_url_query_str(req.query.q);
+            q = objectify_url_query_str(req.query.q);
         }
         const issues = await Issue.find(q);
         const user = { _id: req.params.userid };
@@ -41,7 +45,7 @@ router.get('/:userid/:issue', async (req, res, next) => {
 router.get('/:userid/issue/add', csrfProtection, userValidators, asyncHandler(async (req, res, next) => {
     try {
         let user;
-        if (!funct.isValidId(req.params.userid)) {
+        if (!isValidId(req.params.userid)) {
             return res.status(302).redirect('/user/login?bool=false');
         }
         user = await User.findById(req.params.userid);
@@ -116,7 +120,7 @@ router.post('/:userid/issue/add', csrfProtection, issueValidators, asyncHandler(
 // GET form to find issue(s) with a set of criteria
 router.get('/:userid/issue/find', csrfProtection, async (req, res, next) => {
     try {
-        if (!funct.isValidId(req.params.userid)) {
+        if (!isValidId(req.params.userid)) {
             return res.status(302).redirect('/user/login?bool=false');
         }
         const user = await User.findById(req.params.userid),
@@ -143,11 +147,11 @@ router.get('/:userid/issue/find', csrfProtection, async (req, res, next) => {
 // POST form to find issue(s) with a set of criteria
 router.post('/:userid/:issue/find', csrfProtection, asyncHandler(async (req, res, next) => {
     try {
-        let queryObj = funct.getInput(req.body);
+        let queryObj = getInput(req.body);
         if (!queryObj) {
             return res.status(302).redirect(`/user/${req.params.userid}/issue`);
         }
-        let queryStr = funct.stringify_obj_into_url_query_str(queryObj);
+        let queryStr = stringify_obj_into_url_query_str(queryObj);
         return res.status(302).redirect(`/user/${req.params.userid}/issue?q=${queryStr}`)
     } catch (err) {
         next(err);
@@ -191,7 +195,7 @@ router.post('/:userid/issue/:issueId/update', csrfProtection, issueValidators, a
         const user = { _id: req.params.userid },
               validatorErrors = validationResult(req),
               { project, issue_type, summary, description, reporter, priority, assignee, status } = req.body;
-        let [ count, update, archived ] = funct.update(issue, req.body)
+        let [ count, updateObj, archived ] = update(issue, req.body)
         // if there's no update
         if (count === 0) {
             validatorErrors.errors.push({
@@ -212,9 +216,9 @@ router.post('/:userid/issue/:issueId/update', csrfProtection, issueValidators, a
             });
         }
         // if there's no error, and there's update, we'll insert what's being updated into the log
-        issue.updated = update.updated = new Date();
-        issue.inputter_id = update.inputter_id = req.params.userid;
-        issue.log.push(update);
+        issue.updated = updateObj.updated = new Date();
+        issue.inputter_id = updateObj.inputter_id = req.params.userid;
+        issue.log.push(updateObj);
         await issue.save();
         let logs = issue.log.reverse();
         return res.status(200).render('issue-update', {

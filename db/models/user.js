@@ -4,7 +4,11 @@ try {
     mongoose = require('mongoose');
 } catch(err) {
     console.log(err)
-}
+};
+require('dotenv').config();
+
+/*- - - - - - - - - - - - - DATABASE - - - - - - - - - - - - - - - - */
+
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 const { Schema } = mongoose;
 

@@ -1,11 +1,14 @@
 'use strict'
-const   express = require('express'),
-        // csrf = require('csurf'), // moved to utils.js
-        { csrfProtection, asyncHandler } = require('./utils'),
-        { validationResult } = require('express-validator');
+const express = require('express')
+    , { validationResult } = require('express-validator');
 
-const   User = require('../db/models/user'),
-        Funct = require('../controllers/functions.js');
+const User = require('../db/models/user')
+    , {
+        asyncHandler,
+        csrfProtection,
+        isValidId,
+        isValidName
+    } = require('../controllers/utils');
 
 const {
     loginValidators,
@@ -13,12 +16,6 @@ const {
 } = require('../controllers/validator.js');
 
 const router = express.Router();
-let funct = new Funct();
-
-/*
-const csrfProtection = csrf({ cookie: true });
-const asyncHandler = (handler) => (req, res, next) => handler(req, res, next).catch(next);
-*/
 
 // GET list of all users
 router.get('/super', async (req, res, next) => {
@@ -31,10 +28,8 @@ router.get('/super', async (req, res, next) => {
     }
 })
 
-/*
-
 // GET form to register a new user
-// router.get('/add', csrfProtection, funct.add_user)
+// router.get('/add', csrfProtection, add_user)
 router.get('/add', csrfProtection, (req, res) => {
     const user = {}; // new User({});
     res.status(200).render('user-add', {
@@ -43,7 +38,6 @@ router.get('/add', csrfProtection, (req, res) => {
         csrfToken: req.csrfToken()
     })
 })
-
 
 // GET form to login user
 router.get('/login', csrfProtection, loginValidators, (req, res, next) => {
@@ -100,7 +94,7 @@ router.post('/add', csrfProtection, userValidators, asyncHandler(async (req, res
             password: password
         });
         const validatorErrors = validationResult(req);
-        if (!funct.isValidName(first_name)) {
+        if (!isValidName(first_name)) {
             validatorErrors.errors.push({
                 value: first_name,
                 msg: 'Only arabic alphabets are allowed for Name.',
@@ -108,7 +102,7 @@ router.post('/add', csrfProtection, userValidators, asyncHandler(async (req, res
                 location: 'body'
             });
         }
-        if (!funct.isValidName(last_name)) {
+        if (!isValidName(last_name)) {
             validatorErrors.errors.push({
                 value: last_name,
                 msg: 'Only arabic alphabets are allowed for Name.',
@@ -201,12 +195,11 @@ router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, 
         next(err);
     }
 }))
-*/
 
 // GET a user dashboard
-router.get('/:userid', csrfProtection, asyncHandler(async (req, res) => {
+router.get('/:userid', csrfProtection, asyncHandler(async (req, res, next) => {
     try {
-        if (!funct.isValidId(req.params.userid)) {
+        if (!isValidId(req.params.userid)) {
             return res.status(302).redirect('/user/login?bool=false');
         }
         const user = await User.findById(req.params.userid);
@@ -243,7 +236,7 @@ router.post('/:userid/edit', csrfProtection, userValidators, asyncHandler(async 
         const { first_name, last_name, email, password } = req.body;
         const user = await User.findById(req.params.userid);
         const validatorErrors = validationResult(req);
-        if (!funct.isValidName(first_name)) {
+        if (!isValidName(first_name)) {
             validatorErrors.errors.push({
                 value: first_name,
                 msg: 'Only arabic alphabets are allowed for Name.',
@@ -251,7 +244,7 @@ router.post('/:userid/edit', csrfProtection, userValidators, asyncHandler(async 
                 location: 'body'
             });
         }
-        if (!funct.isValidName(last_name)) {
+        if (!isValidName(last_name)) {
             validatorErrors.errors.push({
                 value: last_name,
                 msg: 'Only arabic alphabets are allowed for Name.',

@@ -65,7 +65,7 @@ If we have this instead, works fine.
 ```
 
 ### 20220220
-Problem: Having a 403 Forbidden Error on any Chai POST route test.
+* Problem: Having a 403 Forbidden Error on any Chai POST route test.
 Probable cause: we need to include _csrf token in the POST request that match the _csrf on GET request.
 Conclusion: YES, 403 error is related to csrf. We need to have our test wrapped with chai.request.agent.
 ```
@@ -87,6 +87,50 @@ agent.get('/singup').end((err, res) => {
 agent.close()
 ```
 Reference: https://stackoverflow.com/questions/70817611/how-to-test-http-api-that-uses-csurf-csrf-protection-with-mocha-chai
+
+### 20220221
+* Problem: Having an error
+```
+UnhandledPromiseRejectionWarning: MongooseError: The `uri` parameter to `openUri()` must be a string, got "undefined". Make sure the first parameter to `mongoose.connect()` or `mongoose.createConnection()` is a string.
+```
+Cause: Missing a
+```
+require('dotenv').config();
+```
+
+### 20220222
+* Problem: Getting a "ReferenceError: mongoose is not defined" in connection.js
+
+```
+const { MongoClient } = require('mongodb'); // throw ReferenceError: mongoose is not defined
+async function main(callback) {
+    const URI = process.env.MONGO_URI;
+    const client = new MongoClient(URI, { useNewUrlParser: true, useUnifiedTopology: true });
+```
+Fix: Import: const mongoose = require('mongoose) and it works.
+I tried to change "new MongoClient" into "mongoose.connect", because it looks confusing (import mongoose does not match new MongoClient), but got a
+"TypeError: client.connect is not a function" instead.
+
+* Problem: Got an
+```
+Assertion failed: You must provide either mongoUrl|clientPromise|client in options
+/Users/stephenhanjaya/Documents/myProject/issue-tracker-1/node_modules/connect-mongo/build/main/lib/MongoStore.js:119
+            throw new Error('Cannot init client. Please provide correct options');
+Error: Cannot init client. Please provide correct options at new MongoStore...
+```
+Cause: the options key in MongoStore.create must be correct (no typo).
+```
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
+    key: 'express.sid',
+    cookie: { // secure: false }
+        maxAge: 1000 * 60 * 60 * 24 // == one day == 24 hours
+    }
+}));
+```
 
 ## USER STORIES:
 ### Done:

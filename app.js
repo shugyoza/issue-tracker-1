@@ -1,54 +1,56 @@
-const   express = require('express')
-    ,   morgan = require('morgan')
-    ,   cookieParser = require('cookie-parser')
-    ,   bodyParser = require('body-parser')
-    ,   cors = require('cors')
-    ,   myDB = require('./connection')
-    ,   session = require('express-session')   //
-    ,   passport = require('passport')
-    ,   ObjectID = require('mongodb').ObjectID;
+const express = require('express')
+    , MongoStore = require('connect-mongo')
+    , morgan = require('morgan')
+    , cookieParser = require('cookie-parser')
+    , bodyParser = require('body-parser')
+    , cors = require('cors')
+    , session = require('express-session')
+    , passport = require('passport');
 
-// const { port } = require('./config')
-//    , { sessionSecret } = require('./config')   //
+const userRoutes = require('./routes/user-api')
+    , issueRoutes = require('./routes/issue-api')
+    , { logSession } = require('./controllers/utils');
 
+/* - - - - - - - - - - - - - - - - GENERAL SETUP - - - - - - - - - - - - - - - - - - -  */
+// gives us access to variables set in .env file via process.env.VARIABLE_NAME
 require('dotenv').config();
-const   authRoutes = require('./routes/auth-api')
-    ,   userRoutes = require('./routes/user-api')
-    ,   issueRoutes = require('./routes/issue-api');
-//    ,   Auth = require('./controllers/auth.js'); //
-
-
 const app = express();
-//    , auth = new Auth();
 
 app.set('view engine', 'pug');
 app.use(cors({ origin: '* '}));
 
 app.use(morgan('dev'));
 app.use('/public', express.static(process.cwd() + '/public'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());     // we can use built-in: app.use(express.json())
+app.use(bodyParser.urlencoded({ extended: true })); // we can use: app.use(express.urlencoded({ extended: true}))
 app.use(cookieParser());
 
+/* - - - - - - - - - - - - - - - - SESSION SETUP - - - - - - - - - - - - - - - - - - -  */
 app.use(session({
     secret: process.env.SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true,
-    cookie: { secure: false }
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
+    key: 'express.sid',
+    cookie: { // secure: false }
+        maxAge: 1000 * 60 * 60 * 24 // == one day == 24 hours
+    }
 }));
+
+/* - - - - - - - - - - - - - PASSPORT AUTHENTICATION - - - - - - - - - - - - - - - - -  */
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(logSession);
 
-myDB
-
-app.use('/user', authRoutes);
+/* - - - - - - - - - - - - - - - - R O U T E S - - - - - - - - - - - - - - - - - - -  */
 app.use('/user', userRoutes);
 app.use('/user', issueRoutes);
 
 app.get('/', (req, res) => {
-    res.redirect('/user/signin')
+    res.redirect('/user/login')
 });
 
+/* - - - - - - - - - - - - - - - - ERROR HANDLING - - - - - - - - - - - - - - - - - - -  */
 app.get('/throw-error', (req, res) => {
     throw new Error('An error occurred!');
 })
@@ -93,6 +95,7 @@ app.use((err, req, res, next) => {
     });
 });
 
+/* - - - - - - - - - - - - - - - - S E R V E R - - - - - - - - - - - - - - - - - - -  */
 const port = process.env.PORT || 8000;
 app.listen(port, () => console.log(`Listening on port ${port}...`))
 
