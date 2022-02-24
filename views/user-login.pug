@@ -14,7 +14,7 @@ block content
   div(class='container')
     h2 #{ title }
     +validationErrorSummary(errors)
-    form(action='/user/login' method='post')
+    form(action=urlPath method='post')
       input(type='hidden' name='_csrf' value=csrfToken)
       div(class='form-group')
         label(for='email') Email

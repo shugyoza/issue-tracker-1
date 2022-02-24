@@ -5,7 +5,6 @@ const express = require('express')
 const User = require('../db/models/user')
     , {
         asyncHandler,
-        csrfProtection,
         isValidId,
         isValidName
     } = require('../controllers/utils');
@@ -18,71 +17,38 @@ const {
 const router = express.Router();
 
 // GET list of all users
-router.get('/super', async (req, res, next) => {
+// for test purpose
+router.get('/user/super', async (req, res, next) => {
     try {
         const users = await User.find({});
-        return res.status(200).render('user-list', { title: 'Users', users });
+        res.status(200).type('application/json').json(users);
     } catch (err) {
         next(err);
     }
 })
 
 // GET form to register a new user
-router.get('/add', csrfProtection, (req, res) => {
+router.get('/user/add', (req, res) => {
     const user = {}; // new User({});
-    return res.status(200).render('user-add', {
-        title: 'Create User', // 'Create User',
-        user,
-        csrfToken: req.csrfToken()
-    })
+    return res.status(200).type('json').json(user)
 })
 
-
 // GET form to login user
-router.get('/login', csrfProtection, loginValidators, (req, res, next) => {
+router.get('/user/login', (req, res, next) => {
     try {
-        const user = {},
-              validatorErrors = validationResult(req),
-              email = '';
-        if (!req.query.bool && !req.query.registered) {
-            return res.status(200).render('user-login', {
-                title: 'Login',
-                user,
-                csrfToken: req.csrfToken()
-            })
-        }
-        // handle redirect from any attempt to access any page without login
-        if (req.query.bool === 'false') {
-            validatorErrors.errors = [{
-                value: email,
-                msg: `You must login to access that page.`,
-                param: 'user',
-                location: 'body'
-            }];
-        }
-        // handle redirect from attempt to register an email already exists in database
-        if (req.query.registered === 'true') {
-            validatorErrors.errors = [{
-                value: email,
-                msg: 'Email already registered. Please login.',
-                param: 'user',
-                location: 'body'
-            }];
-        }
-        const errors = validatorErrors.array().map((error) => error.msg);
-        return res.status(400).render('user-login', {
+        const user = {};
+        return res.status(200).render('user-login', {
             title: 'Login',
             user,
-            errors,
-            csrfToken: req.csrfToken()
         })
     } catch (err) {
         next(err);
     }
 })
 
+
 // POST form to register new user
-router.post('/add', csrfProtection, userValidators, asyncHandler(async (req, res, next) => {
+router.post('/user/add', userValidators, asyncHandler(async (req, res, next) => {
     try {
         const { first_name, last_name, email, password } = req.body;
         const user = new User({
@@ -118,21 +84,23 @@ router.post('/add', csrfProtection, userValidators, asyncHandler(async (req, res
         }
         const errors = validatorErrors.array().map((error) => error.msg);
         if (!validatorErrors.isEmpty || errors.length) {
-            return res.status(400).render('user-add', {
-                title: 'Create User',
-                user,
-                errors,
-                csrfToken: req.csrfToken()
-            })
+            return res.status(400).type('json').json(user);
         }
         else {
             await user.save();
-            return res.status(302).redirect(`/user/${user._id}`);
+            return res.status(200).type('json').json({
+                status: 302,
+                redirect: `test/user/${user._id}`
+            });
         }
     } catch (err) {
         // catching errors thrown because of duplicate index (email already exist)
         if (err.code === 11000) {
-            return res.status(302).redirect('/user/login?registered=true')
+            return res.status(400).type('json').json({
+                error: err,
+                status: 302,
+                redirect: '/test/user/login?registered=true'
+            });
         }
         next(err);
     }
@@ -140,7 +108,7 @@ router.post('/add', csrfProtection, userValidators, asyncHandler(async (req, res
 
 
 // POST form to login existing user
-router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, res, next) => {
+router.post('/user/login', loginValidators, asyncHandler(async (req, res, next) => {
     try {
     const { email, password } = req.body;
     const validatorErrors = validationResult(req);
@@ -154,13 +122,8 @@ router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, 
                 location: 'body'
             });
             const errors = validatorErrors.array().map((error) => error.msg);
-            user = { email: email, password: password };
-            return res.status(400).render('user-login', {
-                title: 'Login', // 'User Login',
-                user,
-                errors,
-                csrfToken: req.csrfToken()
-            })
+            user = { email: email, password: password, error: errors };
+            return res.status(400).type('json').json(user);
         } else if (user) {
             if (user.password !== password) {
                 validatorErrors.errors.push({
@@ -170,59 +133,47 @@ router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, 
                     location: 'body'
                 });
                 const errors = validatorErrors.array().map((error) => error.msg);
-                user = { email: email, password: password };
-                return res.status(400).render('user-login', {
-                    title: 'Login', // 'User Login',
-                    user,
-                    errors,
-                    csrfToken: req.csrfToken()
-                })
-            }
-            else res.status(302).redirect(`/user/${user._id}`);
+                user = { email: email, password: password, error: errors };
+                return res.status(400).type('json').json(user);
+                }
+            else return res.status(200).type('application/json').json({
+                email: email,
+                password: password,
+                code: 302,
+                redirect: `/test/user/${user._id}`
+            });
         }
     } else {
         const errors = validatorErrors.array().map((error) => error.msg);
-        let user = { email: email, password: password };
-        return res.status(400).render('user-login', {
-            title: 'Login', // 'User Login',
-            user,
-            errors,
-            csrfToken: req.csrfToken()
-        });
+        let user = { email: email, password: password, error: errors };
+        return res.status(400).type('json').json(user);
     }
     } catch (err) {
         next(err);
     }
 }))
 
+
 // GET a user dashboard
-router.get('/:userid', csrfProtection, asyncHandler(async (req, res, next) => {
+router.get('/user/:userid', asyncHandler(async (req, res, next) => {
     try {
         if (!isValidId(req.params.userid)) {
             return res.status(302).redirect('/user/login?bool=false');
         }
         const user = await User.findById(req.params.userid);
-        res.status(200).render('user-dashboard', {
-            title: `${user.first_name} ${user.last_name}'s Profile`,
-            first_name: user.first_name,
-            last_name: user.last_name,
-            email: user.email,
-            user,
-            csrfToken: req.csrfToken()
-        });
+        res.status(200).type('json').json(user);
     } catch (err) {
         next(err);
     }
 }))
 
 // GET form to edit user. DO NOT put this AFTER '/:userid/:issue' !
-router.get('/:userid/edit', csrfProtection, userValidators, asyncHandler(async (req, res, next) => {
+router.get('/user/:userid/edit', asyncHandler(async (req, res, next) => {
     try {
         const user = await User.findById(req.params.userid);
         return res.status(200).render('user-edit', {
             title: 'Edit User',
             user,
-            csrfToken: req.csrfToken()
         });
     } catch (err) {
         next(err);
@@ -230,7 +181,7 @@ router.get('/:userid/edit', csrfProtection, userValidators, asyncHandler(async (
 }))
 
 // PUT form to edit user. DO NOT put this AFTER '/:userid/:issue' !
-router.post('/:userid/edit', csrfProtection, userValidators, asyncHandler(async (req, res, next) => {
+router.post('/user/:userid/edit', userValidators, asyncHandler(async (req, res, next) => {
     try {
         const { first_name, last_name, email, password } = req.body;
         const user = await User.findById(req.params.userid);
@@ -261,12 +212,7 @@ router.post('/:userid/edit', csrfProtection, userValidators, asyncHandler(async 
         }
         const errors = validatorErrors.array().map((error) => error.msg);
         if (!validatorErrors.isEmpty || errors.length) {
-            return res.status(400).render('user-edit', {
-                title: 'Edit User',
-                user,
-                errors,
-                csrfToken: req.csrfToken()
-            })
+            return res.status(400).json(user)
         }
         else {
             if (first_name) user.first_name = first_name;
@@ -274,7 +220,14 @@ router.post('/:userid/edit', csrfProtection, userValidators, asyncHandler(async 
             if (email) user.email = email;
             if (password) user.password = password;
             await user.save();
-            return res.status(302).redirect(`/user/${user._id}`);
+            return res.status(200).json({
+                first_name: first_name,
+                last_name: last_name,
+                email: email,
+                password: password,
+                code: 302,
+                redirect: `/user/${user._id}`
+            });
         }
     } catch (err) {
         next(err);
@@ -283,13 +236,12 @@ router.post('/:userid/edit', csrfProtection, userValidators, asyncHandler(async 
 
 
 // GET form to delete user. DO NOT put this AFTER '/:userid/:issue' !
-router.get('/:userid/delete', csrfProtection, asyncHandler(async (req, res, next) => {
+router.get('/user/:userid/delete', asyncHandler(async (req, res, next) => {
     try {
         const user = await User.findById(req.params.userid);
         return res.status(200).render('user-delete', {
             title: 'Delete User',
-            user,
-            csrfToken: req.csrfToken()
+            user
         });
     } catch (err) {
         next(err);
@@ -297,23 +249,26 @@ router.get('/:userid/delete', csrfProtection, asyncHandler(async (req, res, next
 }))
 
 // DELETE form to delete user. DO NOT put this AFTER '/:userid/:issue' !
-router.post('/:userid/delete', csrfProtection, asyncHandler(async (req, res, next) => {
+router.post('/user/:userid/delete', asyncHandler(async (req, res, next) => {
     try {
         await User.findByIdAndDelete(req.params.userid);
-        return res.status(302).redirect('/user/login');
+        return res.status(200).type('json').json({
+            _id: req.params.userid,
+            code: 302,
+            redirect: '/test/user/login'
+        });
     } catch (err) {
         next(err);
     }
 }))
 
 // GET form to delete user. DO NOT put this AFTER '/:userid/:issue' !
-router.get('/delete/:userid', csrfProtection, asyncHandler(async (req, res, next) => {
+router.get('/user/delete/:userid', asyncHandler(async (req, res, next) => {
     try {
         const user = await User.findById(req.params.userid);
         return res.status(200).render('user-delete', {
-            title: 'Delete User', /*'User Edit',*/
+            title: '', /*'User Edit',*/
             user,
-            csrfToken: req.csrfToken()
         });
     } catch (err) {
         next(err);
@@ -322,10 +277,14 @@ router.get('/delete/:userid', csrfProtection, asyncHandler(async (req, res, next
 
 
 // DELETE form to delete user. DO NOT put this AFTER '/:userid/:issue' !
-router.post('/delete/:userid', csrfProtection, asyncHandler(async (req, res, next) => {
+router.post('/user/delete/:userid', asyncHandler(async (req, res, next) => {
     try {
         await User.findByIdAndDelete(req.params.userid);
-        return res.status(302).redirect('/user/login');
+        return res.status(200).type('json').json({
+            _id: req.params.userid,
+            code: 302,
+            redirect: '/test/user/login'
+        });
     } catch (err) {
         next(err);
     }

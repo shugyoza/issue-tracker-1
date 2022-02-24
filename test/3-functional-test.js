@@ -4,29 +4,21 @@ const   chai = require('chai'),
         csrf = require('csurf'),
         csrfProtection = csrf({ cookie: true });
 
-const   app = require('../app'),
-        User = require('../db/models/user'),
-        Issue = require('../db/models/issue'),
-        Funct = require('../controllers/functions.js');
+const app = require('../app')
+    , { getCSRF } = require('./utils');
 
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
 const agent = chai.request.agent(app);
-let funct = new Funct();
+
+/*
+suite('FUNCTIONAL TEST FOR POST ADD USER REQUEST', () => {
+    let input, output, expected, csrf;
+})
 
 suite('FUNCTIONAL TEST FOR POST REQUEST', () => {
     let input, output, expected;
-
-    // suite('get Add User form', () => {
-
-    //     test('function should get a form', () => {
-    //         let req = {}, res = {};
-    //         output = funct.add_user(req, res);
-    //         let resStatus = 200;
-    //         assert.strictEqual(res.status, resStatus, `res.status must be ${resStatus}`);
-    //     })
-    // })
 
     agent.get('/user/login').end((err, res) => {
 
@@ -41,6 +33,7 @@ suite('FUNCTIONAL TEST FOR POST REQUEST', () => {
                     done();
                 })
         })
+
         agent.post('/user/login')
             .set('CSRF-Token', _csrf)
             .send({
@@ -56,4 +49,38 @@ suite('FUNCTIONAL TEST FOR POST REQUEST', () => {
         })
 
         agent.close()
-});
+}); */
+
+// suite('FUNCTIONAL TEST FOR POST REQUEST', () => {
+//     let input, output, expected;
+
+//     agent.get('/user/add').end((err, res) => {
+
+//         test('POST /user/add', (done) => {
+//             chai
+//                 .request(app)
+//                 .get('/user/add')
+//                 .end((err, res) => {
+//                     if (err) done(err)
+//                     assert.equal(res.status, 200);
+//                     assert.equal(res.type, 'text/html');
+//                     done();
+//                 })
+//         })
+
+//         agent.post('/user/login')
+//             .set('CSRF-Token', _csrf)
+//             .send({
+//                 email: 'johnsnow@email.com',
+//                 password: 'Password123'
+//             })
+//             .end((err, res) => {
+//                 if (err) done(err);
+//                 expect(res).to.redirect;
+//                 assert.equal(res.status, 200);
+//                 done();
+//             })
+//         })
+
+//         agent.close()
+// });

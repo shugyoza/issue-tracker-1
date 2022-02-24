@@ -1,9 +1,20 @@
 const   chai = require('chai'),
         { assert, expect } = chai,
         ObjectId = require('mongodb').ObjectId,
-        Funct = require('../controllers/functions.js');
-
-let funct = new Funct();
+        {
+            asyncHandler,
+            csrfProtection,
+            isValidId,
+            isValidName,
+            getInput,
+            stringify_obj_into_url_query_str,
+            objectify_url_query_str,
+            update,
+            logSession,
+            ensureAuthenticated,
+            checkPermission,
+            add_user
+        } = require('../controllers/utils.js');
 
 suite('UNIT TEST', () => {
     let input, output, expected;
@@ -13,29 +24,29 @@ suite('UNIT TEST', () => {
         test('Only valid Mongo ID strings should be accepted.', () => {
 
             input = '61fc67886b160cf621fba14d';
-            output = funct.isValidId(input);
+            output = isValidId(input);
             expected = true;
             assert.strictEqual(output, expected, '');
 
             input = '551137c2f9e1fac808a5f572';
-            output = funct.isValidId(input);
+            output = isValidId(input);
             expected = true;
             assert.strictEqual(output, expected, '');
         })
 
         test('Invalid Mongo ID strings should be rejected.', () => {
             input = 'microsoft123';
-            output = funct.isValidId(input);
+            output = isValidId(input);
             expected = false;
             assert.strictEqual(output, expected, '');
 
             input = 'timtomtamted';
-            output = funct.isValidId(input);
+            output = isValidId(input);
             expected = false;
             assert.strictEqual(output, expected, '');
 
             input = '123456789012';
-            output = funct.isValidId(input);
+            output = isValidId(input);
             expected = false;
             assert.strictEqual(output, expected, '');
         })
@@ -46,27 +57,27 @@ suite('UNIT TEST', () => {
 
         test('Reject improbable name strings.', () => {
             input = 'microsoft123';
-            output = funct.isValidName(input);
+            output = isValidName(input);
             expected = false;
             assert.strictEqual(output, expected, 'Strings containing numeric character should be rejected.');
 
             input = '           ';
-            output = funct.isValidName(input);
+            output = isValidName(input);
             expected = false;
             assert.strictEqual(output, expected, 'Strings of only white space should be rejected.');
 
             input = '2378#$%%^@!';
-            output = funct.isValidName(input);
+            output = isValidName(input);
             expected = false;
             assert.strictEqual(output, expected, 'Strings containing symbols and numeric character should be rejected.');
 
             input = 'X Æ A-12';
-            output = funct.isValidName(input);
+            output = isValidName(input);
             expected = false;
             assert.strictEqual(output, expected, 'Strings containing non arabic alphabets, symbols, and numeric characters should be rejected ');
 
             input = '#$%$$&^%*^**%';
-            output = funct.isValidName(input);
+            output = isValidName(input);
             expected = false;
             assert.strictEqual(output, expected, 'Strings containing all symbols should be rejected.');
 
@@ -74,12 +85,12 @@ suite('UNIT TEST', () => {
 
         test('Accept probable and logical name strings.', () => {
             input = 'apples';
-            output = funct.isValidName(input);
+            output = isValidName(input);
             expected = true;
             assert.strictEqual(output, expected, '');
 
             input = 'gremlins';
-            output = funct.isValidName(input);
+            output = isValidName(input);
             expected = true;
             assert.strictEqual(output, expected, '');
         })
@@ -90,7 +101,7 @@ suite('UNIT TEST', () => {
 
         test('A key named _csrf, and all keys with empty string as a value must be deleted from an object', () => {
             input = { a: '', b: '', c: 'not empty', _csrf: 'string' };
-            output = funct.getInput(input);
+            output = getInput(input);
             outputArr = Object.entries(output);
             expected = { c: 'not empty' };
             expectedArr = Object.entries(expected);
@@ -107,7 +118,7 @@ suite('UNIT TEST', () => {
 
         test('Output string for { aKey: "aValue", bKey: "bValue"} should be: "aKey:aValue%20bKey:bValue". %20 separates every key-value pair.', () => {
             input = { firstKey: 'firstValue', secondKey: 'secondValue', thirdKey: 'thirdValue' };
-            output = funct.stringify_obj_into_url_query_str(input);
+            output = stringify_obj_into_url_query_str(input);
             expected = 'firstKey:firstValue%20secondKey:secondValue%20thirdKey:thirdValue';
             assert.strictEqual(output, expected, '');
         })
@@ -118,7 +129,7 @@ suite('UNIT TEST', () => {
 
         test('With input string: "aKey:aValue%20bKey:bValue", the output object must be: { aKey: "aValue", bKey: "bValue"}.', () => {
             input = 'firstKey:firstValue%20secondKey:secondValue%20thirdKey:thirdValue';
-            output = funct.objectify_url_query_str(input);
+            output = objectify_url_query_str(input);
             outputArr = Object.entries(output);
             expected = { firstKey: 'firstValue', secondKey: 'secondValue', thirdKey: 'thirdValue' };
             expectedArr = Object.entries(expected);
@@ -165,7 +176,7 @@ suite('UNIT TEST', () => {
                 _csrf: 'csrf_string'
             };
 
-            output = funct.update(objectA, objectB); // must be a [2, {}, true/false]
+            output = update(objectA, objectB); // must be a [2, {}, true/false]
             expected = [ 2, { description: 'changed no loger desc', status: 'in progress' }, false ];
 
             assert.strictEqual( output[0], expected[0], 'Output array at index zero must equal to expected array at index zero');
@@ -202,7 +213,7 @@ suite('UNIT TEST', () => {
                 status: 'Archived',
                 _csrf: 'csrf_string'
             }
-            output = funct.update(objectA, objectB);
+            output = update(objectA, objectB);
             expected = [ 2, { description: 'changed no loger desc', status: 'Archived' }, true ];
             assert.strictEqual(expected[1].status, objectB.status, 'Object in the output array at index 1 (one) must have a key .status with value equal to the value of key .status in objectB.');
             assert.strictEqual(expected[1].reporter, undefined, 'Object in the output array at index 1 (one) must not have a key .reporter, because the value of that key in objectB is an empty string.');
@@ -221,7 +232,7 @@ suite('UNIT TEST', () => {
                 status: 'Reopened',
                 _csrf: 'csrf_string'
             }
-            output = funct.update(objectA, objectB);
+            output = update(objectA, objectB);
             expected = [ 1, { status: 'Reopened' }, false ];
             assert.strictEqual(expected[1].status, objectB.status, 'Object in the output array at index 1 (one) must have a key .status with value equal to key .status\' in objectB.');
             assert.strictEqual(objectA.archived, expected[2], 'Output array at index 2 (two) must have boolean value: false, that reflect .archived value in objectA.');

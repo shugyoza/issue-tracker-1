@@ -9,6 +9,7 @@ const express = require('express')
 
 const userRoutes = require('./routes/user-api')
     , issueRoutes = require('./routes/issue-api')
+    , testUserRoutes = require('./routes/test-user-api')
     , { logSession } = require('./controllers/utils');
 
 /* - - - - - - - - - - - - - - - - GENERAL SETUP - - - - - - - - - - - - - - - - - - -  */
@@ -40,9 +41,10 @@ app.use(session({
 /* - - - - - - - - - - - - - PASSPORT AUTHENTICATION - - - - - - - - - - - - - - - - -  */
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(logSession);
+// app.use(logSession);
 
 /* - - - - - - - - - - - - - - - - R O U T E S - - - - - - - - - - - - - - - - - - -  */
+app.use('/test', testUserRoutes);
 app.use('/user', userRoutes);
 app.use('/user', issueRoutes);
 
