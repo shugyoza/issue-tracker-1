@@ -15,6 +15,26 @@ const {
     userValidators,
 } = require('../controllers/validator.js');
 
+
+const passport = require('passport')
+    , bcrypt = require('bcrypt')
+    , flash = require('express-flash')
+    , session = require('express-session')
+    , { getUserByEmail, getUserById, checkAuthenticated } = require('../controllers/utils')
+    , initializePassport = require('../config/passport-config');
+
+/* - - - - - - - - - - - - - - - - GENERAL SETUP - - - - - - - - - - - - - - - - - - -  */
+
+// WHERE?
+// initializePassport(
+//     passport,
+//     email => User.find(user => user.email === email),
+//     _id => User.find(user => user._id === _id)
+// )
+initializePassport( passport, getUserByEmail, getUserById );
+
+
+
 const router = express.Router();
 
 // GET list of all users
@@ -85,11 +105,12 @@ router.get('/login', csrfProtection, loginValidators, (req, res, next) => {
 router.post('/add', csrfProtection, userValidators, asyncHandler(async (req, res, next) => {
     try {
         const { first_name, last_name, email, password } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10);
         const user = new User({
             first_name: first_name,
             last_name: last_name,
             email: email,
-            password: password
+            password: hashedPassword
         });
         const validatorErrors = validationResult(req);
         if (!isValidName(first_name)) {
@@ -127,7 +148,7 @@ router.post('/add', csrfProtection, userValidators, asyncHandler(async (req, res
         }
         else {
             await user.save();
-            return res.status(302).redirect(`/user/${user._id}`);
+            return res.status(302).redirect('/user/profile'); //`/user/${user._id}`);
         }
     } catch (err) {
         // catching errors thrown because of duplicate index (email already exist)
@@ -138,7 +159,7 @@ router.post('/add', csrfProtection, userValidators, asyncHandler(async (req, res
     }
 }));
 
-
+/*
 // POST form to login existing user
 router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, res, next) => {
     try {
@@ -194,6 +215,24 @@ router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, 
         next(err);
     }
 }))
+*/
+
+router.post('/login', csrfProtection, loginValidators, passport.authenticate('local', {
+    successRedirect: '/user/profile',
+    failureRedirect: '/user/login',
+    failureFlash: true
+}))
+
+router.get('/profile', checkAuthenticated, async (req, res) => {
+    const user = await getUserById(req.session.passport.user, User);// await getUserByEmail({ email: req.user.email});
+    res.status(200).render('user-dashboard', {
+        title: `Profile`,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        user,
+    });
+});
 
 // GET a user dashboard
 router.get('/:userid', csrfProtection, asyncHandler(async (req, res, next) => {
@@ -330,5 +369,11 @@ router.post('/delete/:userid', csrfProtection, asyncHandler(async (req, res, nex
         next(err);
     }
 }))
+
+// LOGOUT
+router.delete('/logout', (req, res) => {
+    req.logOut();
+    res.redirect('/login');
+})
 
 module.exports = router;

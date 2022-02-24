@@ -14,7 +14,8 @@ const User = require('../db/models/user')
         objectify_url_query_str,
         update,
         logSession,
-        ensureAuthenticated,
+        checkAuthenticated,
+        checkNotAuthenticated,
         checkPermission,
         add_user
     } = require('../controllers/utils')

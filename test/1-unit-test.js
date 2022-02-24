@@ -11,7 +11,8 @@ const   chai = require('chai'),
             objectify_url_query_str,
             update,
             logSession,
-            ensureAuthenticated,
+            checkAuthenticated,
+            checkNotAuthenticated,
             checkPermission,
             add_user
         } = require('../controllers/utils.js');

@@ -3,11 +3,6 @@ const ObjectId = require('mongodb').ObjectId
     , csrf = require('csurf')
     , csrfProtection = csrf({ cookie: true });
 
-
-const functionName = (input) => {
-    return true;
-}
-
 // simple middleware function for handling exceptions inside async express routes and pass them to error hndlers
 const asyncHandler = (handler) => (req, res, next) => handler(req, res, next).catch(next);
 
@@ -89,14 +84,31 @@ const logSession = (req, res, next) => {
     return next();
 }
 
-const ensureAuthenticated = (req, res, next) => {
+const getUserByEmail = async (email, userSchema) => {
+    const user = await userSchema.find({ email: email }); // output is an array
+    return user[0]; // since we enforce unique, arr.length will always be 1
+}
+
+const getUserById = async (_id, userSchema) => {
+    const user = await userSchema.findById(_id).exec();
+    return user;
+}
+
+const checkAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) {    // if authenticated, next
         return next();
     }
     res.status = 302;       // else redirect to login/signin page
-    return res.redirect('/user/signin');
+    return res.redirect('/user/login');
 };
 
+const checkNotAuthenticated = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        res.status = 302;
+        return res.redirect('/')
+    }
+    next();
+}
 
 
 // function to prevent a user tweaking url to visit a page and modify document s(he)'s not authorized to
@@ -129,7 +141,10 @@ module.exports = {
     objectify_url_query_str,
     update,
     logSession,
-    ensureAuthenticated,
+    getUserByEmail,
+    getUserById,
+    checkAuthenticated,
+    checkNotAuthenticated,
     checkPermission,
     add_user
 }
