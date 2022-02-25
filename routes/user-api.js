@@ -20,7 +20,10 @@ const passport = require('passport')
     , bcrypt = require('bcrypt')
     , flash = require('express-flash')
     , session = require('express-session')
-    , { getUserByEmail, getUserById, checkAuthenticated } = require('../controllers/utils')
+    , { getUserByEmail,
+        getUserById,
+        checkAuthenticated,
+        checkNotAuthenticated } = require('../controllers/utils')
     , initializePassport = require('../config/passport-config');
 
 /* - - - - - - - - - - - - - - - - GENERAL SETUP - - - - - - - - - - - - - - - - - - -  */
@@ -48,7 +51,7 @@ router.get('/super', async (req, res, next) => {
 })
 
 // GET form to register a new user
-router.get('/add', csrfProtection, (req, res) => {
+router.get('/add', checkNotAuthenticated, csrfProtection, (req, res) => {
     const user = {}; // new User({});
     return res.status(200).render('user-add', {
         title: 'Create User', // 'Create User',
@@ -102,7 +105,7 @@ router.get('/login', csrfProtection, loginValidators, (req, res, next) => {
 })
 
 // POST form to register new user
-router.post('/add', csrfProtection, userValidators, asyncHandler(async (req, res, next) => {
+router.post('/add', checkNotAuthenticated, csrfProtection, userValidators, asyncHandler(async (req, res, next) => {
     try {
         const { first_name, last_name, email, password } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -217,25 +220,18 @@ router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, 
 }))
 */
 
-router.post('/login', csrfProtection, loginValidators, passport.authenticate('local', {
-    successRedirect: '/user/profile',
+router.post('/login', checkNotAuthenticated, csrfProtection, loginValidators, passport.authenticate('local', {
+    // successRedirect: `/user/${req.session.passport.user}`, // I cannot have this since the app already built with /:userid for redirect.
     failureRedirect: '/user/login',
     failureFlash: true
+}), asyncHandler(async(req, res) => {
+    console.log(228, req.session.flash.error)
+    const user = await User.find({ email: req.body.email });
+    res.status(302).redirect(`/user/${user._id}`)
 }))
 
-router.get('/profile', checkAuthenticated, async (req, res) => {
-    const user = await getUserById(req.session.passport.user, User);// await getUserByEmail({ email: req.user.email});
-    res.status(200).render('user-dashboard', {
-        title: `Profile`,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        email: user.email,
-        user,
-    });
-});
-
 // GET a user dashboard
-router.get('/:userid', csrfProtection, asyncHandler(async (req, res, next) => {
+router.get('/:userid', checkAuthenticated, csrfProtection, asyncHandler(async (req, res, next) => {
     try {
         if (!isValidId(req.params.userid)) {
             return res.status(302).redirect('/user/login?bool=false');
@@ -371,9 +367,50 @@ router.post('/delete/:userid', csrfProtection, asyncHandler(async (req, res, nex
 }))
 
 // LOGOUT
-router.delete('/logout', (req, res) => {
-    req.logOut();
-    res.redirect('/login');
+router.post('/logout', (req, res, next) => {
+    req.logOut(); // or req.logout()
+    res.redirect('/user/login');
+
+    // await req.logout();
+    // await req.session.destroy(function(err) {
+    //     res.clearCookie('connect.sid');
+    //     // res.redirect('/')
+    //     res.render('user-login', {
+    //         title: 'Login',
+    //         user: {},
+    //         csrfToken: req.csrfToken()
+    //     })
+
+    // })
+
+    // await req.logOut();
+    // req.session.destroy(function(err) {
+    //     req.session = null;
+    //     req.sessionOptions.maxAge = -1;
+    //     res.clearCookie('express.sid');
+    //     res.redirect('/login')
+    // })
+
+    // req.logOut();
+    // req.session.destroy((err) => {
+    //     if (err) return next(err);
+    //     req.session = null;
+    //     req.user = null;
+    //     res.clearCookie('express.sid');
+    //     res.redirect('/user/login')
+    // })
+
+    // req.logOut();
+    // req.session.destroy((err) => {
+    //     if (err) return next(err);
+    //     req.session.cookie = "cookiename= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+    //     req.user = null;
+    //     delete req.session.passport;
+    //     req.session.
+    //     res.clearCookie('express.sid', {path: '/'});
+    //     res.redirect('/')
+    // })
+
 })
 
 module.exports = router;

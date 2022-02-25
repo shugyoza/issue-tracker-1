@@ -132,6 +132,38 @@ app.use(session({
 }));
 ```
 
+### 20220223
+Problem: Incorporating Passport Local Strategy Authentication. Most tutorials gave starter package, or include set up with database, and all of them are confusing, with magical variable names.
+Solution: This one reference is quite simple to digest. Eliminating all the unnecessaries, so I could tweak and debug it to fit and work on my app. Ref: https://youtu.be/-RCnNyD0L-s
+
+### 20220224
+* Spent the whole day trying to make the logout function works deleting cookie and session.
+Problem: I used `button(formaction='/user/logout/' method='post') but the button did not seem to respond at all.
+Cause: Simple thing. Pug DOES NOT accept 'formaction' attribute!!!! (Learned it after I tried poking around creating a simple form as desperate effort)
+Solution: Must create a simple form to nest the button.
+* Another link for learning Passport-JS Local strategy: https://levelup.gitconnected.com/everything-you-need-to-know-about-the-passport-local-passport-js-strategy-633bbab6195 with https://www.youtube.com/watch?v=fGrSmBk9v-4&list=PLYQSCk-qyTW2ewJ05f_GKHtTIzjynDgjK&index=7
+* passport.authenticate('-strategyName, {...}) is a middleware with options. We can just do e.g.:
+```
+router.post('/login', checkNotAuthenticated, csrfProtection, loginValidators, passport.authenticate('local', {
+    successRedirect: `/user/...`,
+    failureRedirect: '/user/login',
+    failureFlash: true
+});
+```
+OR still handle the req, res after it, e.g.:
+```
+router.post('/login', checkNotAuthenticated, csrfProtection, loginValidators, passport.authenticate('local', {
+    // successRedirect: `/user/${req.session.passport.user}`, // I cannot have this since the app already built with /:userid for redirect.
+    // failureRedirect: '/user/login',
+    failureFlash: true
+}), asyncHandler(async(req, res) => {
+    const user = await User.find({ email: req.body.email });
+    res.status(302).redirect(`/user/${user._id}`)
+}))
+
+```
+
+
 ## USER STORIES:
 ### Done:
 

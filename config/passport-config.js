@@ -6,6 +6,7 @@ const LocalStrategy = require('passport-local').Strategy
 const initialize = (passport, getUserByEmail, getUserById) => {
 
     const authenticateUser = async (email, password, done) => {
+        console.log(9, !email, !password)
         const user = await getUserByEmail(email, User); // ok
         if (user == null) {
             return done(null, false, { message: 'No user with that email.'})
@@ -15,9 +16,7 @@ const initialize = (passport, getUserByEmail, getUserById) => {
             let checkPassword = await bcrypt.compare(password, user.password) // ok
             // console.log([16, 'passport.config', checkPassword]) // ok
             if (await bcrypt.compare(password, user.password)) {
-
-                console.log(19, checkPassword, done(null, user));
-                return
+                return done(null, user);
             } else {
                 return done(null, false, { message: 'Password Incorrect.'})
             }
@@ -28,7 +27,6 @@ const initialize = (passport, getUserByEmail, getUserById) => {
 
     passport.use(new LocalStrategy({ usernameField: 'email' }, authenticateUser))
     passport.serializeUser(function(user, done) {
-        console.log(31, user);
         done(null, user._id); // (user, done) => done(null, user._id))
     });
     // passport.deserializeUser((_id, done) => { // does not work. returns undefined.

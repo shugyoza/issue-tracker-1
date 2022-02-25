@@ -57,6 +57,19 @@
 
 
 
+// working route. not needed
+// router.get('/profile', checkAuthenticated, async (req, res) => {
+//     // const user = await getUserById(req.session.passport.user, User);// await getUserByEmail({ email: req.user.email});
+//     const user = {};
+//     res.status(200).render('user-dashboard', {
+//         title: `${req.user.first_name} ${req.user.last_name} Profile`,
+//         first_name: req.user.first_name,
+//         last_name: req.user.last_name,
+//         email: req.user.email,
+//         user,
+//     });
+// });
+
 
 // layout.pug
 doctype html
@@ -88,3 +101,53 @@ html
             td
               a(class='btn btn-blue' href=`/user/${user._id}/issue/${issue._id}/update` role='button') update
               a(class='btn btn-red' href=`/user/${user._id}/issue/delete` role='button') delete
+
+
+// js
+// All the method tried to delete session and cookie on logout when in fact the problem is that
+// Pug does not accept formaction html attribute in a button, at all.
+router.post('/logout', (req, res, next) => {
+    req.logOut(); // or req.logout()
+    res.redirect('/user/login');
+
+    // await req.logout();
+    // await req.session.destroy(function(err) {
+    //     res.clearCookie('connect.sid');
+    //     // res.redirect('/')
+    //     res.render('user-login', {
+    //         title: 'Login',
+    //         user: {},
+    //         csrfToken: req.csrfToken()
+    //     })
+
+    // })
+
+    // await req.logOut();
+    // req.session.destroy(function(err) {
+    //     req.session = null;
+    //     req.sessionOptions.maxAge = -1;
+    //     res.clearCookie('express.sid');
+    //     res.redirect('/login')
+    // })
+
+    // req.logOut();
+    // req.session.destroy((err) => {
+    //     if (err) return next(err);
+    //     req.session = null;
+    //     req.user = null;
+    //     res.clearCookie('express.sid');
+    //     res.redirect('/user/login')
+    // })
+
+    // req.logOut();
+    // req.session.destroy((err) => {
+    //     if (err) return next(err);
+    //     req.session.cookie = "cookiename= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+    //     req.user = null;
+    //     delete req.session.passport;
+    //     req.session.
+    //     res.clearCookie('express.sid', {path: '/'});
+    //     res.redirect('/')
+    // })
+
+})

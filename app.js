@@ -54,13 +54,13 @@ app.use(session({
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
     key: 'express.sid',
     cookie: { // secure: false }
-        maxAge: 1000 * 60 * 60 * 24 // == one day == 24 hours
-    }
+      maxAge: 1000 * 60 * 60 * 24 // == one day == 24 hours
+  }
 }));
 
 /* - - - - - - - - - - - - - PASSPORT AUTHENTICATION - - - - - - - - - - - - - - - - -  */
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.initialize()); // integrate with, thus must be after app.use(session..)
+app.use(passport.session());    // integrate with, thus must be after app.use(session..)
 app.use(logSession);
 
 /* - - - - - - - - - - - - - - - - R O U T E S - - - - - - - - - - - - - - - - - - -  */
@@ -68,7 +68,7 @@ app.use('/test', testUserRoutes);
 app.use('/user', userRoutes);
 app.use('/user', issueRoutes);
 
-app.get('/', (req, res) => res.status(302).redirect('/user/profile'))
+app.get('/', (req, res) => res.status(302).redirect('/user/login'))
 
 /* - - - - - - - - - - - - - - - - ERROR HANDLING - - - - - - - - - - - - - - - - - - -  */
 app.get('/throw-error', (req, res) => {

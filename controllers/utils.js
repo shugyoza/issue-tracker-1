@@ -85,8 +85,12 @@ const logSession = (req, res, next) => {
 }
 
 const getUserByEmail = async (email, userSchema) => {
-    const user = await userSchema.find({ email: email }); // output is an array
-    return user[0]; // since we enforce unique, arr.length will always be 1
+    if (typeof email === 'string' && email.length > 4 && email.indexOf('@') && email.indexOf('.')) {
+        const user = await userSchema.find({ email: email }); // output is an array
+        if (user) return user[0]; // since we enforce unique, arr.length will always be 1
+        return null;
+    }
+    return null;
 }
 
 const getUserById = async (_id, userSchema) => {
@@ -105,7 +109,7 @@ const checkAuthenticated = (req, res, next) => {
 const checkNotAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) {
         res.status = 302;
-        return res.redirect('/')
+        return res.redirect(`/user/${req.user._id}`)
     }
     next();
 }
