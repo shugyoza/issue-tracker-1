@@ -14,11 +14,7 @@ block content
       a(class='button top-bookmark bg-pink' href='/readme' role='button') Read Me
   div(class='container')
     div(class='sub-head')
-      //- a(class='logout txt-red' href=`/user/logout`) Logout
-      //- a(type='submit' formaction='/user/logout?_method=DELETE' method='POST' role='button') Logout
-      //- a(type='submit' formaction='/user/logout' method='POST' role='button') Logout
-      form(action='/user/logout' method='post')
-        button(type='submit' method='post') LOGOUT
+      a(class='logout txt-red' href=`/`) Logout
       h2 #{ title }
     div(class='inner')
       p First Name: #{first_name}

@@ -27,26 +27,6 @@ router.get('/user/super', async (req, res, next) => {
     }
 })
 
-// GET form to register a new user
-router.get('/user/add', (req, res) => {
-    const user = {}; // new User({});
-    return res.status(200).type('json').json(user)
-})
-
-// GET form to login user
-router.get('/user/login', (req, res, next) => {
-    try {
-        const user = {};
-        return res.status(200).render('user-login', {
-            title: 'Login',
-            user,
-        })
-    } catch (err) {
-        next(err);
-    }
-})
-
-
 // POST form to register new user
 router.post('/user/add', userValidators, asyncHandler(async (req, res, next) => {
     try {
@@ -154,32 +134,6 @@ router.post('/user/login', loginValidators, asyncHandler(async (req, res, next) 
 }))
 
 
-// GET a user dashboard
-router.get('/user/:userid', asyncHandler(async (req, res, next) => {
-    try {
-        if (!isValidId(req.params.userid)) {
-            return res.status(302).redirect('/user/login?bool=false');
-        }
-        const user = await User.findById(req.params.userid);
-        res.status(200).type('json').json(user);
-    } catch (err) {
-        next(err);
-    }
-}))
-
-// GET form to edit user. DO NOT put this AFTER '/:userid/:issue' !
-router.get('/user/:userid/edit', asyncHandler(async (req, res, next) => {
-    try {
-        const user = await User.findById(req.params.userid);
-        return res.status(200).render('user-edit', {
-            title: 'Edit User',
-            user,
-        });
-    } catch (err) {
-        next(err);
-    }
-}))
-
 // PUT form to edit user. DO NOT put this AFTER '/:userid/:issue' !
 router.post('/user/:userid/edit', userValidators, asyncHandler(async (req, res, next) => {
     try {
@@ -234,20 +188,6 @@ router.post('/user/:userid/edit', userValidators, asyncHandler(async (req, res, 
     }
 }));
 
-
-// GET form to delete user. DO NOT put this AFTER '/:userid/:issue' !
-router.get('/user/:userid/delete', asyncHandler(async (req, res, next) => {
-    try {
-        const user = await User.findById(req.params.userid);
-        return res.status(200).render('user-delete', {
-            title: 'Delete User',
-            user
-        });
-    } catch (err) {
-        next(err);
-    }
-}))
-
 // DELETE form to delete user. DO NOT put this AFTER '/:userid/:issue' !
 router.post('/user/:userid/delete', asyncHandler(async (req, res, next) => {
     try {
@@ -261,20 +201,6 @@ router.post('/user/:userid/delete', asyncHandler(async (req, res, next) => {
         next(err);
     }
 }))
-
-// GET form to delete user. DO NOT put this AFTER '/:userid/:issue' !
-router.get('/user/delete/:userid', asyncHandler(async (req, res, next) => {
-    try {
-        const user = await User.findById(req.params.userid);
-        return res.status(200).render('user-delete', {
-            title: '', /*'User Edit',*/
-            user,
-        });
-    } catch (err) {
-        next(err);
-    }
-}))
-
 
 // DELETE form to delete user. DO NOT put this AFTER '/:userid/:issue' !
 router.post('/user/delete/:userid', asyncHandler(async (req, res, next) => {

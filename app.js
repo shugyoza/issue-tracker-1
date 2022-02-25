@@ -5,31 +5,15 @@ const express = require('express')
     , bodyParser = require('body-parser')
     , cors = require('cors');
 
-const passport = require('passport')
-    , flash = require('express-flash')
-    , session = require('express-session')
-    , methodOverride = require('method-override');
 const User = require('./db/models/user');
 
 const userRoutes = require('./routes/user-api')
     , issueRoutes = require('./routes/issue-api')
     , testUserRoutes = require('./routes/test-user-api')
-    , { logSession,
-        getUserByEmail,
-        getUserById,
-        checkAuthenticated } = require('./controllers/utils')
-    , initializePassport = require('./config/passport-config');
+    , testIssueRoutes = require('./routes/test-issue-api')
+    , { logSession } = require('./controllers/utils');
 
 /* - - - - - - - - - - - - - - - - GENERAL SETUP - - - - - - - - - - - - - - - - - - -  */
-
-// WHERE?
-// initializePassport(
-//     passport,
-//     email => User.find(user => user.email === email),
-//     _id => User.find(user => user._id === _id)
-// )
-initializePassport( passport, getUserByEmail, getUserById );
-
 
 // gives us access to variables set in .env file via process.env.VARIABLE_NAME
 require('dotenv').config();
@@ -43,28 +27,11 @@ app.use('/public', express.static(process.cwd() + '/public'));
 app.use(bodyParser.json());     // we can use built-in: app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true })); // we can use: app.use(express.urlencoded({ extended: true}))
 app.use(cookieParser());
-app.use(flash());
-app.use(methodOverride('_method'));
-
-/* - - - - - - - - - - - - - - - - SESSION SETUP - - - - - - - - - - - - - - - - - - -  */
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
-    key: 'express.sid',
-    cookie: { // secure: false }
-      maxAge: 1000 * 60 * 60 * 24 // == one day == 24 hours
-  }
-}));
-
-/* - - - - - - - - - - - - - PASSPORT AUTHENTICATION - - - - - - - - - - - - - - - - -  */
-app.use(passport.initialize()); // integrate with, thus must be after app.use(session..)
-app.use(passport.session());    // integrate with, thus must be after app.use(session..)
-app.use(logSession);
+// app.use(logSession);
 
 /* - - - - - - - - - - - - - - - - R O U T E S - - - - - - - - - - - - - - - - - - -  */
 app.use('/test', testUserRoutes);
+app.use('/user', testIssueRoutes);
 app.use('/user', userRoutes);
 app.use('/user', issueRoutes);
 

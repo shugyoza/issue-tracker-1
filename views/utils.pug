@@ -11,13 +11,13 @@ mixin success(successMsg)
     div(class='alert alert-success' role='alert')
       p #{ successMsg }
 
-//- mixin history(logs)
-//-   if logs
-//-     div(class='alert alert-primary' role='alert')
-//-       label History and Updates
-//-       ul
-//-         each log in logs
-//-           li= log
+mixin flash(errors)
+  if errors
+    div(class='alert alert-danger' role='alert')
+      p We got error(s):
+      ul
+        each error in errors
+          li= error
 
 mixin history(logs)
   if logs

@@ -84,57 +84,6 @@ const logSession = (req, res, next) => {
     return next();
 }
 
-const getUserByEmail = async (email, userSchema) => {
-    if (typeof email === 'string' && email.length > 4 && email.indexOf('@') && email.indexOf('.')) {
-        const user = await userSchema.find({ email: email }); // output is an array
-        if (user) return user[0]; // since we enforce unique, arr.length will always be 1
-        return null;
-    }
-    return null;
-}
-
-const getUserById = async (_id, userSchema) => {
-    const user = await userSchema.findById(_id).exec();
-    return user;
-}
-
-const checkAuthenticated = (req, res, next) => {
-    if (req.isAuthenticated()) {    // if authenticated, next
-        return next();
-    }
-    res.status = 302;       // else redirect to login/signin page
-    return res.redirect('/user/login');
-};
-
-const checkNotAuthenticated = (req, res, next) => {
-    if (req.isAuthenticated()) {
-        res.status = 302;
-        return res.redirect(`/user/${req.user._id}`)
-    }
-    next();
-}
-
-
-// function to prevent a user tweaking url to visit a page and modify document s(he)'s not authorized to
-const checkPermission = (instance, currentInstance) => {
-    if (instance._id != currentInstance._id) {
-        const err = new Error('Illegal operation.');
-        err.status = 403;
-        throw err;
-    }
-}
-
-// trial
-const add_user = (req, res) => {
-    const user = {}; // new User({});
-    res.status = 200;
-    return res.render('user-add', {
-        title: 'Create User', // 'Create User',
-        user,
-        csrfToken: req.csrfToken()
-    })
-}
-
 module.exports = {
     asyncHandler,
     csrfProtection,
@@ -144,22 +93,5 @@ module.exports = {
     stringify_obj_into_url_query_str,
     objectify_url_query_str,
     update,
-    logSession,
-    getUserByEmail,
-    getUserById,
-    checkAuthenticated,
-    checkNotAuthenticated,
-    checkPermission,
-    add_user
+    logSession
 }
-
-// function Funct() {
-//     this.functionName = function(input) {
-//         return true;
-//     }
-// }
-// module.exports = Funct;
-/* import, e.g.
-const Funct = require('./fileName');
-const funct = new Funct();
-*/

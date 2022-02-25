@@ -15,29 +15,6 @@ const {
     userValidators,
 } = require('../controllers/validator.js');
 
-
-const passport = require('passport')
-    , bcrypt = require('bcrypt')
-    , flash = require('express-flash')
-    , session = require('express-session')
-    , { getUserByEmail,
-        getUserById,
-        checkAuthenticated,
-        checkNotAuthenticated } = require('../controllers/utils')
-    , initializePassport = require('../config/passport-config');
-
-/* - - - - - - - - - - - - - - - - GENERAL SETUP - - - - - - - - - - - - - - - - - - -  */
-
-// WHERE?
-// initializePassport(
-//     passport,
-//     email => User.find(user => user.email === email),
-//     _id => User.find(user => user._id === _id)
-// )
-initializePassport( passport, getUserByEmail, getUserById );
-
-
-
 const router = express.Router();
 
 // GET list of all users
@@ -51,7 +28,7 @@ router.get('/super', async (req, res, next) => {
 })
 
 // GET form to register a new user
-router.get('/add', checkNotAuthenticated, csrfProtection, (req, res) => {
+router.get('/add', csrfProtection, (req, res) => {
     const user = {}; // new User({});
     return res.status(200).render('user-add', {
         title: 'Create User', // 'Create User',
@@ -105,7 +82,7 @@ router.get('/login', csrfProtection, loginValidators, (req, res, next) => {
 })
 
 // POST form to register new user
-router.post('/add', checkNotAuthenticated, csrfProtection, userValidators, asyncHandler(async (req, res, next) => {
+router.post('/add', csrfProtection, userValidators, asyncHandler(async (req, res, next) => {
     try {
         const { first_name, last_name, email, password } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -151,7 +128,7 @@ router.post('/add', checkNotAuthenticated, csrfProtection, userValidators, async
         }
         else {
             await user.save();
-            return res.status(302).redirect('/user/profile'); //`/user/${user._id}`);
+            return res.status(302).redirect(`/user/${user._id}`);
         }
     } catch (err) {
         // catching errors thrown because of duplicate index (email already exist)
@@ -162,7 +139,6 @@ router.post('/add', checkNotAuthenticated, csrfProtection, userValidators, async
     }
 }));
 
-/*
 // POST form to login existing user
 router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, res, next) => {
     try {
@@ -218,20 +194,9 @@ router.post('/login', csrfProtection, loginValidators, asyncHandler(async (req, 
         next(err);
     }
 }))
-*/
-
-router.post('/login', checkNotAuthenticated, csrfProtection, loginValidators, passport.authenticate('local', {
-    // successRedirect: `/user/${req.session.passport.user}`, // I cannot have this since the app already built with /:userid for redirect.
-    failureRedirect: '/user/login',
-    failureFlash: true
-}), asyncHandler(async(req, res) => {
-    console.log(228, req.session.flash.error)
-    const user = await User.find({ email: req.body.email });
-    res.status(302).redirect(`/user/${user._id}`)
-}))
 
 // GET a user dashboard
-router.get('/:userid', checkAuthenticated, csrfProtection, asyncHandler(async (req, res, next) => {
+router.get('/:userid', csrfProtection, asyncHandler(async (req, res, next) => {
     try {
         if (!isValidId(req.params.userid)) {
             return res.status(302).redirect('/user/login?bool=false');
@@ -370,47 +335,6 @@ router.post('/delete/:userid', csrfProtection, asyncHandler(async (req, res, nex
 router.post('/logout', (req, res, next) => {
     req.logOut(); // or req.logout()
     res.redirect('/user/login');
-
-    // await req.logout();
-    // await req.session.destroy(function(err) {
-    //     res.clearCookie('connect.sid');
-    //     // res.redirect('/')
-    //     res.render('user-login', {
-    //         title: 'Login',
-    //         user: {},
-    //         csrfToken: req.csrfToken()
-    //     })
-
-    // })
-
-    // await req.logOut();
-    // req.session.destroy(function(err) {
-    //     req.session = null;
-    //     req.sessionOptions.maxAge = -1;
-    //     res.clearCookie('express.sid');
-    //     res.redirect('/login')
-    // })
-
-    // req.logOut();
-    // req.session.destroy((err) => {
-    //     if (err) return next(err);
-    //     req.session = null;
-    //     req.user = null;
-    //     res.clearCookie('express.sid');
-    //     res.redirect('/user/login')
-    // })
-
-    // req.logOut();
-    // req.session.destroy((err) => {
-    //     if (err) return next(err);
-    //     req.session.cookie = "cookiename= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
-    //     req.user = null;
-    //     delete req.session.passport;
-    //     req.session.
-    //     res.clearCookie('express.sid', {path: '/'});
-    //     res.redirect('/')
-    // })
-
 })
 
 module.exports = router;

@@ -8,17 +8,18 @@ const User = require('../db/models/user')
         asyncHandler,
         csrfProtection,
         isValidId,
+        isValidName,
         getInput,
         stringify_obj_into_url_query_str,
         objectify_url_query_str,
-        update
+        update,
     } = require('../controllers/utils')
     , { userValidators, issueValidators } = require('../controllers/validator.js');
 
 const router = express.Router();
 
 // GET list of all issues made under this user
-router.get('/:userid/:issue', async (req, res, next) => {
+router.get('/:userid/issue', async (req, res, next) => {
     try {
         let q;
         if (!isValidId(req.params.userid)) {
@@ -30,7 +31,7 @@ router.get('/:userid/:issue', async (req, res, next) => {
         }
         const issues = await Issue.find(q);
         const user = { _id: req.params.userid };
-        return res.status(200).render('issue-list', { title: 'List of Issues', issues, user });
+        return res.status(200).json(issues);
     } catch (err) {
         next(err);
     }
@@ -45,7 +46,7 @@ router.get('/:userid/issue/add', csrfProtection, userValidators, asyncHandler(as
         }
         user = await User.findById(req.params.userid);
         const issue = { reporter: `${user.first_name} ${user.last_name}`};
-        return res.status(200).render('issue-add', {
+        return res.status(200).json('issue-add', {
             title: 'Add Issue',
             issue,
             user,
@@ -99,7 +100,8 @@ router.post('/:userid/issue/add', csrfProtection, issueValidators, asyncHandler(
     const validatorErrors = validationResult(req);
     if (validatorErrors.isEmpty()) {
         await issue.save();
-        return res.status(302).redirect(`/user/${user._id}/issue`);
+//        return res.status(302).redirect(`/user/${user._id}/issue`);
+        return res.status(200).json(issue);
     } else {
         const errors = validatorErrors.array().map((error) => error.msg);
         return res.status(400).render('issue-add', {
