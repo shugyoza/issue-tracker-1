@@ -163,6 +163,8 @@ router.post('/login', checkNotAuthenticated, csrfProtection, loginValidators, pa
 
 ```
 
+### 20220225
+* I decided to stop development on this repo and made this repo to be the first milestone. Ripped out all the authentication feature for passport js, deleted unnecessary files and commented out codes are pooled into the _trash. Deleted the GET requests in the test-user-api.js as that file was created for testing the return result of the post request, does they all are returning application/json instead of text/html.
 
 ## USER STORIES:
 ### Done:
