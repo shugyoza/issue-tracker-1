@@ -1,5 +1,12 @@
 # issue-tracker-1
 
+## PROJECT NOTE
+* I decided to build this app because I believe I can use it to develop other similar apps, e.g. (CRM for Sales/Real Estate, Case Management for Companies/Law Firm);
+* It has been created with focus on accessibility, thus the font size, the color contrast, and the effort to refer to HTML semantics appropriately (e.g. button, h, and a tags).
+* This would be the first milestone. Future development shall be done on another repo. It had been designed without outlook of using authentication library. Having to know how-
+authentication works, thus I stop here, because I believe I would do a major reconstruction on the design (e.g. route paths, use of less templates and more dynamic feature of pug -
+to make it more modular).
+
 ## USER STORIES:
 ### Done:
 
