@@ -347,9 +347,9 @@ router.post('/delete/:userid', csrfProtection, asyncHandler(async (req, res, nex
 }))
 
 // LOGOUT
-router.post('/logout', (req, res, next) => {
-    req.logOut(); // or req.logout()
-    res.redirect('/user/login');
-})
+// router.post('/logout', (req, res, next) => {
+//     req.logOut(); // or req.logout()
+//     res.redirect('/user/login');
+// })
 
 module.exports = router;

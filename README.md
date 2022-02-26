@@ -1,13 +1,16 @@
 # issue-tracker-1
-
 ## PROJECT NOTE
 * I decided to build this app because I believe I can use it to develop other similar apps, e.g. (CRM for Sales/Real Estate, Case Management for Companies/Law Firm);
-* It has been created with focus on accessibility, thus the font size, the color contrast, and the effort to refer to HTML semantics appropriately (e.g. button, h, and a tags);
+* It has been created with focus on accessibility, thus the font size, the color contrast, less picture/video, and the effort to refer to HTML semantics appropriately (e.g. button, h, and a tags);
 * This would be the first milestone. Future development shall be done on another repo. It had been designed without outlook of using authentication library. Having to know how authentication works, thus I stop here, because I believe I would do a major reconstruction on the design (e.g. route paths, use of less templates and more dynamic feature of pug -
 to make it more modular);
+* I refer a lot to Google Issue Tracker and Jira in developing this app;
 * Most difficult challenges in developing this app is:
-    - First, Design (Schema and Routes), considering efficiency, efficacy, readability, usability, maintainability, and scalability;
-    - Second,
+    - First, Design (Schema and Routes), considering use case, efficiency, efficacy, readability, usability, maintainability, and scalability. Specifically in this case, lack of experience substantially made it more difficult;
+    - Second, figuring out the edge case for testing;
+    - Third, organizing the codes to be tidy, not cluttered, yet not maze-like complicated due to using lots of references;
+    - Fourth, not knowing a lot of things and how to use methods certainly is another handicap (e.g. using promises in Chai, acquiring document id for delete/update).
+* At one point of scaling, with lots of one / many to many / one relation, I believe Relational Database would fit better for this app. For the moment, No SQL database like Mongo suffice.
 
 ## USER STORIES:
 ### Done:
@@ -23,6 +26,7 @@ to make it more modular);
 * when I clicked update issue, I want to see an update page with all the fields prefilled with what's existing in the database;
 * when I clicked delete issue, I want to see a page of the issue with a confirmation alert whether I'd really want to delete the issue;
 * to be able to log out whenever and wherever I am in the app;
+* to be able see the update history in each issue page;
 
 #### As an admin I want:
 * to enforce rules on user data input. If input is not rules compliant, the app must reject the input, throw the error, and have the user fix the input before another re-insert effort into database
@@ -38,6 +42,7 @@ to make it more modular);
 * to be able to see the teams involved in this issue;
 * to be able resize the text size smaller for more display
 * to be able to format my writing in the Description field;
+* to be able to have others in the team to comment on this issue, vice versa (eh.. now it became instagram, lol);
 
 #### As an Admin, I want:
 * user to input valid email address; (The best validation is by sending a confirmation email to user's email and have the user clicked on the link within that email)
@@ -46,6 +51,35 @@ to make it more modular);
 #### As a Developer, I want:
 * to be able to do unit test on my controller functions;
 * to be able to do function test on my route handlers;
+
+
+## ROUTES
+
+* GET at '/'
+* GET at '/user/super'
+* GET and POST at '/user/login'
+* GET and POST at '/user/add'
+* GET at '/user/:userid'
+* GET and POST (PUT) at '/user/:userid/edit'
+* GET and POST (DELETE) at '/user/:userid/delete'
+* GET and POST (DELETE) at 'user/delete/:userid'
+* POST (DELETE) at '/logout' (not implemented, later in session and authentication)
+
+* GET at '/:userid/issue'
+* GET and POST at '/user/:userid/issue/add'
+* GET and POST at '/user/:userid/issue/find'
+* GET and POST (PUT) at '/user/:userid/issue/:issueId/update'
+* GET and POST (DELETE) at '/user/:userid/issue/:issueId/delete'
+
+* For test purpose, other routes added to check the returned data:
+    - GET at '/test/user/super'
+    - POST at '/test/user/login'
+    - POST at '/test/user/add'
+    - POST (PUT) at '/test/user/:userid/edit'
+    - POST (DELETE) at '/test/user/:userid/delete' (test not implemented yet)
+    - POST at '/test/user/:userid/issue/add'
+    - POST (PUT) at '/test/user/:userid/issue/:issueId/update' (test not implemented yet)
+    - POST (DELETE) at '/test/user/:userid/issue/:issueId/delete' (test not implemented yet)
 
 ## LOG
 ### 20220207

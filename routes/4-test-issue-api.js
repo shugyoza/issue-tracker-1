@@ -124,11 +124,10 @@ router.post('/user/:userid/issue/:issueId/update', issueValidators, asyncHandler
         }
         const errors = validatorErrors.array().map((error) => error.msg);
         if (!validatorErrors.isEmpty() || errors.length) {
-            return res.status(400).render('issue-update', {
-                title: 'Issue Update',
-                issue,
-                user,
-                errors,
+            return res.status(400).json({
+                issue: issue,
+                user: user,
+                errors: errors,
             });
         }
         // if there's no error, and there's update, we'll insert what's being updated into the log
@@ -137,17 +136,7 @@ router.post('/user/:userid/issue/:issueId/update', issueValidators, asyncHandler
         issue.log.push(updateObj);
         await issue.save();
         let logs = issue.log.reverse();
-        return res.status(200).render('issue-update', {
-            title: 'Issues',
-            successMsg: 'Update success!',
-            current_issue_type: issue.issue_type,
-            current_description: issue.description,
-            current_priority: issue.priority,
-            current_status: issue.status,
-            logs,
-            user,
-            issue,
-        });
+        return res.status(200).json(issue);
     } catch (err) {
         next(err);
     }
