@@ -4,6 +4,7 @@
   "description": "An app to track issue in software development.",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "mocha ./test/ --ui tdd"
   },
   "repository": {
