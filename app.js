@@ -1,5 +1,4 @@
 const express = require('express')
-    , MongoStore = require('connect-mongo')
     , morgan = require('morgan')
     , cookieParser = require('cookie-parser')
     , bodyParser = require('body-parser')
@@ -34,7 +33,6 @@ app.use('/user', userRoutes);
 app.use('/user', issueRoutes);
 
 app.get('/', (req, res) => res.status(302).redirect('/user/login'))
-app.get('/readme', (req, res) => res.status(302).redirect('https://github.com/shugyoza/issue-tracker-1/blob/main/README.md'))
 
 /* - - - - - - - - - - - - - - - - ERROR HANDLING - - - - - - - - - - - - - - - - - - -  */
 app.get('/throw-error', (req, res) => {
