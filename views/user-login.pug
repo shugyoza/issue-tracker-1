@@ -10,12 +10,12 @@ block content
       span(class='button this-bookmark') Login
       span(class='button top-bookmark bg-orange' role='button')
       span(class='button top-bookmark bg-maroon' role='button')
-      a(class='button top-bookmark bg-pink' href='/readme') Read Me
+      span(class='button top-bookmark bg-pink')
   div(class='container')
     div(class='sub-head')
       a(class='logout txt-red' href=`https://github.com/shugyoza/issue-tracker-1#readme`)
       h2 #{ title }
-      +validationErrorSummary(errors)
+    +validationErrorSummary(errors)
     form(action=urlPath method='post')
       input(type='hidden' name='_csrf' value=csrfToken)
       div(class='form-group')
