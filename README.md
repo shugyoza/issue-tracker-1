@@ -1,5 +1,43 @@
 # issue-tracker-1
 
+## USER STORIES:
+### Done:
+
+#### As a User I want:
+* to be able create a user account with as minimum detail possible for the sake of convenience. I can add on my info later;
+* to be able to login with my email as my username. I hate having memorizing username;
+* to be able see all the issues listed in a single click;
+* to be able see all the issues from most recent one created;
+* to be able see within the list: the project name, issue type, summary, description, last updated time, who reported the issue, and to whom it is assigned;
+* to be able to click update on an issue in the list and update it;
+* to be able to click delete on an issue in the list and delete it;
+* when I clicked update issue, I want to see an update page with all the fields prefilled with what's existing in the database;
+* when I clicked delete issue, I want to see a page of the issue with a confirmation alert whether I'd really want to delete the issue;
+* to be able to log out whenever and wherever I am in the app;
+
+#### As an admin I want:
+* to enforce rules on user data input. If input is not rules compliant, the app must reject the input, throw the error, and have the user fix the input before another re-insert effort into database
+* user to access pages using the available provided resources (a links, and button) instead of typing randomly on browser address. Invalid params should be redirected to purported page (e.g. login) or just throw 404 error.
+
+
+### To Do:
+
+#### As a User, I want:
+* to be able click on an issue in the list of issues and see more details (including comments from others, deadline, progress, history, etc.);
+* to be able see the list of issues assigned to me;
+* to be able see the list of issues I created;
+* to be able to see the teams involved in this issue;
+* to be able resize the text size smaller for more display
+* to be able to format my writing in the Description field;
+
+#### As an Admin, I want:
+* user to input valid email address; (The best validation is by sending a confirmation email to user's email and have the user clicked on the link within that email)
+* user to input valid name. No numeric characters;
+* user to make sure they input the correct password they wanted on account creation;
+#### As a Developer, I want:
+* to be able to do unit test on my controller functions;
+* to be able to do function test on my route handlers;
+
 ## LOG
 ### 20220207
 * Problem: 'ForbiddenError: invalid csrf token'
@@ -165,35 +203,3 @@ router.post('/login', checkNotAuthenticated, csrfProtection, loginValidators, pa
 
 ### 20220225
 * I decided to stop development on this repo and made this repo to be the first milestone. Ripped out all the authentication feature for passport js, deleted unnecessary files and commented out codes are pooled into the _trash. Deleted the GET requests in the test-user-api.js as that file was created for testing the return result of the post request, does they all are returning application/json instead of text/html.
-
-## USER STORIES:
-### Done:
-
-#### As a user I want:
-* to be able create a user account with as minimum detail possible for the sake of convenience. I can add on my info later.
-* to be able to login with my email as my username. I hate having memorizing username.
-
-#### As an admin I want:
-* to enforce rules on user data input. If input is not rules compliant, the app must reject the input, throw the error, and have the user fix the input before another re-insert effort into database
-* user to access pages using the available provided resources (a links, and button) instead of typing randomly on browser address. Invalid params should be redirected to purported page (e.g. login) or just throw 404 error.
-
-
-* As a user I want to be able
-
-### To Do:
-
-#### As a User, I want:
-* to be able click on an issue in the list of issues and see more details (including comments from others, deadline, progress, history, etc.);
-* to be able see the list of issues assigned to me;
-* to be able see the list of issues I created;
-* to be able to see the teams involved in this issue;
-* to be able resize the text size smaller for more display
-* to be able to format my writing in the Description field;
-
-#### As an Admin, I want:
-* user to input valid email address;
-* user to input valid name. No numeric characters;
-* user to make sure they input the correct password they wanted on account creation;
-#### As a Developer, I want:
-* to be able to do unit test on my controller functions;
-* to be able to do function test on my route handlers;
