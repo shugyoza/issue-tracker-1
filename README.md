@@ -11,7 +11,9 @@ to make it more modular);
     - Third, organizing the codes to be tidy, not cluttered, yet not maze-like complicated due to using lots of references;
     - Fourth, not knowing a lot of things and how to use methods certainly is another handicap (e.g. using promises in Chai, acquiring document id for delete/update);
 * At one point of scaling, with lots of one / many to many / one relation, I believe Relational Database would fit better for this app. For the moment, No SQL database like Mongo suffice;
-* I love colors, everyone love colors, but too much is too much. I love that I came up with this file binder layout, and the error message (and buttons) I made to look like a post-it note, although sometimes it feels too simple, but it's okay.
+* I love colors, everyone love colors, but too much is too much. I love that I came up with this file binder layout. The error message (and buttons) I made to look like a post-it note, and the white div to contain user profile and history updates, I made them to look like a mailing label. Sometimes it feels too simple, but it's okay;
+* Although currend trend has left it, I still love subtle shadows, to add the 3D feels on the app;
+* I don't use media queries for responsive web design, but I think this app quite liquid and flexible enough to display aesthetically in most screens dimension.
 
 ## USER STORIES:
 ### Done:
