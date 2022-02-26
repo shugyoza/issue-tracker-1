@@ -1,5 +1,10 @@
 # issue-tracker-1
+
+## SETUP
+* 
+
 ## PROJECT NOTE
+
 * I decided to build this app because I believe I can use it to develop other similar apps, e.g. (CRM for Sales/Real Estate, Case Management for Companies/Law Firm);
 * It has been created with focus on accessibility, thus the font size, the color contrast, less picture/video, and the effort to refer to HTML semantics appropriately (e.g. button, h, and a tags);
 * This would be the first milestone. Future development shall be done on another repo. It had been designed without outlook of using authentication library. Having to know how authentication works, thus I stop here, because I believe I would do a major reconstruction on the design (e.g. route paths, use of less templates and more dynamic feature of pug -
@@ -13,7 +18,8 @@ to make it more modular);
 * At one point of scaling, with lots of one / many to many / one relation, I believe Relational Database would fit better for this app. For the moment, No SQL database like Mongo suffice;
 * I love colors, everyone love colors, but too much is too much. I love that I came up with this file binder layout. The error message (and buttons) I made to look like a post-it note, and the white div to contain user profile and history updates, I made them to look like a mailing label. Sometimes it feels too simple, but it's okay;
 * Although currend trend has left it, I still love subtle shadows, to add the 3D feels on the app;
-* I don't use media queries for responsive web design, but I think this app quite liquid and flexible enough to display aesthetically in most screens dimension.
+* I don't use media queries for responsive web design, but I think this app quite liquid and flexible enough to display aesthetically in most screens dimension without breaking apart. For sure there are shortcomings. Everything is a compromise.
+* If you happened to check and play this app, and have any suggestion to make it better, please let me know! Thanks!
 
 ## USER STORIES:
 ### Done:
@@ -23,7 +29,7 @@ to make it more modular);
 * to be able to login with my email as my username. I hate having memorizing username;
 * to be able see all the issues listed in a single click;
 * to be able see all the issues from most recent one created;
-* to be able see within the list: the project name, issue type, summary, description, last updated time, who reported the issue, and to whom it is assigned;
+* to be able see within the list: the project name, issue type, summary, description, status, last updated time, who reported the issue, and to whom it is assigned;
 * to be able to click update on an issue in the list and update it;
 * to be able to click delete on an issue in the list and delete it;
 * when I clicked update issue, I want to see an update page with all the fields prefilled with what's existing in the database;
