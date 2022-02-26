@@ -5,12 +5,10 @@ const express = require('express')
     , bodyParser = require('body-parser')
     , cors = require('cors');
 
-const User = require('./db/models/user');
-
-const userRoutes = require('./routes/user-api')
-    , issueRoutes = require('./routes/issue-api')
-    , testUserRoutes = require('./routes/test-user-api')
-    , testIssueRoutes = require('./routes/test-issue-api')
+const userRoutes = require('./routes/1-user-api')
+    , issueRoutes = require('./routes/2-issue-api')
+    , testUserRoutes = require('./routes/3-test-user-api')
+    , testIssueRoutes = require('./routes/4-test-issue-api')
     , { logSession } = require('./controllers/utils');
 
 /* - - - - - - - - - - - - - - - - GENERAL SETUP - - - - - - - - - - - - - - - - - - -  */
@@ -31,7 +29,7 @@ app.use(cookieParser());
 
 /* - - - - - - - - - - - - - - - - R O U T E S - - - - - - - - - - - - - - - - - - -  */
 app.use('/test', testUserRoutes);
-app.use('/user', testIssueRoutes);
+app.use('/test', testIssueRoutes);
 app.use('/user', userRoutes);
 app.use('/user', issueRoutes);
 

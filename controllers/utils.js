@@ -84,6 +84,12 @@ const logSession = (req, res, next) => {
     return next();
 }
 
+const queryDoc = async (Model, queryKey, queryValue) => {
+    if (!model || !queryStr || !queryStr.length) return false;
+    const doc = await Model.find({ queryKey: queryValue });
+    return doc;
+}
+
 module.exports = {
     asyncHandler,
     csrfProtection,
@@ -93,5 +99,6 @@ module.exports = {
     stringify_obj_into_url_query_str,
     objectify_url_query_str,
     update,
-    logSession
+    logSession,
+    queryDoc
 }

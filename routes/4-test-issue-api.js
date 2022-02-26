@@ -6,9 +6,7 @@ const User = require('../db/models/user')
     , Issue = require('../db/models/issue')
     , {
         asyncHandler,
-        csrfProtection,
         isValidId,
-        isValidName,
         getInput,
         stringify_obj_into_url_query_str,
         objectify_url_query_str,
@@ -19,7 +17,7 @@ const User = require('../db/models/user')
 const router = express.Router();
 
 // GET list of all issues made under this user
-router.get('/:userid/issue', async (req, res, next) => {
+router.get('/user/:userid/issue', async (req, res, next) => {
     try {
         let q;
         if (!isValidId(req.params.userid)) {
@@ -31,34 +29,14 @@ router.get('/:userid/issue', async (req, res, next) => {
         }
         const issues = await Issue.find(q);
         const user = { _id: req.params.userid };
-        return res.status(200).json(issues);
+        return res.status(200).json({ issues: issues });
     } catch (err) {
         next(err);
     }
 })
 
-// GET form to add new issue from user dashboard
-router.get('/:userid/issue/add', csrfProtection, userValidators, asyncHandler(async (req, res, next) => {
-    try {
-        let user;
-        if (!isValidId(req.params.userid)) {
-            return res.status(302).redirect('/user/login?bool=false');
-        }
-        user = await User.findById(req.params.userid);
-        const issue = { reporter: `${user.first_name} ${user.last_name}`};
-        return res.status(200).json('issue-add', {
-            title: 'Add Issue',
-            issue,
-            user,
-            csrfToken: req.csrfToken()
-        })
-    } catch (err) {
-        next(err);
-    }
-}))
-
 // POST form to add issue from user dashboard
-router.post('/:userid/issue/add', csrfProtection, issueValidators, asyncHandler(async(req, res) => {
+router.post('/user/:userid/issue/add', issueValidators, asyncHandler(async(req, res) => {
     const {
         project,
         issue_type,
@@ -104,45 +82,17 @@ router.post('/:userid/issue/add', csrfProtection, issueValidators, asyncHandler(
         return res.status(200).json(issue);
     } else {
         const errors = validatorErrors.array().map((error) => error.msg);
-        return res.status(400).render('issue-add', {
+        return res.status(400).json({
             title: 'Add Issue',
             issue,
             user,
             errors,
-            csrfToken: req.csrfToken()
         });
     }
 }))
 
-// GET form to find issue(s) with a set of criteria
-router.get('/:userid/issue/find', csrfProtection, async (req, res, next) => {
-    try {
-        if (!isValidId(req.params.userid)) {
-            return res.status(302).redirect('/user/login?bool=false');
-        }
-        const user = await User.findById(req.params.userid),
-              issue = {},
-              placeholder = {
-                  project: '- exact match only -',
-                  summary: '- exact match only -',
-                  description: '- We are still working on this search by Description feature. -',
-                  reporter: '- exact match only -',
-                  assignee: '- exact match only -',
-                 };
-        return res.status(200).render('issue-find', {
-            title: 'Find Issue',
-            placeholder,
-            user,
-            issue,
-            csrfToken: req.csrfToken()
-        });
-    } catch (err) {
-        next(err);
-    }
-});
-
 // POST form to find issue(s) with a set of criteria
-router.post('/:userid/:issue/find', csrfProtection, asyncHandler(async (req, res, next) => {
+router.post('/user/:userid/issue/find', asyncHandler(async (req, res, next) => {
     try {
         let queryObj = getInput(req.body);
         if (!queryObj) {
@@ -155,40 +105,10 @@ router.post('/:userid/:issue/find', csrfProtection, asyncHandler(async (req, res
     }
 }))
 
-// GET form to update issue
-router.get('/:userid/issue/:issueId/update', csrfProtection, async (req, res, next) => {
-    try {
-        const issue = await Issue.findById({ _id: req.params.issueId }),
-              user = { _id: req.params.userid },
-              logs = issue.log.reverse(),
-              placeholder = {
-                  project: '',
-                  summary: '',
-                  description: '',
-                  reporter: '',
-                  assignee: '',
-                 };
-        return res.status(200).render('issue-update', {
-            title: 'Update Issue',
-            current_issue_type: issue.issue_type,
-            current_description: issue.description,
-            current_priority: issue.priority,
-            current_status: issue.status,
-            placeholder,
-            logs,
-            issue,
-            user,
-            csrfToken: req.csrfToken()
-        });
-    } catch (err) {
-        next(err);
-    }
-})
-
 // POST form to update issue.
-router.post('/:userid/issue/:issueId/update', csrfProtection, issueValidators, asyncHandler(async (req, res, next) => {
+router.post('/user/:userid/issue/:issueId/update', issueValidators, asyncHandler(async (req, res, next) => {
     try {
-        let issue = await Issue.findById(req.params.issueId);
+        const issue = await Issue.findById(req.params.issueId);
         const user = { _id: req.params.userid },
               validatorErrors = validationResult(req),
               { project, issue_type, summary, description, reporter, priority, assignee, status } = req.body;
@@ -209,7 +129,6 @@ router.post('/:userid/issue/:issueId/update', csrfProtection, issueValidators, a
                 issue,
                 user,
                 errors,
-                csrfToken: req.csrfToken()
             });
         }
         // if there's no error, and there's update, we'll insert what's being updated into the log
@@ -228,41 +147,14 @@ router.post('/:userid/issue/:issueId/update', csrfProtection, issueValidators, a
             logs,
             user,
             issue,
-            csrfToken: req.csrfToken()
         });
     } catch (err) {
         next(err);
     }
 }))
 
-// GET form to delete issue
-router.get('/:userid/issue/:issueId/delete', csrfProtection, issueValidators, async (req, res, next) => {
-    try {
-        const issue = await Issue.findById(req.params.issueId),
-              user = { _id: req.params.userid },
-              placeholder = {
-                project: '',
-                summary: '',
-                description: '',
-                reporter: '',
-                assignee: '',
-               };
-        let logs = issue.log.reverse();
-        return res.status(200).render('issue-delete', {
-            title: 'Delete Issue',
-            placeholder,
-            logs,
-            issue,
-            user,
-            csrfToken: req.csrfToken()
-        });
-    } catch (err) {
-        next(err);
-    }
-})
-
 // POST form to delete issue
-router.post('/:userid/issue/:issueId/delete', csrfProtection, asyncHandler(async (req, res, next) => {
+router.post('/user/:userid/issue/:issueId/delete', asyncHandler(async (req, res, next) => {
     try {
         const issue = await Issue.findByIdAndDelete(req.params.issueId);
         const user = { _id: req.params.userid };

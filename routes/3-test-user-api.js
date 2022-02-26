@@ -68,9 +68,10 @@ router.post('/user/add', userValidators, asyncHandler(async (req, res, next) => 
         }
         else {
             await user.save();
-            return res.status(200).type('json').json({
+            return res.status(200).json({
                 status: 302,
-                redirect: `test/user/${user._id}`
+                redirect: `/test/user/${user._id}`,
+                user: user
             });
         }
     } catch (err) {
@@ -206,7 +207,7 @@ router.post('/user/:userid/delete', asyncHandler(async (req, res, next) => {
 router.post('/user/delete/:userid', asyncHandler(async (req, res, next) => {
     try {
         await User.findByIdAndDelete(req.params.userid);
-        return res.status(200).type('json').json({
+        return res.status(200).json({
             _id: req.params.userid,
             code: 302,
             redirect: '/test/user/login'

@@ -85,7 +85,7 @@ router.get('/login', csrfProtection, loginValidators, (req, res, next) => {
 router.post('/add', csrfProtection, userValidators, asyncHandler(async (req, res, next) => {
     try {
         const { first_name, last_name, email, password } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = password; // await bcrypt.hash(password, 10);
         const user = new User({
             first_name: first_name,
             last_name: last_name,
@@ -202,6 +202,9 @@ router.get('/:userid', csrfProtection, asyncHandler(async (req, res, next) => {
             return res.status(302).redirect('/user/login?bool=false');
         }
         const user = await User.findById(req.params.userid);
+        if (!user) {
+            return res.status(302).redirect('/user/add?registered=false')
+        }
         res.status(200).render('user-dashboard', {
             title: `${user.first_name} ${user.last_name}'s Profile`,
             first_name: user.first_name,
@@ -285,7 +288,13 @@ router.post('/:userid/edit', csrfProtection, userValidators, asyncHandler(async 
 // GET form to delete user. DO NOT put this AFTER '/:userid/:issue' !
 router.get('/:userid/delete', csrfProtection, asyncHandler(async (req, res, next) => {
     try {
+        if (!isValidId(req.params.userid)) {
+            return res.status(302).redirect('/user/login?bool=false');
+        }
         const user = await User.findById(req.params.userid);
+        if (!user) {
+            return res.status(302).redirect('/user/add?registered=false')
+        }
         return res.status(200).render('user-delete', {
             title: 'Delete User',
             user,
@@ -309,7 +318,13 @@ router.post('/:userid/delete', csrfProtection, asyncHandler(async (req, res, nex
 // GET form to delete user. DO NOT put this AFTER '/:userid/:issue' !
 router.get('/delete/:userid', csrfProtection, asyncHandler(async (req, res, next) => {
     try {
+        if (!isValidId(req.params.userid)) {
+            return res.status(302).redirect('/user/login?bool=false');
+        }
         const user = await User.findById(req.params.userid);
+        if (!user) {
+            return res.status(302).redirect('/user/add?registered=false')
+        }
         return res.status(200).render('user-delete', {
             title: 'Delete User', /*'User Edit',*/
             user,

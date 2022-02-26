@@ -18,7 +18,7 @@ const User = require('../db/models/user')
 const router = express.Router();
 
 // GET list of all issues made under this user
-router.get('/:userid/:issue', async (req, res, next) => {
+router.get('/:userid/issue', async (req, res, next) => {
     try {
         let q;
         if (!isValidId(req.params.userid)) {
@@ -140,7 +140,7 @@ router.get('/:userid/issue/find', csrfProtection, async (req, res, next) => {
 });
 
 // POST form to find issue(s) with a set of criteria
-router.post('/:userid/:issue/find', csrfProtection, asyncHandler(async (req, res, next) => {
+router.post('/:userid/issue/find', csrfProtection, asyncHandler(async (req, res, next) => {
     try {
         let queryObj = getInput(req.body);
         if (!queryObj) {
@@ -156,16 +156,30 @@ router.post('/:userid/:issue/find', csrfProtection, asyncHandler(async (req, res
 // GET form to update issue
 router.get('/:userid/issue/:issueId/update', csrfProtection, async (req, res, next) => {
     try {
-        const issue = await Issue.findById({ _id: req.params.issueId }),
-              user = { _id: req.params.userid },
-              logs = issue.log.reverse(),
-              placeholder = {
-                  project: '',
-                  summary: '',
-                  description: '',
-                  reporter: '',
-                  assignee: '',
-                 };
+        if (!isValidId(req.params.userid)) {
+            return res.status(302).redirect('/user/login?bool=false');
+        }
+        const user = await User.findById(req.params.userid);
+        if (!user) {
+            // redirect to user create with error message
+            return res.status(302).redirect('/user/add')
+        }
+        if (user && !isValidId(req.params.issueId)) {
+            // should include error message why the redirect
+            return res.status(302).redirect(`/user/${req.params.userid}/issue?err=issue-not-exist`);
+        }
+        const issue = await Issue.findById(req.params.issueId);
+        if (user && !issue) {
+            return res.status(302).redirect(`/user/${req.params.userid}/issue?err=issue-not-exist`);
+        }
+        const logs = issue.log.reverse(),
+        placeholder = {
+            project: '',
+            summary: '',
+            description: '',
+            reporter: '',
+            assignee: '',
+        };
         return res.status(200).render('issue-update', {
             title: 'Update Issue',
             current_issue_type: issue.issue_type,
@@ -186,7 +200,7 @@ router.get('/:userid/issue/:issueId/update', csrfProtection, async (req, res, ne
 // POST form to update issue.
 router.post('/:userid/issue/:issueId/update', csrfProtection, issueValidators, asyncHandler(async (req, res, next) => {
     try {
-        let issue = await Issue.findById(req.params.issueId);
+        issue = await Issue.findById(req.params.issueId);
         const user = { _id: req.params.userid },
               validatorErrors = validationResult(req),
               { project, issue_type, summary, description, reporter, priority, assignee, status } = req.body;
@@ -234,17 +248,31 @@ router.post('/:userid/issue/:issueId/update', csrfProtection, issueValidators, a
 }))
 
 // GET form to delete issue
-router.get('/:userid/issue/:issueId/delete', csrfProtection, issueValidators, async (req, res, next) => {
+router.get('/:userid/issue/:issueId/delete', csrfProtection, async (req, res, next) => {
     try {
-        const issue = await Issue.findById(req.params.issueId),
-              user = { _id: req.params.userid },
-              placeholder = {
-                project: '',
-                summary: '',
-                description: '',
-                reporter: '',
-                assignee: '',
-               };
+        if (!isValidId(req.params.userid)) {
+            return res.status(302).redirect('/user/login?bool=false');
+        }
+        const user = await User.findById(req.params.userid);
+        if (!user) {
+            // redirect to user create with error message
+            return res.status(302).redirect('/user/add')
+        }
+        if (user && !isValidId(req.params.issueId)) {
+            // should include error message why the redirect
+            return res.status(302).redirect(`/user/${req.params.userid}/issue?err=issue-not-exist`);
+        }
+        const issue = await Issue.findById(req.params.issueId);
+        if (user && !issue) {
+            return res.status(302).redirect(`/user/${req.params.userid}/issue?err=issue-not-exist`);
+        }
+        const placeholder = {
+            project: '',
+            summary: '',
+            description: '',
+            reporter: '',
+            assignee: '',
+        };
         let logs = issue.log.reverse();
         return res.status(200).render('issue-delete', {
             title: 'Delete Issue',

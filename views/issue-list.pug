@@ -26,7 +26,7 @@ block content
           th(scope='col') Last Update
           th(scope='col')
       tbody
-        each issue in issues
+        each issue in issues.reverse()
           tr
             td= issue.project
             td= issue.issue_type

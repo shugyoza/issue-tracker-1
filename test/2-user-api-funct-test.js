@@ -2,10 +2,14 @@ const   chai = require('chai'),
         assert = chai.assert,
         expect = chai.expect;
 
-const app = require('../app');
+const app = require('../app')
+    , User = require('../db/models/user')
+    , {queryDoc} = require('../controllers/utils');
 
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
+
+let idToDelete = '621974c9cbd8ffafa70867c9';
 
 suite(`HTTP REQUEST TO: '/'`, () => {
 
@@ -309,25 +313,28 @@ suite(`HTTP REQUEST TO: '/user/add'`, () => {
         })
     })
 
-    test('Valid first_name, last_name, email and password input must return the user document, which _id will be used for redirect to profile page "user/:userid', (done) => {
-        chai
-        .request(app)
-        .post('/test/user/add')
-        .send({
+    test('Valid first_name, last_name, email and password input must return the user document, which _id will be used for redirect to profile page "/user/:userid', (done) => {
+        let newUser = {
+            _id: `${idToDelete}`,
             first_name: 'firstName',
             last_name: 'lastName',
             email: 'firstNamelastName@email.com',
             password: 'Password123'
-        })
+        }
+        chai
+        .request(app)
+        .post('/test/user/add')
+        .send(newUser)
         .end((err, res) => {
             if (err) done(err);
             assert.equal(res.status, 200);
             assert.equal(res.type, 'application/json');
-            assert.equal(res.body.first_name, 'firstName');
-            assert.equal(res.body.last_name, 'lastName');
-            assert.equal(res.body.email, 'firstNameLastName@email.com');
-            assert.equal(res.body.password, 'Password123');
-            assert.isNotEmpty(res.error)
+            assert.equal(res.body.status, 302);
+            assert.include(res.body.redirect, '/test/user/');
+            assert.isNotNull(res.body.user);
+            assert.equal(res.body.user.first_name, newUser.first_name);
+            assert.equal(res.body.user.last_name, newUser.last_name);
+            assert.equal(res.body.user.email, newUser.email);
             done();
         })
     })
@@ -505,15 +512,66 @@ suite(`HTTP REQUEST TO: '/user/:userid/edit'`, () => {
 suite(`HTTP REQUEST TO: '/user/:userid/delete'`, () => {
 
     test('Valid :userid render the form file, status: 200, content-type: text-html', (done) => {
-        let id = '6216c50ff21fb2c08f1a8b9f'; // DO NOT POST DELETE
+        let id = '6216c50ff21fb2c08f1a8b9f';
         chai
+        .request(app)
+        .get(`/user/${id}/delete`)
+        .end((err, res) => {
+            if (err) done(err);
+            assert.equal(res.status, 200);
+            assert.equal(res.type, 'text/html');
+            done();
+        })
+    })
+
+    /* DOES NOT WORK TO DELETE DOCUMENT
+    User.find({ email: 'firstNamelastName@email.com' }).then(res => {
+        let id = res._id;
+
+        test('Successful delete on valid :userid redirect to login page', (done) => {
+            chai
             .request(app)
-            .get(`/user/${id}/edit`)
+            .post(`/test/user/${id}/delete`)
             .end((err, res) => {
                 if (err) done(err);
                 assert.equal(res.status, 200);
-                assert.equal(res.type, 'text/html');
+                assert.equal(res.type, 'application/json');
+                assert.equal(res.body._id, idToDelete);
+                assert.equal(res.body.code, 302);
+                assert.equal(res.body.redirect, '/test/user/login')
                 done();
             })
+        })
+    }) */
+
+    test('Successful delete on valid :userid redirect to login page', (done) => {
+        chai
+        .request(app)
+        .post(`/test/user/${idToDelete}/delete`)
+        .end((err, res) => {
+            if (err) done(err);
+            assert.equal(res.status, 200);
+            assert.equal(res.type, 'application/json');
+            assert.equal(res.body._id, idToDelete);
+            assert.equal(res.body.code, 302);
+            assert.equal(res.body.redirect, '/test/user/login')
+            done();
+        })
     })
+
+    test('Successful delete on valid deleted the document from database', (done) => {
+        chai
+        .request(app)
+        .get(`/user/${idToDelete}/delete`)
+        .send()
+        .end((err, res) => {
+            if (err) done(err);
+            expect(res).to.redirect
+            assert.equal(res.status, 400);
+            assert.equal(user, null);
+            assert.equal(idToDelete, undefined);
+            done();
+        })
+    })
+
 })
