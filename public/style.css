@@ -58,6 +58,7 @@ h2,
 }
 div.main {
     margin-top: 3rem;
+    margin-left: 5rem;
     min-width: 510px;
     display: flex;
     flex-direction: column;
