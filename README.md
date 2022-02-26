@@ -9,8 +9,9 @@ to make it more modular);
     - First, Design (Schema and Routes), considering use case, efficiency, efficacy, readability, usability, maintainability, and scalability. Specifically in this case, lack of experience substantially made it more difficult;
     - Second, figuring out the edge case for testing;
     - Third, organizing the codes to be tidy, not cluttered, yet not maze-like complicated due to using lots of references;
-    - Fourth, not knowing a lot of things and how to use methods certainly is another handicap (e.g. using promises in Chai, acquiring document id for delete/update).
-* At one point of scaling, with lots of one / many to many / one relation, I believe Relational Database would fit better for this app. For the moment, No SQL database like Mongo suffice.
+    - Fourth, not knowing a lot of things and how to use methods certainly is another handicap (e.g. using promises in Chai, acquiring document id for delete/update);
+* At one point of scaling, with lots of one / many to many / one relation, I believe Relational Database would fit better for this app. For the moment, No SQL database like Mongo suffice;
+* I love colors, everyone love colors, but too much is too much. I love that I came up with this file binder layout, and the error message (and buttons) I made to look like a post-it note, although sometimes it feels too simple, but it's okay.
 
 ## USER STORIES:
 ### Done:
