@@ -20,10 +20,10 @@ block content
       input(type='hidden' name='_csrf' value=csrfToken)
       div(class='form-group')
         label(for='email') Email
-        input(type='text' id='email' name='email' value=user.email placeholder='e.g. jk@email.com [this email is valid for demo too]' class='form-control')
+        input(type='text' id='email' name='email' value=user.email placeholder='e.g. jk@email.com [use this email for demo]' class='form-control')
       div(class='form-group')
         label(for='password') Password
-        input(type='password' id='password' name='password' value=user.password placeholder='e.g. Password123 [this password is valid for demo too]' class='form-control')
+        input(type='password' id='password' name='password' value=user.password placeholder='e.g. Password123 [use this password for demo]' class='form-control')
       div(class='py-4')
         button(class='button bg-blue' type='submit') #{ title }
         a(class='button bg-orange' href='/') Cancel
