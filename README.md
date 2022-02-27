@@ -1,7 +1,10 @@
 # issue-tracker-1
 
 ## SETUP
-* 
+The process to setup the app in the computer terminal is as follows:
+* Go to the directory where you want to install the app;
+* Type: `` git clone https://github.com/shugyoza/issue-tracker-1.git``
+* Enter the issue-tracker-1 directory. Type: cd issue-tracker-1
 
 ## PROJECT NOTE
 
