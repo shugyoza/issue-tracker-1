@@ -2,10 +2,10 @@
 
 ## SETUP
 The process to setup the app in the computer terminal is as follows:
-* Go to the directory (folder) where you want to install the app;
-* Type: `` git clone https://github.com/shugyoza/issue-tracker-1.git ``
-* Enter the issue-tracker-1 directory. Type: `` cd issue-tracker-1 ``
-You'll see something like this if you're checking the content of issue-tracker-1 directory by typing: `` ls ``
+1 Go to the directory (folder) where you want to install the app;
+1 Type: `` git clone https://github.com/shugyoza/issue-tracker-1.git ``
+1 Enter the issue-tracker-1 directory. Type: `` cd issue-tracker-1 ``
+1 If yout type: `` ls ``, you'll see something like this in the issue-tracker-1 directory.
 ```
 Han-MBPro-10% cd issue-tracker-1
 Han-MBPro-10% ls
@@ -14,7 +14,7 @@ app.js			package.json		test
 controllers		public			views
 db			routes
 ```
-* Install dependencies, type: `` npm install ``
+1 Install dependencies, type: `` npm install ``
 You'll see something like this in your terminal afterwards.
 ```
 > nodemon@2.0.15 postinstall /Users/stephenhanjaya/Documents/TOP/issue-tracker-1/node_modules/nodemon
