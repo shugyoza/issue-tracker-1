@@ -1,14 +1,14 @@
 # issue-tracker-1
 
-## SETUP
+## SETUP IN LOCAL SERVER (LOCAL COMPUTER USE ONLY)
 The process to setup the app in the computer terminal is as follows:
 * Go to the directory (folder) where you want to install the app;
 * Type: `` git clone https://github.com/shugyoza/issue-tracker-1.git ``
 * Enter the issue-tracker-1 directory. Type: `` cd issue-tracker-1 ``
 * If yout type: `` ls ``, you'll see something like this in the issue-tracker-1 directory.
 ```
-Han-MBPro-10% cd issue-tracker-1
-Han-MBPro-10% ls
+terminal-moniker-10% cd issue-tracker-1
+terminal-moniker-10% ls
 README.md		package-lock.json	sample.env
 app.js			package.json		test
 controllers		public			views
@@ -27,10 +27,54 @@ added 422 packages from 273 contributors and audited 422 packages in 12.786s
 
 found 0 vulnerabilities
 ```
- `` node_modules `` directory if you type: `` ls `` again.
+* If you type: `` ls `` again, you'll see `` node_modules `` directory now.
 ```
-
+terminal-moniker-10% ls
+README.md		node_modules		routes
+app.js			package-lock.json	sample.env
+controllers		package.json		test
+db			public			views
 ```
+* Create your own MongoDB database to interact with this app and store data.
+    - Login to mongodb.com
+    - For creating a database, refer to this link: https://www.mongodb.com/basics/create-database
+    - If you need to create a database user, in your user Dashboard:
+        - click: `` Database Access ``, then
+        - click `` +Add New Database User ``, then
+        - type your new username and password in corresponding fields, and click `` Add User``
+    - Once data base created:
+        - click: `` Database ``, then
+        - click: `` Connect ``, then
+        - click: `` Connect your application ``, then
+        - you'll see something like this: `` mongodb+srv://<username>:<password>@cluster0.5lubw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority ``
+        - replace `` <username> ``, `` <password> `` and `` myFirstDatabase `` with your own database username, database password, and database name, then
+        - copy that customized mongo string
+* You need to create a file named: `` .env `` in the `` issue-tracker-1 `` directory.
+    - Back in your computer terminal, go to `` issue-tracker-1 `` folder with `` cd `` command as we've used previously, then
+        - fire up your code editor
+        - make a copy of the `` sample.env `` file, then
+        - open the copy of `` sample.env `` file with your text editor, then
+        - fill in the `` PORT= `` with any four digit number, most common: 3000, 5000, 8000, or 8080, no space in between! and no quotes!, then
+        - paste the mongo string you copied and customized previously to the `` MONGO_URI= ``, again, no space in between! and no quotes!, then
+        - after your edit, it'll look something like this:
+        ```
+        PORT=5000
+        MONGO_URI=mongodb+srv://your_database_username:your_database_user_password@cluster0.5lubw.mongodb.net/your_database_name?retryWrites=true&w=majority
+        ```
+        - save it, then
+        - rename the file to be: `` .env ``
+        - once renamed, the file should be hidden from plain sight in the file-finder / window-explorer, unless you've st the file-finder / window-explorer to be able to view hidden files.
+* At this point you're done setting up. Back in your computer terminal, within the `` issue-tracker-1 `` directory, type: `` npm start ``, then
+* Open your favorite browser, and type: `` localhost:5000 ``. You should've seen a login page of the app by now, which means you're done done. Time to play!
+* __REMARKS!__ Whenever you want to have this app in your online Git Repository, always.. always.. do as follows prior to pushing to the online repository:
+    - create a file name `` .gitignore ``, then
+    - open it with your code editor, and add: `` /node_modules/ `` on the first line (you don't want to upload the whole bunch of gigabytes of files in /node_modules/ folder!, and
+    - add `` .env `` on the next line (you don't want the whole world knows your username and password for your database! duh!), and
+    - SAVE it!, Your `` .gitignore `` file should then have the following lines within it:
+    ```
+    /node_modules/
+    .env
+    ```
 
 ## PROJECT NOTE
 
