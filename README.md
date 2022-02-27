@@ -66,16 +66,18 @@ db			public			views
         - once renamed, the file should be hidden from plain sight in the file-finder / window-explorer, unless you've st the file-finder / window-explorer to be able to view hidden files.
 * At this point you're done setting up. Back in your computer terminal, within the `` issue-tracker-1 `` directory, type: `` npm start ``, then
 * Open your favorite browser, and type: `` localhost:5000 ``. You should've seen a login page of the app by now, which means you're done done. Time to play!
-* To stop the local server, in that computer terminal where you typed `` npm start `` type `` ctrl C ``. (Always shutdown before closing the terminal)
-* __REMARKS!__ Whenever you want to have this app in your online Git Repository, always.. always.. do as follows prior to pushing to the online repository:
-    - create a file name `` .gitignore ``, then
-    - open it with your code editor, and add: `` /node_modules/ `` on the first line (you don't want to upload the whole bunch of gigabytes of files in /node_modules/ folder!, and
-    - add `` .env `` on the next line (you don't want the whole world knows your username and password for your database! duh!), and
-    - SAVE it!, Your `` .gitignore `` file should then have the following lines within it:
-    ```
-    /node_modules/
-    .env
-    ```
+* To stop the local server, in that computer terminal where you typed `` npm start `` type `` ctrl C ``. (Always shutdown before closing the terminal).
+* __REMARKS!__
+    - Whenever you want to have this app in your online Git Repository, always.. always.. do as follows prior to pushing to the online repository:
+        - create a file name `` .gitignore ``, then
+        - open it with your code editor, and add: `` /node_modules/ `` on the first line (you don't want to upload the whole bunch of gigabytes of files in /node_modules/ folder!, and
+        - add `` .env `` on the next line (you don't want the whole world knows your username and password for your database! duh!), and
+        - SAVE it!, Your `` .gitignore `` file should then have the following lines within it:
+        ```
+        /node_modules/
+        .env
+        ```
+    - All the tests on the app is in the `` test `` directory, if you want to add some more tests. To run the test specs, follow the above steps, only that you have to type `` npm test `` instead of `` npm start ``, and type `` ctrl C `` once you're done.
 
 ## PROJECT NOTE
 
