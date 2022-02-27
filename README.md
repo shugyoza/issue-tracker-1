@@ -2,13 +2,35 @@
 
 ## SETUP
 The process to setup the app in the computer terminal is as follows:
-* Go to the directory where you want to install the app;
-* Type:
+* Go to the directory (folder) where you want to install the app;
+* Type: `` git clone https://github.com/shugyoza/issue-tracker-1.git ``
+* Enter the issue-tracker-1 directory. Type: `` cd issue-tracker-1 ``
+You'll see something like this if you're checking the content of issue-tracker-1 directory by typing: `` ls ``
 ```
-git clone https://github.com/shugyoza/issue-tracker-1.git
+Han-MBPro-10% cd issue-tracker-1
+Han-MBPro-10% ls
+README.md		package-lock.json	sample.env
+app.js			package.json		test
+controllers		public			views
+db			routes
 ```
-* Enter the issue-tracker-1 directory. Type: cd issue-tracker-1
 * Install dependencies, type: `` npm install ``
+You'll see something like this in your terminal afterwards.
+```
+> nodemon@2.0.15 postinstall /Users/stephenhanjaya/Documents/TOP/issue-tracker-1/node_modules/nodemon
+> node bin/postinstall || exit 0
+
+added 422 packages from 273 contributors and audited 422 packages in 12.786s
+
+51 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+```
+ `` node_modules `` directory if you type: `` ls `` again.
+```
+
+```
 
 ## PROJECT NOTE
 
@@ -71,31 +93,31 @@ to make it more modular);
 
 ## ROUTES
 
-* GET at '/'
-* GET at '/user/super'
-* GET and POST at '/user/login'
-* GET and POST at '/user/add'
-* GET at '/user/:userid'
-* GET and POST (PUT) at '/user/:userid/edit'
-* GET and POST (DELETE) at '/user/:userid/delete'
-* GET and POST (DELETE) at 'user/delete/:userid'
-* POST (DELETE) at '/logout' (not implemented, later in session and authentication)
+* GET at ` / `
+* GET at ` /user/super `
+* GET and POST at ` /user/login `
+* GET and POST at ` /user/add `
+* GET at ` /user/:userid `
+* GET and POST (PUT) at ` /user/:userid/edit `
+* GET and POST (DELETE) at ` /user/:userid/delete `
+* GET and POST (DELETE) at ` user/delete/:userid `
+* POST (DELETE) at ` /logout ` (not implemented, later in session and authentication)
 
-* GET at '/:userid/issue'
-* GET and POST at '/user/:userid/issue/add'
-* GET and POST at '/user/:userid/issue/find'
-* GET and POST (PUT) at '/user/:userid/issue/:issueId/update'
-* GET and POST (DELETE) at '/user/:userid/issue/:issueId/delete'
+* GET at ` /:userid/issue `
+* GET and POST at ` /user/:userid/issue/add `
+* GET and POST at ` /user/:userid/issue/find `
+* GET and POST (PUT) at ` /user/:userid/issue/:issueId/update `
+* GET and POST (DELETE) at ` /user/:userid/issue/:issueId/delete `
 
 * For test purpose, other routes added to check the returned data:
-    - GET at '/test/user/super'
-    - POST at '/test/user/login'
-    - POST at '/test/user/add'
-    - POST (PUT) at '/test/user/:userid/edit'
-    - POST (DELETE) at '/test/user/:userid/delete' (test not implemented yet)
-    - POST at '/test/user/:userid/issue/add'
-    - POST (PUT) at '/test/user/:userid/issue/:issueId/update' (test not implemented yet)
-    - POST (DELETE) at '/test/user/:userid/issue/:issueId/delete' (test not implemented yet)
+    - GET at ` /test/user/super `
+    - POST at ` /test/user/login `
+    - POST at ` /test/user/add `
+    - POST (PUT) at ` /test/user/:userid/edit `
+    - POST (DELETE) at ` /test/user/:userid/delete ` (test not implemented yet)
+    - POST at ` /test/user/:userid/issue/add `
+    - POST (PUT) at ` /test/user/:userid/issue/:issueId/update ` (test not implemented yet)
+    - POST (DELETE) at ` /test/user/:userid/issue/:issueId/delete ` (test not implemented yet)
 
 ## LOG
 ### 20220207
