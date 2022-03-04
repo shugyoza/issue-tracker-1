@@ -7,10 +7,10 @@ div
     label(for='issue_type') Issue Type
     select(name='issue_type' id='issue_type' value=issue.issue_type class='form-control')
       option(value=`${ issue.issue_type ? issue.issue_type : '' }`) #{ issue.issue_type ? issue.issue_type : '- select -' }
-      option(value='Bug') Bug
-      option(value='Improvement') Improvement
-      option(value='Task') Task
-      option(value='New Feature') New Feature
+      option(value='bug') Bug
+      option(value='improvement') Improvement
+      option(value='task') Task
+      option(value='new_feature') New Feature
   div(class='form-group')
     label(for='summary') Summary
     input(type='text' id='summary' name='summary' value=issue.summary placeholder=placeholder.summary ? placeholder.summary : '' class='form-control')
@@ -21,10 +21,10 @@ div
     label(for='priority') Priority
     select(name='priority' id='priority' value=issue.priority class='form-control')
       option(value=`${ issue.priority ? issue.priority : '' }`) #{ issue.priority ? issue.priority : '- select -' }
-      option(value='Low') Low
-      option(value='Medium') Medium
-      option(value='High') High
-      option(value='Urgent') Urgent
+      option(value='low') Low
+      option(value='medium') Medium
+      option(value='high') High
+      option(value='urgent') Urgent
   div(class='form-group')
     label(for='reporter') Reporter
     input(type='text' id='reporter' name='reporter' value=issue.reporter placeholder=placeholder.reporter ? placeholder.reporter : `` class='form-control')
@@ -35,16 +35,16 @@ div
     label(for='status') Status
     select(name='status' id='status' value=issue.status class='form-control')
       option(value=`${ issue.status ? issue.status: '' }`) #{ issue.status ? issue.status : '- select -' }
-      option(value='Open') Open
-      option(value='Approved') Approved
-      option(value='Archived') Archived
-      option(value='Closed') Closed
-      option(value='Done') Done
-      option(value='In Progress') In Progress
-      option(value='In Review') In Review
-      option(value='Pending') Pending
-      option(value='Reopened') Reopened
-      option(value='Second Review') Second Review
-      option(value='To Do') To Do
-      option(value='Waiting for Approval') Waiting for Approval
-      option(value='Waiting for Support') Waiting for Support
+      option(value='open') Open
+      option(value='approved') Approved
+      option(value='archived') Archived
+      option(value='closed') Closed
+      option(value='done') Done
+      option(value='in_progress') In Progress
+      option(value='in_review') In Review
+      option(value='pending') Pending
+      option(value='reopened') Reopened
+      option(value='second_review') Second Review
+      option(value='to_do') To Do
+      option(value='waiting_for_approval') Waiting for Approval
+      option(value='waiting_for_support') Waiting for Support

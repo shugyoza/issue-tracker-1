@@ -26,8 +26,8 @@ mixin history(logs)
       ul(class='list-group list-group-flush')
         each log in logs
           div(class='inner') Update on #{ log.updated }
-            p= log.project ? `Project Name: ${log.project}` : ''
-            p= log.issue_type ? `Issue Type: ${log.issue_type}` : ''
+            p= log.project ? `- Project Name: ${log.project}` : ''
+            p= log.issue_type ? `- Issue Type: ${log.issue_type}` : ''
             p= log.summary ? `- Summary: ${log.summary}` : ''
             p #{ log.description ? `- Description: ${log.description}` : '' }
             p= log.reporter ? `- Reporter: ${log.reporter}` : ''

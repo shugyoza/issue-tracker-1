@@ -24,9 +24,10 @@ router.get('/:userid/issue', async (req, res, next) => {
         if (!isValidId(req.params.userid)) {
             return res.status(302).redirect('/user/login?bool=false');
         }
-        if (req.params.issue && req.query.q) {
+        if (req.query.q) {
             // turn the string into a valid object for querying database
             q = objectify_url_query_str(req.query.q);
+            console.log('b')
         }
         const issues = await Issue.find(q);
         const user = { _id: req.params.userid };
@@ -200,11 +201,19 @@ router.get('/:userid/issue/:issueId/update', csrfProtection, async (req, res, ne
 // POST form to update issue.
 router.post('/:userid/issue/:issueId/update', csrfProtection, issueValidators, asyncHandler(async (req, res, next) => {
     try {
-        issue = await Issue.findById(req.params.issueId);
+        let issue = await Issue.findById(req.params.issueId);
         const user = { _id: req.params.userid },
               validatorErrors = validationResult(req),
-              { project, issue_type, summary, description, reporter, priority, assignee, status } = req.body;
-        let [ count, updateObj, archived ] = update(issue, req.body)
+              { project, issue_type, summary, description, reporter, priority, assignee, status } = req.body,
+              placeholder = {
+                project: '',
+                summary: '',
+                description: '',
+                reporter: '',
+                assignee: '',
+            };
+
+        let [ count, updateObj, archived ] = update(issue, req.body);
         // if there's no update
         if (count === 0) {
             validatorErrors.errors.push({
@@ -218,6 +227,7 @@ router.post('/:userid/issue/:issueId/update', csrfProtection, issueValidators, a
         if (!validatorErrors.isEmpty() || errors.length) {
             return res.status(400).render('issue-update', {
                 title: 'Issue Update',
+                placeholder,
                 issue,
                 user,
                 errors,
@@ -237,6 +247,7 @@ router.post('/:userid/issue/:issueId/update', csrfProtection, issueValidators, a
             current_description: issue.description,
             current_priority: issue.priority,
             current_status: issue.status,
+            placeholder,
             logs,
             user,
             issue,
