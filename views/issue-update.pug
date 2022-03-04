@@ -23,6 +23,6 @@ block content
       +history(logs)
       div(class='py-4')
         button(class='button bg-blue' type='submit') Save Update
-        button(class='button bg-orange' onclick='window.location.reload();' type='button') Reset Fields
+        button(class='button bg-orange' href=`/user/${user._id}/issue/update` type='button') Reset Fields
         a(class='button bg-red' href=`/user/${user._id}/issue/${issue._id}/delete` role='button') Delete Issue
   include footer.pug
