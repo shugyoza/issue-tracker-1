@@ -9,9 +9,9 @@ block content
       a(class='button top-bookmark bg-green' href=`/user/${user._id}/issue/add` role='button') Add
       a(class='button top-bookmark bg-purple' href=`/user/${user._id}/issue/find` role='button') Find
       a(class='button top-bookmark bg-blue' href=`/user/${user._id}/issue` role='button') Issues
-      span(class='button this-bookmark') Delete
+      a(class='button this-bookmark' aria-disabled=true) Delete
       a(class='button top-bookmark bg-maroon' href=`/user/${user._id}` role='button') Account
-      span(class='button top-bookmark bg-pink' aria-label="empty tab")
+      a(class='button top-bookmark bg-pink' aria-disabled=true)
   div(class='container')
     div(class='sub-head')
       a(class='logout txt-red' href=`/`) Logout

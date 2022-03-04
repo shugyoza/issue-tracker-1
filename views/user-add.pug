@@ -6,12 +6,12 @@ block content
   nav(class='top')
     h1(class='button top-bookmark bg-black') Issue Tracker
     div(class='py-3')
-      a(class='button this-bookmark' role='button') Create User
+      a(class='button this-bookmark' role='button' aria-disabled=true) Create User
       a(class='button top-bookmark bg-green' href='/user/login/' role='button') Login
-      span(class='button top-bookmark bg-purple' aria-label="empty tab")
-      span(class='button top-bookmark bg-orange' aria-label="empty tab")
-      span(class='button top-bookmark bg-maroon' aria-label="empty tab")
-      span(class='button top-bookmark bg-pink' aria-label="empty tab")
+      a(class='button top-bookmark bg-purple' aria-disabled=true)
+      a(class='button top-bookmark bg-orange' aria-disabled=true)
+      a(class='button top-bookmark bg-maroon' aria-disabled=true)
+      a(class='button top-bookmark bg-pink' aria-disabled=true)
   div(class='container')
     div(class='sub-head')
       a(class='logout txt-red' href=`/`)
