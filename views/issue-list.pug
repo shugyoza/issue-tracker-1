@@ -6,9 +6,9 @@ block content
     div(class='py-3')
       a(class='button top-bookmark bg-green' id='add-issue' href=`/user/${user._id}/issue/add` role='button') Add
       a(class='button top-bookmark bg-purple' id='find-issue' href=`/user/${user._id}/issue/find` role='button') Find
-      a(class='button this-bookmark' aria-disabled=true) Issues
+      a(class='button this-bookmark' aria-hidden='true') Issues
       a(class='button top-bookmark bg-maroon' href=`/user/${user._id}` role='button') Account
-      a(class='button top-bookmark bg-pink' aria-disabled=true)
+      a(class='button top-bookmark bg-pink' aria-hidden='true')
   div(class='container')
     div(class='sub-head')
       a(class='logout txt-red' href=`/`) Logout
