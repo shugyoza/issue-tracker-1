@@ -99,7 +99,9 @@ router.post('/:userid/issue/add', csrfProtection, issueValidators, asyncHandler(
     });
     const validatorErrors = validationResult(req);
     if (validatorErrors.isEmpty()) {
+        console.log('before issue.save')
         await issue.save();
+        console.log('after issue.save')
         return res.status(302).redirect(`/user/${user._id}/issue`);
     } else {
         const errors = validatorErrors.array().map((error) => error.msg);
