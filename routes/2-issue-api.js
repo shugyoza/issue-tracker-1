@@ -18,18 +18,19 @@ const User = require('../db/models/user')
 const router = express.Router();
 
 // GET list of all issues made under this user
-router.get('/:userid/issue', async (req, res, next) => {
+router.get('/:userid/:issue', async (req, res, next) => {
     try {
         let q;
         if (!isValidId(req.params.userid)) {
             return res.status(302).redirect('/user/login?bool=false');
         }
-        if (req.query.q) {
+        // if (req.query.q) {
+        if (req.params.issue === 'issue' && Object.keys(req.query).length) {
             // turn the string into a valid object for querying database
-            q = objectify_url_query_str(req.query.q);
-            console.log('b')
+            q = objectify_url_query_str(req.query)// (req.query.q);
+            console.log(31, q, req.query)
         }
-        const issues = await Issue.find(q);
+        const issues = await Issue.find(req.query);// (q);
         const user = { _id: req.params.userid };
         return res.status(200).render('issue-list', { title: 'List of Issues', issues, user });
     } catch (err) {
@@ -150,7 +151,8 @@ router.post('/:userid/issue/find', csrfProtection, asyncHandler(async (req, res,
             return res.status(302).redirect(`/user/${req.params.userid}/issue`);
         }
         let queryStr = stringify_obj_into_url_query_str(queryObj);
-        return res.status(302).redirect(`/user/${req.params.userid}/issue?q=${queryStr}`)
+        console.log(154, queryStr)
+        return res.status(302).redirect(`/user/${req.params.userid}/issue?${queryStr}`) // (`/user/${req.params.userid}/issue?q=${queryStr}`)
     } catch (err) {
         next(err);
     }

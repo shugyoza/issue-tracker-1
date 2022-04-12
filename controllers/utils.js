@@ -36,19 +36,25 @@ const stringify_obj_into_url_query_str = (obj) => {
     let result = '';
     for (let key in obj) {
         if (key === '_csrf') continue;
-        else result += `${key}:${obj[key]}%20`;
+        // else result += `${key}:${obj[key]}%20`;
+        else {
+            let valStr = obj[key].replace(/ +/g, '%20')
+            result +=`${key}=${valStr}&`;
+        }
     }
-    result = result.slice(0, result.length - 3)
+    result = result.slice(0, result.length - 1)
     return result;
 }
 
 // function to convert a string of req.query into an object
 const objectify_url_query_str = (str) => {
-    const arr_of_keyVal = str.split('%20')
+    console.log('hey', str)
+    // const arr_of_keyVal = str.split('%20')
+    const arr_of_keyVal = []// str.replace('%20', ' ').split('&')
         , resObj = {};
     for (let i = 0; i < arr_of_keyVal.length; i++) {
         let strEl = arr_of_keyVal[i],
-            idx = strEl.indexOf(':'),
+            idx = strEl.indexOf('='), // (':'),
             keyStr = strEl.slice(0, idx),
             valStr = strEl.slice(idx + 1);
         resObj[keyStr] = valStr;

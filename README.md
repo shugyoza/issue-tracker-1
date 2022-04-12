@@ -385,3 +385,8 @@ Action:
 - redeployed
 - disable maintenance mode
 - it works.
+
+### 20220412
+- POST on issue/find did not yield the expected result in correspond to the req.query
+Cause: the callback function to stringify the query object did not return the correct string, e.g. `issue?q=priority:high%20reporter:Stephen%20Hanjaya`
+Fixed the callback to return this query string e.g. `issue?priority=high&reporter=Stephen%20Hanjaya` which turned into the correct req.query on redirect to /:userId/issue
