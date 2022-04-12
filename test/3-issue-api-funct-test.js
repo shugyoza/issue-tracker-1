@@ -87,7 +87,7 @@ suite(`HTTP REQUEST TO: '/user/:userid/issue/add'`, () => {
             issue_type: 'Bug',
             summary: 'Is There any Bug in Issue Tracker Development',
             description: 'We are testing whether there is any bug within the Issue Tracker App using Chai-JS library.',
-            priority: 'Medium',
+            priority: 'medium',
             reporter: 'Tester 1',
             assignee: 'Assistant to Tester 1',
             status: 'Open'
@@ -100,7 +100,7 @@ suite(`HTTP REQUEST TO: '/user/:userid/issue/add'`, () => {
             assert.equal(res.body.issue_type, 'Bug');
             assert.equal(res.body.summary, 'Is There any Bug in Issue Tracker Development');
             assert.equal(res.body.description, 'We are testing whether there is any bug within the Issue Tracker App using Chai-JS library.');
-            assert.equal(res.body.priority, 'Medium');
+            assert.equal(res.body.priority, 'medium');
             assert.equal(res.body.reporter, 'Tester 1');
             assert.equal(res.body.assignee, 'Assistant to Tester 1');
             assert.equal(res.body.status, 'Open');

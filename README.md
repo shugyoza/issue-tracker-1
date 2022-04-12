@@ -376,4 +376,12 @@ router.post('/login', checkNotAuthenticated, csrfProtection, loginValidators, pa
 
 ### 20220411
 
-- POST request on /user/:userId/issue/add on Heroku throws error: 500.
+- POST request on /user/:userId/issue/add on Heroku throws error: 500 with no log in the Heroku CLI although it works on localhost.
+Hypotheses: For sure the problem is not in my code, but rather in Heroku. Quite probably was caused by something in heroku got updated into a new version and caused the error
+Action:
+- set to maintenance mode
+- delete the Buildpacks in setting for heroku/nodejs
+- add a new heroku/nodejs buildpack
+- redeployed
+- disable maintenance mode
+- it works.
