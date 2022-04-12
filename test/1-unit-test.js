@@ -117,10 +117,10 @@ suite('UNIT TEST', () => {
 
     suite(`Convert an Object into a Valid URL Query String.`, () => {
 
-        test('Output string for { aKey: "aValue", bKey: "bValue"} should be: "aKey:aValue%20bKey:bValue". %20 separates every key-value pair.', () => {
-            input = { firstKey: 'firstValue', secondKey: 'secondValue', thirdKey: 'thirdValue' };
+        test('Output string for { aKey: "aValue", bKey: "bValue"} should be: "aKey=aValue&bKey=bValue". & separates every key-value pair.', () => {
+            input = { firstKey: 'firstValue', secondKey: 'second Value', thirdKey: 'third Value' };
             output = stringify_obj_into_url_query_str(input);
-            expected = 'firstKey:firstValue%20secondKey:secondValue%20thirdKey:thirdValue';
+            expected = 'firstKey=firstValue&secondKey=second%20Value&thirdKey=third%20Value';
             assert.strictEqual(output, expected, '');
         })
     })
@@ -128,11 +128,11 @@ suite('UNIT TEST', () => {
 
     suite('Convert a Valid URL Query String into an Object', () => {
 
-        test('With input string: "aKey:aValue%20bKey:bValue", the output object must be: { aKey: "aValue", bKey: "bValue"}.', () => {
-            input = 'firstKey:firstValue%20secondKey:secondValue%20thirdKey:thirdValue';
+        test('With input string: "aKey=aValue&bKey:bValue", the output object must be: { aKey: "aValue", bKey: "bValue"}.', () => {
+            input = 'firstKey=firstValue&secondKey=second%20Value&thirdKey=third%20Value';
             output = objectify_url_query_str(input);
             outputArr = Object.entries(output);
-            expected = { firstKey: 'firstValue', secondKey: 'secondValue', thirdKey: 'thirdValue' };
+            expected = { firstKey: 'firstValue', secondKey: 'second Value', thirdKey: 'third Value' };
             expectedArr = Object.entries(expected);
             assert.typeOf(output, 'object', "Output must be an object.");
             assert.lengthOf(outputArr, expectedArr.length, `The amount of key-value pairs in the output must be: ${expectedArr.length}.`);

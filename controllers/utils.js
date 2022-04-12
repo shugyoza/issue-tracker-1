@@ -50,7 +50,7 @@ const stringify_obj_into_url_query_str = (obj) => {
 const objectify_url_query_str = (str) => {
     console.log('hey', str)
     // const arr_of_keyVal = str.split('%20')
-    const arr_of_keyVal = []// str.replace('%20', ' ').split('&')
+    const arr_of_keyVal = str.replace('%20', ' ').split('&')
         , resObj = {};
     for (let i = 0; i < arr_of_keyVal.length; i++) {
         let strEl = arr_of_keyVal[i],
