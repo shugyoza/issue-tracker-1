@@ -1,3 +1,9 @@
+# Developments
 /node_modules/
 .env
+
+# OS
 .DS_Store
+
+# IDEs
+.idea/
